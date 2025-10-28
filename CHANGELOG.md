@@ -14,6 +14,8 @@ Format: Keep a short note per entry with date and summary.
 - fix(test): Provide `createTestConnector()` helper for quick manual testing of connectors.
 - chore(index): Modularized HTML partials and refactored initialization to wait for partials.
 - style: Move inline styles into `css/main.css` and add accessibility labels for form controls.
+ - fix(connectors): Finalize Bezier control-point handles and persist controlPoints so curves survive save/load (commit 0dc78ab).
+ - fix(connectors): Add connector visual nodes directly to `mainLayer` to avoid them becoming selectable/draggable shapes and ensure proper restore behavior on load (commit 4c21eee).
 
 ## Previous
 
