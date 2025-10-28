@@ -67,17 +67,18 @@ export class ConnectorsManager {
                 listening: true
             });
         } else {
-            if (connector.type === 'line') {
-                node = new Konva.Line({
-                    points: [startPoint.x, startPoint.y, endPoint.x, endPoint.y],
-                    stroke: connector.options.stroke,
-                    strokeWidth: connector.options.strokeWidth,
-                    dash: connector.options.dash || [],
-                    tension: 0,
-                    lineCap: 'round',
-                    lineJoin: 'round',
-                    listening: true
-                });
+                if (connector.type === 'line' || connector.type === 'elbow') {
+                    const points = (connector.type === 'elbow') ? this.computeElbowPoints(startPoint, endPoint) : [startPoint.x, startPoint.y, endPoint.x, endPoint.y];
+                    node = new Konva.Line({
+                        points: points,
+                        stroke: connector.options.stroke,
+                        strokeWidth: connector.options.strokeWidth,
+                        dash: connector.options.dash || [],
+                        tension: connector.type === 'line' ? 0 : 0,
+                        lineCap: 'round',
+                        lineJoin: 'round',
+                        listening: true
+                    });
             } else {
                 // Bezier: use Konva.Shape with custom sceneFunc to draw cubic bezier
                 // Determine control points (absolute coords) - allow provided controlPoints
@@ -196,6 +197,27 @@ export class ConnectorsManager {
     }
 
     /**
+     * Compute orthogonal elbow points between two points.
+     * Returns a flat array of points for Konva.Line: [x1,y1,x2,y2,...]
+     */
+    computeElbowPoints(startPoint, endPoint) {
+        // Simple two-bend elbow: horizontal then vertical via middle X
+        const sx = startPoint.x;
+        const sy = startPoint.y;
+        const ex = endPoint.x;
+        const ey = endPoint.y;
+
+        // If points are nearly aligned, fallback to straight line
+        if (Math.abs(sx - ex) < 2 || Math.abs(sy - ey) < 2) {
+            return [sx, sy, ex, ey];
+        }
+
+        const midX = Math.round((sx + ex) / 2);
+        // Path: start -> (midX, start.y) -> (midX, end.y) -> end
+        return [sx, sy, midX, sy, midX, ey, ex, ey];
+    }
+
+    /**
      * Setup listeners to update connector when shapes move
      */
     setupConnectorListeners(connector) {
@@ -227,12 +249,26 @@ export class ConnectorsManager {
                     } catch (e) {}
                 }
             } else if (connector.arrow && typeof connector.arrow.points === 'function') {
-                connector.arrow.points([
-                    startPoint.x,
-                    startPoint.y,
-                    endPoint.x,
-                    endPoint.y
-                ]);
+                if (connector.type === 'elbow') {
+                    try {
+                        const pts = this.computeElbowPoints(startPoint, endPoint);
+                        connector.arrow.points(pts);
+                    } catch (e) {
+                        connector.arrow.points([
+                            startPoint.x,
+                            startPoint.y,
+                            endPoint.x,
+                            endPoint.y
+                        ]);
+                    }
+                } else {
+                    connector.arrow.points([
+                        startPoint.x,
+                        startPoint.y,
+                        endPoint.x,
+                        endPoint.y
+                    ]);
+                }
             }
 
             this.canvasManager.mainLayer.draw();
@@ -372,6 +408,17 @@ export class ConnectorsManager {
                         } catch (e) {}
                     }
                     if (connector.type === 'bezier' || connector.type === 'line') {
+                        // If elbow type, recompute points
+                        if (connector.type === 'elbow') {
+                            try {
+                                const startPoint = this.getConnectionPoint(connector.startShape, connector.endShape);
+                                const endPoint = this.getConnectionPoint(connector.endShape, connector.startShape);
+                                const pts = this.computeElbowPoints(startPoint, endPoint);
+                                if (connector.arrow && typeof connector.arrow.points === 'function') {
+                                    connector.arrow.points(pts);
+                                }
+                            } catch (e) {}
+                        }
                         try {
                             if (typeof connector.arrow.tension === 'function') {
                                 connector.arrow.tension(connector.options.curvature || 0);

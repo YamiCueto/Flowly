@@ -433,7 +433,8 @@ export class CanvasManager {
             if (nearest && nearest.dist <= threshold && nearest.shape !== shape) {
                 // Create connector between shapes
                 if (this.connectorsManager) {
-                    this.connectorsManager.createConnector(shape, nearest.shape);
+                    // Create elbow (orthogonal) connector by default for UX clarity
+                    this.connectorsManager.createConnector(shape, nearest.shape, { type: 'elbow' });
                 } else {
                     console.warn('ConnectorsManager not available on canvasManager');
                 }
