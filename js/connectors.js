@@ -67,31 +67,79 @@ export class ConnectorsManager {
                 listening: true
             });
         } else {
-            // line or bezier (use Konva.Line with tension for bezier-like curve)
-            node = new Konva.Line({
-                points: [startPoint.x, startPoint.y, endPoint.x, endPoint.y],
-                stroke: connector.options.stroke,
-                strokeWidth: connector.options.strokeWidth,
-                dash: connector.options.dash || [],
-                tension: connector.type === 'bezier' ? connector.options.curvature || 0.5 : 0,
-                lineCap: 'round',
-                lineJoin: 'round',
-                listening: true
-            });
-            // For lines, we may optionally add arrowhead later; omitted for simplicity
+            if (connector.type === 'line') {
+                node = new Konva.Line({
+                    points: [startPoint.x, startPoint.y, endPoint.x, endPoint.y],
+                    stroke: connector.options.stroke,
+                    strokeWidth: connector.options.strokeWidth,
+                    dash: connector.options.dash || [],
+                    tension: 0,
+                    lineCap: 'round',
+                    lineJoin: 'round',
+                    listening: true
+                });
+            } else {
+                // Bezier: use Konva.Shape with custom sceneFunc to draw cubic bezier
+                // Determine control points (absolute coords) - allow provided controlPoints
+                const start = startPoint;
+                const end = endPoint;
+                let cp1 = connector.options.controlPoints && connector.options.controlPoints[0];
+                let cp2 = connector.options.controlPoints && connector.options.controlPoints[1];
+                if (!cp1 || !cp2) {
+                    // default control points: quarter and three-quarters points offset perpendicular
+                    const mx = (start.x + end.x) / 2;
+                    const my = (start.y + end.y) / 2;
+                    const dx = end.x - start.x;
+                    const dy = end.y - start.y;
+                    const nx = -dy;
+                    const ny = dx;
+                    const len = Math.sqrt(nx * nx + ny * ny) || 1;
+                    const ux = nx / len;
+                    const uy = ny / len;
+                    const offset = Math.min(100, Math.max(30, Math.sqrt(dx*dx+dy*dy)/4));
+                    cp1 = { x: start.x + dx * 0.25 + ux * offset, y: start.y + dy * 0.25 + uy * offset };
+                    cp2 = { x: start.x + dx * 0.75 + ux * offset, y: start.y + dy * 0.75 + uy * offset };
+                    connector.options.controlPoints = [cp1, cp2];
+                }
+
+                node = new Konva.Shape({
+                    sceneFunc: function(ctx, shape) {
+                        const b = shape._bezier || {};
+                        const s = b.startPoint || { x: 0, y: 0 };
+                        const e = b.endPoint || { x: 0, y: 0 };
+                        const c1 = b.cp1 || s;
+                        const c2 = b.cp2 || e;
+                        ctx.beginPath();
+                        ctx.moveTo(s.x, s.y);
+                        ctx.bezierCurveTo(c1.x, c1.y, c2.x, c2.y, e.x, e.y);
+                        ctx.strokeShape(shape);
+                    },
+                    stroke: connector.options.stroke,
+                    strokeWidth: connector.options.strokeWidth,
+                    dash: connector.options.dash || [],
+                    listening: true
+                });
+                // store refs to control points data so update function can use them
+                node._bezier = { startPoint: start, endPoint: end, cp1: cp1, cp2: cp2 };
+            }
         }
 
         connector.arrow = node;
         this.connectors.push(connector);
 
         // Add to canvas
-        this.canvasManager.addShape(node);
+    this.canvasManager.addShape(node);
 
         // Move to bottom (under shapes)
         node.moveToBottom();
 
         // Setup update listeners
         this.setupConnectorListeners(connector);
+
+        // If bezier, create draggable control handles
+        if (connector.type === 'bezier') {
+            this._createBezierHandles(connector);
+        }
 
         return connector;
     }
@@ -154,7 +202,24 @@ export class ConnectorsManager {
                 connector.startShape
             );
 
-            if (connector.arrow && typeof connector.arrow.points === 'function') {
+            if (connector.type === 'bezier' && connector.arrow && connector.arrow._bezier) {
+                // Update bezier endpoints
+                connector.arrow._bezier.startPoint = startPoint;
+                connector.arrow._bezier.endPoint = endPoint;
+                // If control points stored in options, keep them; otherwise keep existing
+                if (connector.options.controlPoints && connector.options.controlPoints.length === 2) {
+                    connector.arrow._bezier.cp1 = connector.options.controlPoints[0];
+                    connector.arrow._bezier.cp2 = connector.options.controlPoints[1];
+                }
+
+                // Update handles positions if present
+                if (connector._handles && connector._handles.length === 2) {
+                    try {
+                        connector._handles[0].position(connector.arrow._bezier.cp1);
+                        connector._handles[1].position(connector.arrow._bezier.cp2);
+                    } catch (e) {}
+                }
+            } else if (connector.arrow && typeof connector.arrow.points === 'function') {
                 connector.arrow.points([
                     startPoint.x,
                     startPoint.y,
@@ -164,6 +229,7 @@ export class ConnectorsManager {
             }
 
             this.canvasManager.mainLayer.draw();
+            try { this.canvasManager.transformLayer && this.canvasManager.transformLayer.batchDraw(); } catch (e) {}
         };
 
         connector.startShape.on('dragmove', updateConnector);
@@ -179,7 +245,9 @@ export class ConnectorsManager {
         const index = this.connectors.findIndex(c => c.id === connectorId);
         if (index !== -1) {
             const connector = this.connectors[index];
-            connector.arrow.destroy();
+            // destroy bezier handles if any
+            try { this._destroyBezierHandles(connector); } catch (e) {}
+            try { connector.arrow.destroy(); } catch (e) {}
             this.connectors.splice(index, 1);
             this.canvasManager.mainLayer.draw();
         }
@@ -217,6 +285,8 @@ export class ConnectorsManager {
             // If type changed, recreate visual node
             if (options.type && options.type !== connector.type) {
                 const oldNode = connector.arrow;
+                // destroy any existing bezier handles before replacing visual
+                try { this._destroyBezierHandles(connector); } catch (e) {}
                 const newType = options.type;
                 connector.type = newType;
 
@@ -255,6 +325,10 @@ export class ConnectorsManager {
                 newNode.moveToBottom();
                 // Rewire listeners by calling setupConnectorListeners again
                 this.setupConnectorListeners(connector);
+                // If new type is bezier, create handles
+                if (connector.type === 'bezier') {
+                    try { this._createBezierHandles(connector); } catch (e) {}
+                }
             } else {
                 // Simple attribute update
                 if (connector.arrow && typeof connector.arrow.setAttrs === 'function') {
@@ -271,7 +345,18 @@ export class ConnectorsManager {
                             connector.arrow.fill(connector.options.stroke);
                         } catch (e) {}
                     }
-                    // Bezier curvature
+                    // Bezier curvature or update bezier control points
+                    if (connector.type === 'bezier') {
+                        // ensure node._bezier reflects stored controlPoints
+                        try {
+                            if (connector.arrow && connector.arrow._bezier) {
+                                if (connector.options.controlPoints && connector.options.controlPoints.length === 2) {
+                                    connector.arrow._bezier.cp1 = connector.options.controlPoints[0];
+                                    connector.arrow._bezier.cp2 = connector.options.controlPoints[1];
+                                }
+                            }
+                        } catch (e) {}
+                    }
                     if (connector.type === 'bezier' || connector.type === 'line') {
                         try {
                             if (typeof connector.arrow.tension === 'function') {
@@ -293,6 +378,73 @@ export class ConnectorsManager {
      */
     findConnectorByArrow(node) {
         return this.connectors.find(c => c.arrow === node) || null;
+    }
+
+    /**
+     * Create draggable bezier control handles for a connector
+     */
+    _createBezierHandles(connector) {
+        try {
+            if (!this.canvasManager) return;
+            const layer = this.canvasManager.transformLayer || this.canvasManager.mainLayer;
+            if (!layer) return;
+            // destroy existing
+            this._destroyBezierHandles(connector);
+
+            const node = connector.arrow;
+            const cp = connector.options.controlPoints || (node && node._bezier && [node._bezier.cp1, node._bezier.cp2]) || [{ x: 0, y: 0 }, { x: 0, y: 0 }];
+
+            const makeHandle = (pt, idx) => {
+                const h = new Konva.Circle({
+                    x: pt.x,
+                    y: pt.y,
+                    radius: 6,
+                    fill: '#ffffff',
+                    stroke: this.canvasManager.anchorStroke || '#3498db',
+                    strokeWidth: 2,
+                    draggable: true,
+                    name: 'bezier-handle',
+                    listening: true
+                });
+
+                h.on('dragmove', () => {
+                    const p = h.position();
+                    // update connector options and node
+                    connector.options.controlPoints = connector.options.controlPoints || [{}, {}];
+                    connector.options.controlPoints[idx] = { x: p.x, y: p.y };
+                    if (node && node._bezier) {
+                        if (idx === 0) node._bezier.cp1 = connector.options.controlPoints[0];
+                        else node._bezier.cp2 = connector.options.controlPoints[1];
+                    }
+                    try { this.canvasManager.mainLayer.draw(); } catch (e) {}
+                });
+
+                layer.add(h);
+                return h;
+            };
+
+            const h1 = makeHandle(cp[0], 0);
+            const h2 = makeHandle(cp[1], 1);
+
+            connector._handles = [h1, h2];
+            try { layer.batchDraw(); } catch (e) {}
+        } catch (e) {
+            console.warn('Failed to create bezier handles', e);
+        }
+    }
+
+    /**
+     * Destroy bezier handles for a connector
+     */
+    _destroyBezierHandles(connector) {
+        if (!connector || !connector._handles) return;
+        try {
+            connector._handles.forEach(h => {
+                try { h.destroy(); } catch (e) {}
+            });
+        } catch (e) {}
+        connector._handles = null;
+        try { this.canvasManager.transformLayer && this.canvasManager.transformLayer.batchDraw(); } catch (e) {}
     }
 
     /**
@@ -331,6 +483,7 @@ export class ConnectorsManager {
      */
     clearAll() {
         this.connectors.forEach(c => {
+            try { this._destroyBezierHandles(c); } catch (e) {}
             try { c.arrow.destroy(); } catch (e) { /* ignore */ }
         });
         this.connectors = [];

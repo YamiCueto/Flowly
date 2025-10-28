@@ -506,13 +506,13 @@ class FlowlyApp {
             textProperties.style.display = 'none';
         }
 
-        // Connector-specific UI
+        // Connector-specific UI (works for Arrow, Line and Bezier shapes)
         const connectorProps = document.getElementById('connector-properties');
-        if (shape.getClassName() === 'Arrow' || shape.getClassName() === 'Line') {
+        const conn = this.connectorsManager ? this.connectorsManager.findConnectorByArrow(shape) : null;
+        if (conn) {
             // Show connector controls
             connectorProps.style.display = 'block';
             // Populate values
-            const conn = this.connectorsManager ? this.connectorsManager.findConnectorByArrow(shape) : null;
             const stroke = attrs.stroke || '#2c3e50';
             const strokeWidth = attrs.strokeWidth || 2;
             const dash = attrs.dash && attrs.dash.length > 0;
@@ -524,7 +524,7 @@ class FlowlyApp {
             document.getElementById('connector-dashed').checked = !!dash;
 
             // type and curvature
-            const type = conn ? conn.type : (shape.getClassName() === 'Arrow' ? 'arrow' : 'line');
+            const type = conn ? conn.type : 'arrow';
             document.getElementById('connector-type').value = type;
             document.getElementById('connector-arrowhead').checked = (type === 'arrow');
             if (type === 'bezier') {
