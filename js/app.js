@@ -266,16 +266,6 @@ class FlowlyApp {
 		}
 	}
 
-
-
-
-
-
-
-
-
-
-
 	/**
 	 * Load last session
 	 */
