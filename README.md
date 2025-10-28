@@ -227,10 +227,71 @@ Usuario → Toolbar/Tools → ToolManager → CanvasManager → Konva Stage
 ## 🔮 Roadmap - Próximas Características
 
 ### Fase 2: Conectores Avanzados ⏳
-- [ ] Conectores que se adhieren a formas
-- [ ] Puntos de anclaje inteligentes
-- [ ] Curvas Bezier automáticas
-- [ ] Conectores que se actualizan al mover formas
+Objetivo: Implementar un sistema de conectores robusto y amigable que permita unir formas de manera precisa, visualmente agradable y mantenible. Los conectores deben poder engancharse a puntos de anclaje en las formas, soportar curvas Bezier para trazados suaves y mantenerse actualizados cuando las formas relacionadas se muevan o redimensionen.
+
+Criterios de aceptación (mínimos):
+- El usuario puede crear un conector arrastrando desde un punto de anclaje de una forma hasta el punto de anclaje de otra forma.
+- Los conectores se anclan solo a puntos válidos (anchors) y se visualizan mientras se crea la conexión.
+- Los conectores son redibujados automáticamente cuando cualquiera de las formas conectadas se mueve o cambia de tamaño.
+- Existe soporte para al menos dos tipos de trazado: línea recta y curva Bezier controlable (automática por defecto).
+- El panel de propiedades permite personalizar: color, grosor y estilo de línea (sólido, dashed, dotted) para conectores.
+- Guardado/Carga: los conectores se serializan y deserializan correctamente en el JSON del proyecto.
+
+Plan de implementación (pasos incrementales):
+1. Anchor points (completado): puntos de anclaje en cada forma (8 por defecto) que pueden ser visibles en hover/selección y sirven como puntos de conexión.
+2. Modelo de conector básico:
+  - Estructura de datos: { id, start: {shapeId, anchorIndex}, end: {shapeId, anchorIndex}, type: 'line'|'bezier', style: {stroke, strokeWidth, dash} }
+  - Render inicial: línea recta simple entre los puntos absolutos de los anchors.
+3. Actualización dinámica:
+  - Escuchar eventos de movimiento/redimensionamiento en las formas y recalcular las coordenadas absolutas de los anchors.
+  - Redibujar conectores de forma eficiente (batchDraw / requestAnimationFrame).
+4. Curvas Bezier:
+  - Añadir función de generación de control points heurísticos (p. ej. puntos medios con offset perpendicular) para generar curvas agradables por defecto.
+  - Permitir ajustar la curvatura con un control en el panel de propiedades (opcional en esta fase).
+5. UX de creación y edición:
+  - Al arrastrar desde un anchor, mostrar una línea provisional que sigue el cursor y resalta anchors válidos.
+  - Permitir reconectar moviendo el extremo del conector a otro anchor.
+  - Soporte para eliminar conectores con tecla Supr o botón en propiedades.
+6. Persistencia y exportación:
+  - Serializar conectores en el JSON del proyecto (incluyendo tipo, puntos relativos, estilo).
+  - Asegurar que exportaciones a SVG/PDF mantengan la apariencia (trazado Bezier convertido a path en SVG).
+
+Consideraciones técnicas y edge cases:
+- Formas con transformaciones (scale/rotation): los anchors deben calcularse en coordenadas globales usando getAbsolutePosition/getClientRect.
+- Rendimiento con muchos conectores: agrupar redibujos y evitar cálculos innecesarios; probar con ~200 conexiones.
+- Conectores que cruzan formas: evitar intersecciones si se añadiera routing (fase futura). Ahora, documentar la limitación.
+- Eliminación de formas: limpiar conectores huérfanos cuando se borre una forma.
+
+Pruebas (mínimas a automatizar/manual):
+- Crear conector entre dos formas y mover ambas; verificar que el conector se actualiza.
+- Serializar proyecto con conectores y volver a cargarlo; comprobar integridad.
+- Crear conector Bezier y exportar a SVG; abrir SVG y verificar trazado.
+- Intentar conectar a un área inválida y verificar que no se crea la conexión.
+
+Tareas (sub-items para issues/PRs):
+- [ ] Definir y documentar la estructura de datos del conector
+- [ ] Implementar render inicial de conectores lineales
+- [ ] Implementar actualización dinámica (event listeners + redibujo eficiente)
+- [ ] Implementar curvas Bezier automáticas
+- [ ] UX: línea provisional, resaltado de anchors, reconnect
+- [ ] Persistencia: guardar/cargar conectores en JSON
+- [ ] Export: SVG/PDF path conversion
+- [ ] Tests: unitarios y E2E básicos
+
+Notas para desarrolladores:
+- Usar las utilidades de `shapes.js` para obtener `anchor.getAbsolutePosition()` y `shape.on('dragmove', ...)` ya implementadas.
+- Evitar añadir lógica de routing compleja en esta fase; priorizar estabilidad y rendimiento.
+- Mantener el panel de propiedades sincronizado con la selección para ediciones rápidas.
+
+Probar Connectores (rápido)
+1. Abre la aplicación localmente y crea al menos dos formas en el canvas.
+2. Abre la consola del navegador (DevTools) y ejecuta:
+
+```
+createTestConnector()
+```
+
+Esto creará un conector simple entre las dos primeras formas del canvas para pruebas rápidas. Si ves el conector, prueba mover las formas y verifica que el conector sigue las posiciones.
 
 ### Fase 3: Más Formas y Herramientas ⏳
 - [ ] Polígonos personalizados

@@ -7,6 +7,7 @@ import { CanvasManager } from './canvas-manager.js';
 import { ToolManager } from './tools.js';
 import { ExportManager } from './export-manager.js';
 import { StorageManager } from './storage.js';
+import { ConnectorsManager } from './connectors.js';
 
 class FlowlyApp {
     constructor() {
@@ -14,6 +15,7 @@ class FlowlyApp {
         this.toolManager = null;
         this.exportManager = null;
         this.storageManager = null;
+        this.connectorsManager = null;
         this.currentTool = 'select';
         this.selectedShape = null;
     }
@@ -29,6 +31,8 @@ class FlowlyApp {
         this.toolManager = new ToolManager(this.canvasManager);
         this.exportManager = new ExportManager(this.canvasManager);
         this.storageManager = new StorageManager(this.canvasManager);
+    // Connectors manager handles connections between shapes
+    this.connectorsManager = new ConnectorsManager(this.canvasManager);
         
         // Setup event listeners
         this.setupToolbar();
@@ -42,6 +46,17 @@ class FlowlyApp {
         this.canvasManager.on('selectionChanged', (shapes) => {
             this.updatePropertiesPanel(shapes);
         });
+
+        // Expose a small test helper to create a connector between first two shapes
+        window.createTestConnector = () => {
+            const shapes = this.canvasManager.mainLayer.children.toArray().filter(n => n !== this.canvasManager.transformer && n.className !== 'Transformer');
+            if (shapes.length >= 2) {
+                const conn = this.connectorsManager.createConnector(shapes[0], shapes[1]);
+                console.log('Test connector created', conn);
+            } else {
+                console.warn('Need at least two shapes on the canvas to create a test connector');
+            }
+        };
         
         // Listen to history changes
         this.canvasManager.on('historyChanged', () => {
