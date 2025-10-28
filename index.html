@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flowly - Creador de Diagramas</title>
+    
+    <!-- CSS Files -->
+	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="css/toolbar.css">
+	<link rel="stylesheet" href="css/modals.css">
+
+	<!-- Font Awesome Icons -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+	<!-- External Libraries -->
+	<script src="https://unpkg.com/konva@9/konva.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+
+<body>
+	<!-- Top Toolbar -->
+	<div class="toolbar">
+		<div class="toolbar-section logo-section">
+			<h1><i class="fas fa-draw-polygon"></i> Flowly </h1>
+		</div>
+
+		<div class="toolbar-section tools-section">
+			<!-- Selection Tool -->
+			<button class="tool-btn active" data-tool="select" title="Seleccionar (V)">
+				<i class="fas fa-mouse-pointer"></i>
+			</button>
+
+			<div class="toolbar-divider"></div>
+
+			<!-- Shape Tools -->
+			<button class="tool-btn" data-tool="rectangle" title="Rectángulo (R)">
+				<i class="far fa-square"></i>
+			</button>
+			<button class="tool-btn" data-tool="rounded-rectangle" title="Rectángulo Redondeado">
+				<i class="fas fa-square"></i>
+			</button>
+			<button class="tool-btn" data-tool="circle" title="Círculo (C)">
+				<i class="far fa-circle"></i>
+			</button>
+			<button class="tool-btn" data-tool="ellipse" title="Elipse">
+				<i class="fas fa-circle"></i>
+			</button>
+			<button class="tool-btn" data-tool="triangle" title="Triángulo">
+				<i class="fas fa-play fa-rotate-270"></i>
+			</button>
+
+			<div class="toolbar-divider"></div>
+
+			<!-- Line Tools -->
+			<button class="tool-btn" data-tool="line" title="Línea (L)">
+				<i class="fas fa-minus"></i>
+			</button>
+			<button class="tool-btn" data-tool="arrow" title="Flecha (A)">
+				<i class="fas fa-arrow-right"></i>
+			</button>
+
+			<div class="toolbar-divider"></div>
+
+			<!-- Text Tool -->
+			<button class="tool-btn" data-tool="text" title="Texto (T)">
+				<i class="fas fa-font"></i>
+			</button>
+
+			<div class="toolbar-divider"></div>
+
+			<!-- Pan/Hand Tool -->
+			<button class="tool-btn" data-tool="pan" title="Mover Vista (H)">
+				<i class="fas fa-hand-paper"></i>
+			</button>
+		</div>
+
+		<div class="toolbar-section actions-section">
+			<!-- Undo/Redo -->
+			<button class="action-btn" id="undo-btn" title="Deshacer (Ctrl+Z)">
+				<i class="fas fa-undo"></i>
+			</button>
+			<button class="action-btn" id="redo-btn" title="Rehacer (Ctrl+Y)">
+				<i class="fas fa-redo"></i>
+			</button>
+
+			<div class="toolbar-divider"></div>
+
+			<!-- Zoom Controls -->
+			<button class="action-btn" id="zoom-out-btn" title="Alejar (-)">
+				<i class="fas fa-search-minus"></i>
+			</button>
+			<span class="zoom-display" id="zoom-display">100%</span>
+			<button class="action-btn" id="zoom-in-btn" title="Acercar (+)">
+				<i class="fas fa-search-plus"></i>
+			</button>
+			<button class="action-btn" id="zoom-fit-btn" title="Ajustar a pantalla">
+				<i class="fas fa-expand"></i>
+			</button>
+
+			<div class="toolbar-divider"></div>
+
+			<!-- File Operations -->
+			<button class="action-btn" id="new-btn" title="Nuevo">
+				<i class="fas fa-file"></i>
+			</button>
+			<button class="action-btn" id="save-btn" title="Guardar">
+				<i class="fas fa-save"></i>
+			</button>
+			<button class="action-btn" id="load-btn" title="Cargar">
+				<i class="fas fa-folder-open"></i>
+			</button>
+
+			<div class="toolbar-divider"></div>
+
+			<!-- Export -->
+			<button class="action-btn" id="export-btn" title="Exportar">
+				<i class="fas fa-download"></i>
+			</button>
+		</div>
+	</div>
+
+	<!-- Main Container -->
+	<div class="main-container">
+		<!-- Left Sidebar -->
+		<div class="sidebar left-sidebar">
+			<div class="sidebar-header">
+				<h3>Formas</h3>
+			</div>
+			<div class="shapes-library" id="shapes-library">
+				<div class="shape-item" data-shape="rectangle">
+					<i class="far fa-square"></i>
+					<span>Rectángulo</span>
+				</div>
+				<div class="shape-item" data-shape="circle">
+					<i class="far fa-circle"></i>
+					<span>Círculo</span>
+				</div>
+				<div class="shape-item" data-shape="triangle">
+					<i class="fas fa-play fa-rotate-270"></i>
+					<span>Triángulo</span>
+				</div>
+				<div class="shape-item" data-shape="arrow">
+					<i class="fas fa-arrow-right"></i>
+					<span>Flecha</span>
+				</div>
+				<div class="shape-item" data-shape="text">
+					<i class="fas fa-font"></i>
+					<span>Texto</span>
+				</div>
+			</div>
+		</div>
+
+		<!-- Canvas Area -->
+		<div class="canvas-container">
+			<div class="canvas-controls">
+				<label class="control-item">
+					<input type="checkbox" id="grid-toggle" checked>
+					<span>Mostrar Grid</span>
+				</label>
+				<label class="control-item">
+					<input type="checkbox" id="snap-toggle" checked>
+					<span>Snap to Grid</span>
+				</label>
+			</div>
+			<div id="canvas-wrapper">
+				<!-- Konva Stage will be created here -->
+			</div>
+		</div>
+
+		<!-- Right Sidebar -->
+		<div class="sidebar right-sidebar">
+			<div class="sidebar-header">
+				<h3>Propiedades</h3>
+			</div>
+			<div class="properties-panel" id="properties-panel">
+				<div class="no-selection">
+					<i class="fas fa-hand-pointer"></i>
+					<p>Selecciona un elemento para editar sus propiedades</p>
+				</div>
+
+				<div class="properties-content" id="properties-content" style="display: none;">
+					<!-- Fill Color -->
+					<div class="property-group">
+						<label>Color de Relleno</label>
+						<div class="color-input-group">
+							<input type="color" id="fill-color" value="#3498db">
+							<input type="text" id="fill-color-text" value="#3498db" maxlength="7">
+						</div>
+					</div>
+
+					<!-- Stroke Color -->
+					<div class="property-group">
+						<label>Color de Borde</label>
+						<div class="color-input-group">
+							<input type="color" id="stroke-color" value="#2c3e50">
+							<input type="text" id="stroke-color-text" value="#2c3e50" maxlength="7">
+						</div>
+					</div>
+
+					<!-- Stroke Width -->
+					<div class="property-group">
+						<label>Grosor de Borde</label>
+						<input type="range" id="stroke-width" min="0" max="20" value="2" step="1">
+						<span id="stroke-width-value">2px</span>
+					</div>
+
+					<!-- Opacity -->
+					<div class="property-group">
+						<label>Opacidad</label>
+						<input type="range" id="opacity" min="0" max="100" value="100" step="5">
+						<span id="opacity-value">100%</span>
+					</div>
+
+					<!-- Text Properties (shown only for text elements) -->
+					<div class="property-group text-properties" id="text-properties" style="display: none;">
+						<label>Tamaño de Fuente</label>
+						<input type="number" id="font-size" min="8" max="72" value="16" step="1">
+
+						<label>Color de Texto</label>
+						<div class="color-input-group">
+							<input type="color" id="text-color" value="#000000">
+							<input type="text" id="text-color-text" value="#000000" maxlength="7">
+						</div>
+					</div>
+
+					<!-- Position & Size -->
+					<div class="property-group">
+						<h4>Posición y Tamaño</h4>
+						<div class="input-row">
+							<div class="input-col">
+								<label>X</label>
+								<input type="number" id="pos-x" step="1">
+							</div>
+							<div class="input-col">
+								<label>Y</label>
+								<input type="number" id="pos-y" step="1">
+							</div>
+						</div>
+						<div class="input-row">
+							<div class="input-col">
+								<label>Ancho</label>
+								<input type="number" id="width" step="1" min="10">
+							</div>
+							<div class="input-col">
+								<label>Alto</label>
+								<input type="number" id="height" step="1" min="10">
+							</div>
+						</div>
+					</div>
+
+					<!-- Layer Controls -->
+					<div class="property-group">
+						<h4>Orden</h4>
+						<div class="button-group">
+							<button id="bring-front-btn" class="prop-btn">
+								<i class="fas fa-angle-double-up"></i> Al frente
+							</button>
+							<button id="send-back-btn" class="prop-btn">
+								<i class="fas fa-angle-double-down"></i> Atrás
+							</button>
+						</div>
+					</div>
+
+					<!-- Delete -->
+					<div class="property-group">
+						<button id="delete-btn" class="prop-btn delete-btn">
+							<i class="fas fa-trash"></i> Eliminar
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Export Modal -->
+	<div class="modal" id="export-modal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2>Exportar Diagrama</h2>
+				<button type="button" title="Cerrar" class="modal-close" id="export-modal-close">
+					<i class="fas fa-times"></i>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="export-options">
+					<button class="export-option" data-format="png">
+						<i class="fas fa-file-image"></i>
+						<span>PNG</span>
+						<small>Imagen de alta calidad</small>
+					</button>
+					<button class="export-option" data-format="jpg">
+						<i class="fas fa-file-image"></i>
+						<span>JPG</span>
+						<small>Imagen comprimida</small>
+					</button>
+					<button class="export-option" data-format="svg">
+						<i class="fas fa-file-code"></i>
+						<span>SVG</span>
+						<small>Gráfico vectorial</small>
+					</button>
+					<button class="export-option" data-format="pdf">
+						<i class="fas fa-file-pdf"></i>
+						<span>PDF</span>
+						<small>Documento portable</small>
+					</button>
+					<button class="export-option" data-format="json">
+						<i class="fas fa-file-code"></i>
+						<span>JSON</span>
+						<small>Formato editable</small>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Load Modal -->
+	<div class="modal" id="load-modal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2>Cargar Proyecto</h2>
+				<button type="button" title="Cerrar" class="modal-close" id="load-modal-close">
+					<i class="fas fa-times"></i>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="saved-projects" id="saved-projects">
+					<!-- Saved projects will be listed here -->
+				</div>
+				<div class="load-file-section">
+					<p>O cargar desde archivo:</p>
+					<input title="Seleccionar archivo" type="file" id="file-input" accept=".json" style="display: none;">
+					<button class="prop-btn" id="load-file-btn">
+						<i class="fas fa-upload"></i> Seleccionar Archivo JSON
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- JavaScript Modules -->
+	<script type="module" src="js/app.js"></script>
+</body>
+
+</html>
