@@ -161,6 +161,8 @@ export class ToolManager {
                 break;
                 
             case 'triangle':
+            case 'pentagon':
+            case 'hexagon':
                 const size = Math.max(Math.abs(width), Math.abs(height));
                 this.currentShape.radius(size / 2);
                 this.currentShape.x(this.startPos.x + width / 2);
@@ -208,6 +210,8 @@ export class ToolManager {
                 }
                 break;
             case 'triangle':
+            case 'pentagon':
+            case 'hexagon':
                 if (this.currentShape.radius() < minSize) {
                     isValid = false;
                 }
@@ -360,11 +364,51 @@ export class ToolManager {
                 });
                 break;
                 
+            case 'rounded-rectangle':
+                shape = ShapeFactory.create('rounded-rectangle', {
+                    x: centerX - 50,
+                    y: centerY - 40,
+                    width: 100,
+                    height: 80
+                });
+                break;
+
+            case 'ellipse':
+                shape = ShapeFactory.create('ellipse', {
+                    x: centerX,
+                    y: centerY,
+                    radiusX: 70,
+                    radiusY: 40
+                });
+                break;
+
+            case 'line':
+                shape = ShapeFactory.create('line', {
+                    x: centerX - 60,
+                    y: centerY,
+                    points: [0, 0, 120, 0]
+                });
+                break;
+                
             case 'arrow':
                 shape = ShapeFactory.create('arrow', {
                     x: centerX - 60,
                     y: centerY,
                     points: [0, 0, 120, 0]
+                });
+                break;
+            case 'pentagon':
+                shape = ShapeFactory.create('pentagon', {
+                    x: centerX,
+                    y: centerY,
+                    radius: 50
+                });
+                break;
+            case 'hexagon':
+                shape = ShapeFactory.create('hexagon', {
+                    x: centerX,
+                    y: centerY,
+                    radius: 50
                 });
                 break;
                 

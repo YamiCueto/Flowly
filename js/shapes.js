@@ -43,6 +43,10 @@ export class ShapeFactory {
                 return this.createEllipse(options);
             case 'triangle':
                 return this.createTriangle(options);
+            case 'pentagon':
+                return this.createPentagon(options);
+            case 'hexagon':
+                return this.createHexagon(options);
             case 'line':
                 return this.createLine(options);
             case 'arrow':
@@ -104,6 +108,30 @@ export class ShapeFactory {
             ...this.defaultProps,
             sides: 3,
             rotation: -90, // Point up
+            ...options
+        });
+    }
+
+    /**
+     * Create pentagon
+     */
+    static createPentagon(options) {
+        return new Konva.RegularPolygon({
+            ...this.defaultProps,
+            sides: 5,
+            rotation: -90,
+            ...options
+        });
+    }
+
+    /**
+     * Create hexagon
+     */
+    static createHexagon(options) {
+        return new Konva.RegularPolygon({
+            ...this.defaultProps,
+            sides: 6,
+            rotation: -90,
             ...options
         });
     }

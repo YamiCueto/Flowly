@@ -14,6 +14,7 @@ import { setupKeyboardShortcuts } from './ui/shortcuts.js';
 import { setupModals } from './ui/modals.js';
 import { setupPropertiesPanel } from './ui/properties.js';
 import { attachFileOperations } from './ui/fileops.js';
+import { setupContextMenu } from './ui/context-menu.js';
 
 class FlowlyApp {
 	constructor() {
@@ -50,6 +51,8 @@ class FlowlyApp {
 		setupPropertiesPanel(this);
 		attachFileOperations(this);
 		setupModals(this);
+		// Right-click context menu for nodes
+		try { setupContextMenu(this); } catch (e) { console.warn('Context menu failed to initialize', e); }
 		this.setupShapesLibrary();
 
 		// Listen to selection changes
@@ -92,18 +95,10 @@ class FlowlyApp {
 				});
 			}
 		} catch (e) { }
-
-
-
 		console.log('✅ Flowly initialized successfully!');
-
 		// Load last session if available
 		this.loadLastSession();
 	}
-
-
-
-
 
 	/**
 	 * Setup canvas control toggles
