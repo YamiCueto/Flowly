@@ -8,6 +8,10 @@ import { ToolManager } from './tools.js';
 import { ExportManager } from './export-manager.js';
 import { StorageManager } from './storage.js';
 import { ConnectorsManager } from './connectors.js';
+import { attachNotificationHelpers } from './ui/notifications.js';
+import { setupToolbar } from './ui/toolbar.js';
+import { setupKeyboardShortcuts } from './ui/shortcuts.js';
+import { setupModals } from './ui/modals.js';
 
 class FlowlyApp {
 	constructor() {
@@ -36,12 +40,13 @@ class FlowlyApp {
 		// Expose to canvas manager so it can create connectors during anchor-drag UX
 		this.canvasManager.connectorsManager = this.connectorsManager;
 
-		// Setup event listeners
-		this.setupToolbar();
-		this.setupKeyboardShortcuts();
+		// Setup event listeners (delegated to modular helpers)
+		attachNotificationHelpers(this);
+		setupToolbar(this);
+		setupKeyboardShortcuts(this);
 		this.setupCanvasControls();
 		this.setupPropertiesPanel();
-		this.setupModals();
+		setupModals(this);
 		this.setupShapesLibrary();
 
 		// Listen to selection changes
@@ -85,48 +90,7 @@ class FlowlyApp {
 			}
 		} catch (e) { }
 
-		// Notification helper using SweetAlert2 if available
-		this.notify = (message, options = {}) => {
-			const title = options.title || '';
-			const icon = options.icon || 'success';
-			const toast = options.toast !== undefined ? options.toast : true;
-			const position = options.position || 'top-end';
-			const timer = options.timer || 2000;
-			if (window.Swal && typeof window.Swal.fire === 'function') {
-				window.Swal.fire({
-					title,
-					text: message,
-					icon,
-					toast,
-					position,
-					showConfirmButton: false,
-					timer,
-					timerProgressBar: true
-				});
-			} else {
-				// fallback
-				try { alert(message); } catch (e) { }
-			}
-		};
 
-		// Confirm helper using SweetAlert2 if available
-		this.confirm = async (message, options = {}) => {
-			try {
-				if (window.Swal && typeof window.Swal.fire === 'function') {
-					const result = await window.Swal.fire({
-						title: options.title || '',
-						text: message,
-						icon: options.icon || 'question',
-						showCancelButton: true,
-						confirmButtonText: options.confirmText || 'Aceptar',
-						cancelButtonText: options.cancelText || 'Cancelar',
-						reverseButtons: true
-					});
-					return !!result.isConfirmed;
-				}
-			} catch (e) { }
-			try { return confirm(message); } catch (e) { return false; }
-		};
 
 		console.log('✅ Flowly initialized successfully!');
 
@@ -134,137 +98,9 @@ class FlowlyApp {
 		this.loadLastSession();
 	}
 
-	/**
-	 * Setup toolbar button handlers
-	 */
-	setupToolbar() {
-		// Tool buttons
-		document.querySelectorAll('.tool-btn').forEach(btn => {
-			btn.addEventListener('click', (e) => {
-				const tool = e.currentTarget.dataset.tool;
-				this.selectTool(tool);
-			});
-		});
 
-		// Action buttons
-		document.getElementById('undo-btn').addEventListener('click', () => {
-			this.canvasManager.undo();
-		});
 
-		document.getElementById('redo-btn').addEventListener('click', () => {
-			this.canvasManager.redo();
-		});
 
-		document.getElementById('zoom-in-btn').addEventListener('click', () => {
-			this.canvasManager.zoomIn();
-			this.updateZoomDisplay();
-		});
-
-		document.getElementById('zoom-out-btn').addEventListener('click', () => {
-			this.canvasManager.zoomOut();
-			this.updateZoomDisplay();
-		});
-
-		document.getElementById('zoom-fit-btn').addEventListener('click', () => {
-			this.canvasManager.fitToScreen();
-			this.updateZoomDisplay();
-		});
-
-		document.getElementById('new-btn').addEventListener('click', () => {
-			this.newProject();
-		});
-
-		document.getElementById('save-btn').addEventListener('click', () => {
-			this.saveProject();
-		});
-
-		document.getElementById('load-btn').addEventListener('click', () => {
-			this.openLoadModal();
-		});
-
-		document.getElementById('export-btn').addEventListener('click', () => {
-			this.openExportModal();
-		});
-	}
-
-	/**
-	 * Setup keyboard shortcuts
-	 */
-	setupKeyboardShortcuts() {
-		document.addEventListener('keydown', (e) => {
-			// Ignore if typing in input field
-			if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-				return;
-			}
-
-			// Tool shortcuts
-			if (!e.ctrlKey && !e.metaKey) {
-				switch (e.key.toLowerCase()) {
-					case 'v': this.selectTool('select'); break;
-					case 'r': this.selectTool('rectangle'); break;
-					case 'c': this.selectTool('circle'); break;
-					case 'l': this.selectTool('line'); break;
-					case 'a': this.selectTool('arrow'); break;
-					case 't': this.selectTool('text'); break;
-					case 'h': this.selectTool('pan'); break;
-					case 'delete':
-					case 'backspace':
-						this.canvasManager.deleteSelected();
-						e.preventDefault();
-						break;
-				}
-			}
-
-			// Ctrl/Cmd shortcuts
-			if (e.ctrlKey || e.metaKey) {
-				switch (e.key.toLowerCase()) {
-					case 'z':
-						if (e.shiftKey) {
-							this.canvasManager.redo();
-						} else {
-							this.canvasManager.undo();
-						}
-						e.preventDefault();
-						break;
-					case 'y':
-						this.canvasManager.redo();
-						e.preventDefault();
-						break;
-					case 'c':
-						this.canvasManager.copy();
-						e.preventDefault();
-						break;
-					case 'v':
-						this.canvasManager.paste();
-						e.preventDefault();
-						break;
-					case 's':
-						this.saveProject();
-						e.preventDefault();
-						break;
-					case 'o':
-						this.openLoadModal();
-						e.preventDefault();
-						break;
-					case 'n':
-						this.newProject();
-						e.preventDefault();
-						break;
-				}
-			}
-
-			// Zoom shortcuts
-			if (e.key === '+' || e.key === '=') {
-				this.canvasManager.zoomIn();
-				this.updateZoomDisplay();
-				e.preventDefault();
-			} else if (e.key === '-') {
-				this.canvasManager.zoomOut();
-				this.updateZoomDisplay();
-				e.preventDefault();
-			}
-		});
-	}
 
 	/**
 	 * Setup canvas control toggles
@@ -421,62 +257,7 @@ class FlowlyApp {
 		});
 	}
 
-	/**
-	 * Setup modal dialogs
-	 */
-	setupModals() {
-		// Export modal
-		const exportModal = document.getElementById('export-modal');
-		const exportBtn = document.getElementById('export-btn');
-		const exportClose = document.getElementById('export-modal-close');
 
-		exportClose.addEventListener('click', () => {
-			exportModal.classList.remove('active');
-		});
-
-		exportModal.addEventListener('click', (e) => {
-			if (e.target === exportModal) {
-				exportModal.classList.remove('active');
-			}
-		});
-
-		// Export format buttons
-		document.querySelectorAll('.export-option').forEach(btn => {
-			btn.addEventListener('click', (e) => {
-				const format = e.currentTarget.dataset.format;
-				this.exportDiagram(format);
-				exportModal.classList.remove('active');
-			});
-		});
-
-		// Load modal
-		const loadModal = document.getElementById('load-modal');
-		const loadClose = document.getElementById('load-modal-close');
-
-		loadClose.addEventListener('click', () => {
-			loadModal.classList.remove('active');
-		});
-
-		loadModal.addEventListener('click', (e) => {
-			if (e.target === loadModal) {
-				loadModal.classList.remove('active');
-			}
-		});
-
-		// File input
-		const fileInput = document.getElementById('file-input');
-		document.getElementById('load-file-btn').addEventListener('click', () => {
-			fileInput.click();
-		});
-
-		fileInput.addEventListener('change', (e) => {
-			const file = e.target.files[0];
-			if (file) {
-				this.loadFromFile(file);
-				loadModal.classList.remove('active');
-			}
-		});
-	}
 
 	/**
 	 * Setup shapes library
