@@ -127,11 +127,18 @@ export class ConnectorsManager {
         connector.arrow = node;
         this.connectors.push(connector);
 
-        // Add to canvas
-    this.canvasManager.addShape(node);
-
-        // Move to bottom (under shapes)
-        node.moveToBottom();
+        // Add visual node directly to mainLayer (don't route through addShape which makes
+        // the node selectable/draggable and creates anchors for it). Connectors should
+        // be non-draggable visual elements managed by ConnectorsManager.
+        try {
+            if (this.canvasManager && this.canvasManager.mainLayer) {
+                this.canvasManager.mainLayer.add(node);
+                node.moveToBottom();
+                this.canvasManager.mainLayer.draw();
+            }
+        } catch (e) {
+            console.warn('Failed to add connector node to mainLayer', e);
+        }
 
         // Setup update listeners
         this.setupConnectorListeners(connector);
@@ -318,11 +325,18 @@ export class ConnectorsManager {
                     });
                 }
 
-                // Replace node on canvas
+                // Replace node on canvas (add directly to mainLayer so it doesn't become selectable)
                 try { oldNode.destroy(); } catch (e) {}
                 connector.arrow = newNode;
-                this.canvasManager.addShape(newNode);
-                newNode.moveToBottom();
+                try {
+                    if (this.canvasManager && this.canvasManager.mainLayer) {
+                        this.canvasManager.mainLayer.add(newNode);
+                        newNode.moveToBottom();
+                        this.canvasManager.mainLayer.draw();
+                    }
+                } catch (e) {
+                    console.warn('Failed to add replacement connector node to mainLayer', e);
+                }
                 // Rewire listeners by calling setupConnectorListeners again
                 this.setupConnectorListeners(connector);
                 // If new type is bezier, create handles
@@ -463,8 +477,11 @@ export class ConnectorsManager {
      * Load connectors from data
      */
     fromJSON(data, shapes) {
-        // Clear existing connectors
-        this.connectors.forEach(c => c.arrow.destroy());
+        // Clear existing connectors (destroy arrows and any bezier handles)
+        this.connectors.forEach(c => {
+            try { this._destroyBezierHandles(c); } catch (e) {}
+            try { c.arrow && c.arrow.destroy(); } catch (e) {}
+        });
         this.connectors = [];
 
         // Recreate connectors
