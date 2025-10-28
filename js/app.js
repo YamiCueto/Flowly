@@ -75,6 +75,39 @@ class FlowlyApp {
         this.canvasManager.on('historyChanged', () => {
             this.updateHistoryButtons();
         });
+
+        // Initialize Bootstrap tooltips if available
+        try {
+            if (window.bootstrap && typeof window.bootstrap.Tooltip === 'function') {
+                document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+                    try { new window.bootstrap.Tooltip(el); } catch (e) {}
+                });
+            }
+        } catch (e) {}
+
+        // Notification helper using SweetAlert2 if available
+        this.notify = (message, options = {}) => {
+            const title = options.title || '';
+            const icon = options.icon || 'success';
+            const toast = options.toast !== undefined ? options.toast : true;
+            const position = options.position || 'top-end';
+            const timer = options.timer || 2000;
+            if (window.Swal && typeof window.Swal.fire === 'function') {
+                window.Swal.fire({
+                    title,
+                    text: message,
+                    icon,
+                    toast,
+                    position,
+                    showConfirmButton: false,
+                    timer,
+                    timerProgressBar: true
+                });
+            } else {
+                // fallback
+                try { alert(message); } catch (e) {}
+            }
+        };
         
         console.log('✅ Flowly initialized successfully!');
         
@@ -575,7 +608,8 @@ class FlowlyApp {
         const projectName = prompt('Nombre del proyecto:', 'Mi Diagrama');
         if (projectName) {
             this.storageManager.saveProject(projectName);
-            alert('✅ Proyecto guardado correctamente');
+            // Use SweetAlert2 notify if available
+            try { this.notify('Proyecto guardado correctamente', { icon: 'success' }); } catch (e) { alert('✅ Proyecto guardado correctamente'); }
         }
     }
 
@@ -658,7 +692,7 @@ class FlowlyApp {
                 this.canvasManager.loadFromJSON(data);
                 this.updateHistoryButtons();
             } catch (error) {
-                alert('❌ Error al cargar el archivo: ' + error.message);
+                try { this.notify('Error al cargar el archivo: ' + error.message, { icon: 'error' }); } catch (e) { alert('❌ Error al cargar el archivo: ' + error.message); }
             }
         };
         reader.readAsText(file);
@@ -679,7 +713,7 @@ class FlowlyApp {
             this.exportManager.export(format);
             console.log(`✅ Exported as ${format.toUpperCase()}`);
         } catch (error) {
-            alert('❌ Error al exportar: ' + error.message);
+            try { this.notify('Error al exportar: ' + error.message, { icon: 'error' }); } catch (e) { alert('❌ Error al exportar: ' + error.message); }
             console.error(error);
         }
     }
