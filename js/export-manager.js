@@ -6,6 +6,23 @@
 export class ExportManager {
     constructor(canvasManager) {
         this.canvasManager = canvasManager;
+        // Notification helper (use SweetAlert2 if available)
+        this.notify = (message, opts = {}) => {
+            try {
+                if (window.Swal && typeof window.Swal.fire === 'function') {
+                    window.Swal.fire({
+                        text: message,
+                        icon: opts.icon || 'warning',
+                        toast: opts.toast !== undefined ? opts.toast : true,
+                        position: opts.position || 'top-end',
+                        showConfirmButton: false,
+                        timer: opts.timer || 2000
+                    });
+                    return;
+                }
+            } catch (e) {}
+            try { alert(message); } catch (e) {}
+        };
     }
 
     /**
@@ -42,7 +59,7 @@ export class ExportManager {
         // Get the bounding box of all shapes
         const shapes = this.canvasManager.mainLayer.children;
         if (shapes.length === 0) {
-            alert('No hay elementos para exportar');
+            this.notify('No hay elementos para exportar', { icon: 'warning' });
             return;
         }
         
@@ -83,7 +100,7 @@ export class ExportManager {
         
         const shapes = this.canvasManager.mainLayer.children;
         if (shapes.length === 0) {
-            alert('No hay elementos para exportar');
+            this.notify('No hay elementos para exportar', { icon: 'warning' });
             return;
         }
         
@@ -139,7 +156,7 @@ export class ExportManager {
         
         const shapes = this.canvasManager.mainLayer.children;
         if (shapes.length === 0) {
-            alert('No hay elementos para exportar');
+            this.notify('No hay elementos para exportar', { icon: 'warning' });
             return;
         }
         
@@ -287,7 +304,7 @@ export class ExportManager {
         
         const shapes = this.canvasManager.mainLayer.children;
         if (shapes.length === 0) {
-            alert('No hay elementos para exportar');
+            this.notify('No hay elementos para exportar', { icon: 'warning' });
             return;
         }
         

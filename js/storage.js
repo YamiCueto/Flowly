@@ -52,10 +52,11 @@ export class StorageManager {
         if (project) {
             this.canvasManager.loadFromJSON(project.data);
             this.saveLastSession();
-            return true;
+            // Return the loaded project object for callers to use (e.g., show notifications)
+            return project;
         }
         
-        return false;
+        return null;
     }
 
     /**
