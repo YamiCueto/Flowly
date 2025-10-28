@@ -33,6 +33,8 @@ class FlowlyApp {
         this.storageManager = new StorageManager(this.canvasManager);
     // Connectors manager handles connections between shapes
     this.connectorsManager = new ConnectorsManager(this.canvasManager);
+        // Expose to canvas manager so it can create connectors during anchor-drag UX
+        this.canvasManager.connectorsManager = this.connectorsManager;
         
         // Setup event listeners
         this.setupToolbar();
@@ -49,7 +51,18 @@ class FlowlyApp {
 
         // Expose a small test helper to create a connector between first two shapes
         window.createTestConnector = () => {
-            const shapes = this.canvasManager.mainLayer.children.toArray().filter(n => n !== this.canvasManager.transformer && n.className !== 'Transformer');
+            // Convert the Konva collection to a proper array in a robust way
+            const children = Array.from(this.canvasManager.mainLayer.getChildren ? this.canvasManager.mainLayer.getChildren() : this.canvasManager.mainLayer.children || []);
+            // Filter out non-shape nodes (Transformer, etc.)
+            const shapes = children.filter(n => {
+                try {
+                    const cls = n.getClassName ? n.getClassName() : n.className || '';
+                    return cls !== 'Transformer';
+                } catch (e) {
+                    return true;
+                }
+            });
+
             if (shapes.length >= 2) {
                 const conn = this.connectorsManager.createConnector(shapes[0], shapes[1]);
                 console.log('Test connector created', conn);
@@ -252,6 +265,58 @@ class FlowlyApp {
                 this.canvasManager.updateSelectedProperty('stroke', color);
             }
         });
+
+        // Connector controls
+        const connectorProps = document.getElementById('connector-properties');
+        const connectorType = document.getElementById('connector-type');
+        const connectorStroke = document.getElementById('connector-stroke-color');
+        const connectorStrokeText = document.getElementById('connector-stroke-color-text');
+        const connectorWidth = document.getElementById('connector-stroke-width');
+        const connectorWidthValue = document.getElementById('connector-stroke-width-value');
+        const connectorDashed = document.getElementById('connector-dashed');
+        const connectorArrowhead = document.getElementById('connector-arrowhead');
+        const connectorCurvatureRow = document.getElementById('connector-curvature-row');
+        const connectorCurvature = document.getElementById('connector-curvature');
+        const connectorCurvatureValue = document.getElementById('connector-curvature-value');
+
+        const updateConnectorSelection = () => {
+            // Called when controls change to update the selected connector
+            const sel = this.canvasManager.selectedShapes[0];
+            if (!sel || !this.connectorsManager) return;
+            const conn = this.connectorsManager.findConnectorByArrow(sel);
+            if (!conn) return;
+
+            const opts = {
+                stroke: connectorStroke.value || '#2c3e50',
+                strokeWidth: parseInt(connectorWidth.value, 10) || 2,
+                dash: connectorDashed.checked ? [6, 4] : [],
+                type: connectorType.value,
+                curvature: parseFloat(connectorCurvature.value)
+            };
+
+            // pointer options
+            if (connectorArrowhead.checked) {
+                opts.pointerLength = conn.options.pointerLength || 10;
+                opts.pointerWidth = conn.options.pointerWidth || 10;
+            } else {
+                opts.pointerLength = 0;
+                opts.pointerWidth = 0;
+            }
+
+            this.connectorsManager.updateConnectorStyle(conn.id, opts);
+        };
+
+        // Wire events
+        connectorType.addEventListener('change', (e) => {
+            connectorCurvatureRow.style.display = (e.target.value === 'bezier') ? 'block' : 'none';
+            updateConnectorSelection();
+        });
+        connectorStroke.addEventListener('input', (e) => { connectorStrokeText.value = e.target.value; updateConnectorSelection(); });
+        connectorStrokeText.addEventListener('change', (e) => { const c = e.target.value; if (/^#[0-9A-F]{6}$/i.test(c)) { connectorStroke.value = c; updateConnectorSelection(); } });
+        connectorWidth.addEventListener('input', (e) => { connectorWidthValue.textContent = e.target.value + 'px'; updateConnectorSelection(); });
+        connectorDashed.addEventListener('change', updateConnectorSelection);
+        connectorArrowhead.addEventListener('change', updateConnectorSelection);
+        connectorCurvature.addEventListener('input', (e) => { connectorCurvatureValue.textContent = parseFloat(e.target.value).toFixed(2); updateConnectorSelection(); });
         
         // Stroke width
         document.getElementById('stroke-width').addEventListener('input', (e) => {
@@ -439,6 +504,38 @@ class FlowlyApp {
             document.getElementById('text-color-text').value = attrs.fill || '#000000';
         } else {
             textProperties.style.display = 'none';
+        }
+
+        // Connector-specific UI
+        const connectorProps = document.getElementById('connector-properties');
+        if (shape.getClassName() === 'Arrow' || shape.getClassName() === 'Line') {
+            // Show connector controls
+            connectorProps.style.display = 'block';
+            // Populate values
+            const conn = this.connectorsManager ? this.connectorsManager.findConnectorByArrow(shape) : null;
+            const stroke = attrs.stroke || '#2c3e50';
+            const strokeWidth = attrs.strokeWidth || 2;
+            const dash = attrs.dash && attrs.dash.length > 0;
+
+            document.getElementById('connector-stroke-color').value = stroke;
+            document.getElementById('connector-stroke-color-text').value = stroke;
+            document.getElementById('connector-stroke-width').value = strokeWidth;
+            document.getElementById('connector-stroke-width-value').textContent = strokeWidth + 'px';
+            document.getElementById('connector-dashed').checked = !!dash;
+
+            // type and curvature
+            const type = conn ? conn.type : (shape.getClassName() === 'Arrow' ? 'arrow' : 'line');
+            document.getElementById('connector-type').value = type;
+            document.getElementById('connector-arrowhead').checked = (type === 'arrow');
+            if (type === 'bezier') {
+                document.getElementById('connector-curvature-row').style.display = 'block';
+                document.getElementById('connector-curvature').value = conn ? (conn.options.curvature || 0.5) : 0.5;
+                document.getElementById('connector-curvature-value').textContent = (conn ? (conn.options.curvature || 0.5) : 0.5).toFixed(2);
+            } else {
+                document.getElementById('connector-curvature-row').style.display = 'none';
+            }
+        } else {
+            connectorProps.style.display = 'none';
         }
     }
 

@@ -266,6 +266,36 @@
 						<span id="opacity-value">100%</span>
 					</div>
 
+					<!-- Connector Properties -->
+					<div class="property-group" id="connector-properties" style="display: none;">
+						<h4>Conector</h4>
+						<label>Tipo de conector</label>
+						<select id="connector-type">
+							<option value="arrow">Flecha</option>
+							<option value="line">Línea</option>
+							<option value="bezier">Bezier</option>
+						</select>
+
+						<label>Color</label>
+						<div class="color-input-group">
+							<input type="color" id="connector-stroke-color" value="#2c3e50">
+							<input type="text" id="connector-stroke-color-text" value="#2c3e50" maxlength="7">
+						</div>
+
+						<label>Grosor</label>
+						<input type="range" id="connector-stroke-width" min="0" max="10" value="2" step="1">
+						<span id="connector-stroke-width-value">2px</span>
+
+						<label><input type="checkbox" id="connector-dashed"> Trazos punteados</label>
+						<label><input type="checkbox" id="connector-arrowhead" checked> Mostrar punta (flecha)</label>
+
+						<div id="connector-curvature-row" style="display:none;">
+							<label>Curvatura Bezier</label>
+							<input type="range" id="connector-curvature" min="0" max="1" step="0.05" value="0.5">
+							<span id="connector-curvature-value">0.50</span>
+						</div>
+					</div>
+
 					<!-- Text Properties (shown only for text elements) -->
 					<div class="property-group text-properties" id="text-properties" style="display: none;">
 						<label>Tamaño de Fuente</label>

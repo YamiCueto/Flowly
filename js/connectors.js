@@ -37,11 +37,14 @@ export class ConnectorsManager {
             startShape: shape1,
             endShape: shape2,
             arrow: null,
+            type: options.type || 'arrow', // 'arrow' | 'line' | 'bezier'
             options: {
                 stroke: '#2c3e50',
                 strokeWidth: 2,
                 pointerLength: 10,
                 pointerWidth: 10,
+                dash: [],
+                curvature: 0.5,
                 ...options
             }
         };
@@ -50,27 +53,42 @@ export class ConnectorsManager {
         const startPoint = this.getConnectionPoint(shape1, shape2);
         const endPoint = this.getConnectionPoint(shape2, shape1);
 
-        // Create arrow
-        const arrow = new Konva.Arrow({
-            points: [
-                startPoint.x,
-                startPoint.y,
-                endPoint.x,
-                endPoint.y
-            ],
-            ...connector.options,
-            fill: connector.options.stroke,
-            draggable: false
-        });
+        // Create the visual node according to type
+        let node;
+        if (connector.type === 'arrow') {
+            node = new Konva.Arrow({
+                points: [startPoint.x, startPoint.y, endPoint.x, endPoint.y],
+                stroke: connector.options.stroke,
+                strokeWidth: connector.options.strokeWidth,
+                pointerLength: connector.options.pointerLength,
+                pointerWidth: connector.options.pointerWidth,
+                fill: connector.options.stroke,
+                dash: connector.options.dash || [],
+                listening: true
+            });
+        } else {
+            // line or bezier (use Konva.Line with tension for bezier-like curve)
+            node = new Konva.Line({
+                points: [startPoint.x, startPoint.y, endPoint.x, endPoint.y],
+                stroke: connector.options.stroke,
+                strokeWidth: connector.options.strokeWidth,
+                dash: connector.options.dash || [],
+                tension: connector.type === 'bezier' ? connector.options.curvature || 0.5 : 0,
+                lineCap: 'round',
+                lineJoin: 'round',
+                listening: true
+            });
+            // For lines, we may optionally add arrowhead later; omitted for simplicity
+        }
 
-        connector.arrow = arrow;
+        connector.arrow = node;
         this.connectors.push(connector);
 
         // Add to canvas
-        this.canvasManager.addShape(arrow);
+        this.canvasManager.addShape(node);
 
-        // Move to back
-        arrow.moveToBottom();
+        // Move to bottom (under shapes)
+        node.moveToBottom();
 
         // Setup update listeners
         this.setupConnectorListeners(connector);
@@ -136,12 +154,14 @@ export class ConnectorsManager {
                 connector.startShape
             );
 
-            connector.arrow.points([
-                startPoint.x,
-                startPoint.y,
-                endPoint.x,
-                endPoint.y
-            ]);
+            if (connector.arrow && typeof connector.arrow.points === 'function') {
+                connector.arrow.points([
+                    startPoint.x,
+                    startPoint.y,
+                    endPoint.x,
+                    endPoint.y
+                ]);
+            }
 
             this.canvasManager.mainLayer.draw();
         };
@@ -191,9 +211,88 @@ export class ConnectorsManager {
     updateConnectorStyle(connectorId, options) {
         const connector = this.connectors.find(c => c.id === connectorId);
         if (connector) {
-            connector.arrow.setAttrs(options);
+            // Merge stored options
+            connector.options = { ...connector.options, ...options };
+
+            // If type changed, recreate visual node
+            if (options.type && options.type !== connector.type) {
+                const oldNode = connector.arrow;
+                const newType = options.type;
+                connector.type = newType;
+
+                // create new node similar to createConnector's logic
+                const startPoint = this.getConnectionPoint(connector.startShape, connector.endShape);
+                const endPoint = this.getConnectionPoint(connector.endShape, connector.startShape);
+                let newNode;
+                if (newType === 'arrow') {
+                    newNode = new Konva.Arrow({
+                        points: [startPoint.x, startPoint.y, endPoint.x, endPoint.y],
+                        stroke: connector.options.stroke,
+                        strokeWidth: connector.options.strokeWidth,
+                        pointerLength: connector.options.pointerLength,
+                        pointerWidth: connector.options.pointerWidth,
+                        fill: connector.options.stroke,
+                        dash: connector.options.dash || [],
+                        listening: true
+                    });
+                } else {
+                    newNode = new Konva.Line({
+                        points: [startPoint.x, startPoint.y, endPoint.x, endPoint.y],
+                        stroke: connector.options.stroke,
+                        strokeWidth: connector.options.strokeWidth,
+                        dash: connector.options.dash || [],
+                        tension: newType === 'bezier' ? connector.options.curvature || 0.5 : 0,
+                        lineCap: 'round',
+                        lineJoin: 'round',
+                        listening: true
+                    });
+                }
+
+                // Replace node on canvas
+                try { oldNode.destroy(); } catch (e) {}
+                connector.arrow = newNode;
+                this.canvasManager.addShape(newNode);
+                newNode.moveToBottom();
+                // Rewire listeners by calling setupConnectorListeners again
+                this.setupConnectorListeners(connector);
+            } else {
+                // Simple attribute update
+                if (connector.arrow && typeof connector.arrow.setAttrs === 'function') {
+                    connector.arrow.setAttrs({
+                        stroke: connector.options.stroke,
+                        strokeWidth: connector.options.strokeWidth,
+                        dash: connector.options.dash || []
+                    });
+                    // Arrow-specific
+                    if (connector.type === 'arrow') {
+                        try {
+                            connector.arrow.pointerLength(connector.options.pointerLength || 10);
+                            connector.arrow.pointerWidth(connector.options.pointerWidth || 10);
+                            connector.arrow.fill(connector.options.stroke);
+                        } catch (e) {}
+                    }
+                    // Bezier curvature
+                    if (connector.type === 'bezier' || connector.type === 'line') {
+                        try {
+                            if (typeof connector.arrow.tension === 'function') {
+                                connector.arrow.tension(connector.options.curvature || 0);
+                            } else if ('tension' in connector.arrow.attrs) {
+                                connector.arrow.setAttrs({ tension: connector.options.curvature || 0 });
+                            }
+                        } catch (e) {}
+                    }
+                }
+            }
+
             this.canvasManager.mainLayer.draw();
         }
+    }
+
+    /**
+     * Find a connector by its visual node (arrow/line)
+     */
+    findConnectorByArrow(node) {
+        return this.connectors.find(c => c.arrow === node) || null;
     }
 
     /**
@@ -225,5 +324,18 @@ export class ConnectorsManager {
                 this.createConnector(startShape, endShape, connectorData.options);
             }
         });
+    }
+
+    /**
+     * Clear all connectors
+     */
+    clearAll() {
+        this.connectors.forEach(c => {
+            try { c.arrow.destroy(); } catch (e) { /* ignore */ }
+        });
+        this.connectors = [];
+        if (this.canvasManager && this.canvasManager.mainLayer) {
+            this.canvasManager.mainLayer.draw();
+        }
     }
 }
