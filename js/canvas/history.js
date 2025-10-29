@@ -1,7 +1,9 @@
+import { saveHistoryImpl, undoImpl, redoImpl, canUndoImpl, canRedoImpl } from './history.impl.js';
+
 export function attachHistory(canvas) {
-    const proto = Object.getPrototypeOf(canvas);
-    const names = ['saveHistory','undo','redo','canUndo','canRedo'];
-    names.forEach(n => {
-        if (typeof proto[n] === 'function') canvas[n] = proto[n].bind(canvas);
-    });
+    canvas.saveHistory = () => saveHistoryImpl(canvas);
+    canvas.undo = () => undoImpl(canvas);
+    canvas.redo = () => redoImpl(canvas);
+    canvas.canUndo = () => canUndoImpl(canvas);
+    canvas.canRedo = () => canRedoImpl(canvas);
 }

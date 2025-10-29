@@ -319,47 +319,7 @@ export class CanvasManager {
 	/**
 	 * History management
 	 */
-	saveHistory() {
-		// Remove any history after current step
-		this.history = this.history.slice(0, this.historyStep + 1);
-
-		// Add current state
-		const state = this.toJSON();
-		this.history.push(state);
-
-		// Limit history size
-		if (this.history.length > this.maxHistory) {
-			this.history.shift();
-		} else {
-			this.historyStep++;
-		}
-
-		this.emit('historyChanged');
-	}
-
-	undo() {
-		if (!this.canUndo()) return;
-
-		this.historyStep--;
-		this.loadFromJSON(this.history[this.historyStep], false);
-		this.emit('historyChanged');
-	}
-
-	redo() {
-		if (!this.canRedo()) return;
-
-		this.historyStep++;
-		this.loadFromJSON(this.history[this.historyStep], false);
-		this.emit('historyChanged');
-	}
-
-	canUndo() {
-		return this.historyStep > 0;
-	}
-
-	canRedo() {
-		return this.historyStep < this.history.length - 1;
-	}
+	// saveHistory/undo/redo/canUndo/canRedo are provided by js/canvas/history.impl.js via attachHistory
 
 	/**
 	 * Clear canvas
