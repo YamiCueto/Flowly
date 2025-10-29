@@ -201,101 +201,112 @@ export class ExportManager {
      * Convert Konva shape to SVG element
      */
     shapeToSVG(shape, offsetX, offsetY) {
-        const attrs = shape.attrs;
+        const attrs = shape.attrs || {};
         const className = shape.getClassName();
-        
-        const x = shape.x() - offsetX;
-        const y = shape.y() - offsetY;
+
+        // Use the absolute transform matrix so rotated/scaled shapes are preserved
+        let matrix = [1,0,0,1,0,0];
+        try {
+            const m = shape.getAbsoluteTransform().getMatrix();
+            // Konva returns a Transform which exposes getMatrix() as array [a, b, c, d, e, f]
+            matrix = m;
+        } catch (e) {
+            // fallback to identity
+        }
+
+        const transform = `matrix(${matrix.map(n => Number(n).toFixed(6)).join(' ')})`;
+
         const fill = attrs.fill || 'none';
         const stroke = attrs.stroke || 'none';
         const strokeWidth = attrs.strokeWidth || 0;
         const opacity = attrs.opacity !== undefined ? attrs.opacity : 1;
-        
+
         let svg = '';
-        
+
         switch(className) {
-            case 'Rect':
-                const width = shape.width() * shape.scaleX();
-                const height = shape.height() * shape.scaleY();
+            case 'Rect': {
+                const width = shape.width();
+                const height = shape.height();
                 const cornerRadius = attrs.cornerRadius || 0;
-                svg = `<rect x="${x}" y="${y}" width="${width}" height="${height}" rx="${cornerRadius}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}" />`;
+                svg = `<rect x="0" y="0" width="${width}" height="${height}" rx="${cornerRadius}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}" transform="${transform}" />`;
                 break;
-                
-            case 'Circle':
-                const radius = attrs.radius * shape.scaleX();
-                svg = `<circle cx="${x}" cy="${y}" r="${radius}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}" />`;
+            }
+            case 'Circle': {
+                const radius = attrs.radius || 0;
+                svg = `<circle cx="0" cy="0" r="${radius}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}" transform="${transform}" />`;
                 break;
-                
-            case 'Ellipse':
-                const rx = attrs.radiusX * shape.scaleX();
-                const ry = attrs.radiusY * shape.scaleY();
-                svg = `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}" />`;
+            }
+            case 'Ellipse': {
+                const rx = attrs.radiusX || 0;
+                const ry = attrs.radiusY || 0;
+                svg = `<ellipse cx="0" cy="0" rx="${rx}" ry="${ry}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}" transform="${transform}" />`;
                 break;
-                
-            case 'RegularPolygon':
-                const sides = attrs.sides;
-                const polygonRadius = attrs.radius * shape.scaleX();
+            }
+            case 'RegularPolygon': {
+                const sides = attrs.sides || 3;
+                const polygonRadius = attrs.radius || 0;
                 const rotation = (attrs.rotation || 0) * Math.PI / 180;
                 let points = '';
-                
                 for (let i = 0; i < sides; i++) {
                     const angle = (i * 2 * Math.PI / sides) + rotation;
-                    const px = x + polygonRadius * Math.cos(angle);
-                    const py = y + polygonRadius * Math.sin(angle);
+                    const px = polygonRadius * Math.cos(angle);
+                    const py = polygonRadius * Math.sin(angle);
                     points += `${px},${py} `;
                 }
-                
-                svg = `<polygon points="${points.trim()}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}" />`;
+                svg = `<polygon points="${points.trim()}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}" transform="${transform}" />`;
                 break;
-                
-            case 'Line':
+            }
+            case 'Line': {
                 const linePoints = attrs.points || [];
                 let pathData = '';
                 for (let i = 0; i < linePoints.length; i += 2) {
-                    const px = x + linePoints[i];
-                    const py = y + linePoints[i + 1];
+                    const px = linePoints[i];
+                    const py = linePoints[i + 1];
                     pathData += i === 0 ? `M ${px} ${py}` : ` L ${px} ${py}`;
                 }
-                svg = `<path d="${pathData}" fill="none" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}" stroke-linecap="round" stroke-linejoin="round" />`;
+                svg = `<path d="${pathData}" fill="none" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}" stroke-linecap="round" stroke-linejoin="round" transform="${transform}" />`;
                 break;
-                
-            case 'Arrow':
+            }
+            case 'Arrow': {
                 const arrowPoints = attrs.points || [];
                 let arrowPath = '';
                 for (let i = 0; i < arrowPoints.length; i += 2) {
-                    const px = x + arrowPoints[i];
-                    const py = y + arrowPoints[i + 1];
+                    const px = arrowPoints[i];
+                    const py = arrowPoints[i + 1];
                     arrowPath += i === 0 ? `M ${px} ${py}` : ` L ${px} ${py}`;
                 }
-                
-                // Add arrowhead
-                const lastX = x + arrowPoints[arrowPoints.length - 2];
-                const lastY = y + arrowPoints[arrowPoints.length - 1];
-                const prevX = x + arrowPoints[arrowPoints.length - 4];
-                const prevY = y + arrowPoints[arrowPoints.length - 3];
-                
-                const angle = Math.atan2(lastY - prevY, lastX - prevX);
-                const arrowLength = attrs.pointerLength || 10;
-                const arrowWidth = attrs.pointerWidth || 10;
-                
-                const arrowTip1X = lastX - arrowLength * Math.cos(angle - Math.PI / 6);
-                const arrowTip1Y = lastY - arrowLength * Math.sin(angle - Math.PI / 6);
-                const arrowTip2X = lastX - arrowLength * Math.cos(angle + Math.PI / 6);
-                const arrowTip2Y = lastY - arrowLength * Math.sin(angle + Math.PI / 6);
-                
-                svg = `<path d="${arrowPath}" fill="none" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}" stroke-linecap="round" stroke-linejoin="round" />`;
-                svg += `<polygon points="${lastX},${lastY} ${arrowTip1X},${arrowTip1Y} ${arrowTip2X},${arrowTip2Y}" fill="${stroke}" opacity="${opacity}" />`;
+
+                // Add arrowhead using last two points if available
+                let arrowHead = '';
+                if (arrowPoints.length >= 4) {
+                    const lastX = arrowPoints[arrowPoints.length - 2];
+                    const lastY = arrowPoints[arrowPoints.length - 1];
+                    const prevX = arrowPoints[arrowPoints.length - 4];
+                    const prevY = arrowPoints[arrowPoints.length - 3];
+                    const angle = Math.atan2(lastY - prevY, lastX - prevX);
+                    const arrowLength = attrs.pointerLength || 10;
+                    const arrowTip1X = lastX - arrowLength * Math.cos(angle - Math.PI / 6);
+                    const arrowTip1Y = lastY - arrowLength * Math.sin(angle - Math.PI / 6);
+                    const arrowTip2X = lastX - arrowLength * Math.cos(angle + Math.PI / 6);
+                    const arrowTip2Y = lastY - arrowLength * Math.sin(angle + Math.PI / 6);
+                    arrowHead = `<polygon points="${lastX},${lastY} ${arrowTip1X},${arrowTip1Y} ${arrowTip2X},${arrowTip2Y}" fill="${stroke}" opacity="${opacity}" transform="${transform}" />`;
+                }
+
+                svg = `<path d="${arrowPath}" fill="none" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}" stroke-linecap="round" stroke-linejoin="round" transform="${transform}" />`;
+                svg += arrowHead;
                 break;
-                
-            case 'Text':
+            }
+            case 'Text': {
                 const text = attrs.text || '';
                 const fontSize = attrs.fontSize || 16;
                 const fontFamily = attrs.fontFamily || 'Arial';
                 const textFill = attrs.fill || '#000000';
-                svg = `<text x="${x}" y="${y + fontSize}" font-size="${fontSize}" font-family="${fontFamily}" fill="${textFill}" opacity="${opacity}">${this.escapeXml(text)}</text>`;
+                // place text at local origin; vertical offset by fontSize for baseline
+                svg = `<text x="0" y="${fontSize}" font-size="${fontSize}" font-family="${fontFamily}" fill="${textFill}" opacity="${opacity}" transform="${transform}">${this.escapeXml(text)}</text>`;
                 break;
+            }
         }
-        
+
         return svg + '\n';
     }
 
