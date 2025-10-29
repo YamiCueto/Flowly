@@ -191,7 +191,10 @@ export class ExportManager {
         const blob = new Blob([svg], { type: 'image/svg+xml' });
         const url = URL.createObjectURL(blob);
         this.downloadFile(url, 'diagram.svg');
-        URL.revokeObjectURL(url);
+        // Revoke the object URL after a short delay to ensure the download has started
+        setTimeout(() => {
+            try { URL.revokeObjectURL(url); } catch (e) { /* ignore */ }
+        }, 1500);
     }
 
     /**
@@ -333,8 +336,12 @@ export class ExportManager {
         });
         
         // Create PDF using jsPDF
+        if (!window.jspdf || !window.jspdf.jsPDF) {
+            this.notify('jsPDF no está disponible. Instala/importe jsPDF para exportar a PDF.', { icon: 'error' });
+            return;
+        }
+
         const { jsPDF } = window.jspdf;
-        
         // Determine page orientation
         const orientation = width > height ? 'landscape' : 'portrait';
         const pdf = new jsPDF(orientation, 'pt', 'a4');
@@ -361,7 +368,7 @@ export class ExportManager {
     exportJSON() {
         const data = this.canvasManager.toJSON();
         data.exportDate = new Date().toISOString();
-        data.appName = 'Flowly ';
+        data.appName = 'Flowly';
         
         const json = JSON.stringify(data, null, 2);
         const blob = new Blob([json], { type: 'application/json' });
