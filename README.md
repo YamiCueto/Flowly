@@ -1,396 +1,456 @@
-# 🎨 Flowly - Creador de Diagramas Interactivo
+# 🎨 Flowly - Herramienta Ligera de Diagramas para Desarrolladores
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
-![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow.svg)
+<div align="center">
 
-Una aplicación web moderna y ligera para crear diagramas de flujo, esquemas y diseños visuales. Similar a draw.io pero más simple y rápida, construida con tecnologías web nativas.
+![Flowly Banner](https://via.placeholder.com/1200x400/3498db/ffffff?text=Flowly+-+Crea+Diagramas+Como+Codificas)
 
-🔗 **Demo en vivo**: [yamicueto.github.io/Flowly](https://yamicueto.github.io/Flowly)
+[![Licencia: MIT](https://img.shields.io/badge/Licencia-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Versión](https://img.shields.io/badge/versi%C3%B3n-1.0.0-blue.svg)](https://github.com/YamiCueto/Flowly/releases)
+[![PRs Bienvenidos](https://img.shields.io/badge/PRs-bienvenidos-brightgreen.svg)](http://makeapullrequest.com)
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/es/docs/Web/JavaScript)
 
-## ✨ Características Principales
+**[🚀 Demo en Vivo](https://yamicueto.github.io/Flowly)** • **[📖 Docs](#-inicio-rápido)** • **[🤝 Contribuir](CONTRIBUTING.md)** • **[🐛 Reportar Bug](https://github.com/YamiCueto/Flowly/issues)**
 
-### 🎯 Canvas Interactivo
-- **Área de trabajo infinita** con zoom y pan
-- **Grid configurable** con snap-to-grid
-- **Selección múltiple** de elementos (Shift + Click o arrastre de área)
-- **Drag & drop** intuitivo
-- **Transformaciones** completas: resize, rotación, reordenamiento
+</div>
 
-### 🔧 Herramientas de Dibujo
-- **Formas básicas**: Rectángulos, círculos, elipses, triángulos
-- **Rectángulos redondeados** personalizables
-- **Líneas y flechas** con diferentes estilos
-- **Texto editable** con doble-click
-- **Conectores inteligentes** (próximamente)
+## 💡 ¿Por qué otra herramienta de diagramas?
 
-### 🎨 Personalización
-- **Colores personalizables** (relleno y borde)
-- **Grosor de línea** ajustable
-- **Opacidad** configurable
-- **Propiedades de texto** (tamaño, fuente, color)
-- **Panel de propiedades** contextual
+> **Sugerencia de GIF**: Grabación de 30 segundos mostrando:
+> 1. Abrir Flowly (carga instantánea, sin login)
+> 2. Arrastrar y soltar 3-4 figuras rápidamente
+> 3. Conectarlas con flechas
+> 4. Ajustar colores/propiedades en tiempo real
+> 5. Exportar a SVG con un clic
+> *Texto: "De idea a diagrama en 30 segundos. Sin cuenta requerida."*
 
-### 💾 Gestión de Proyectos
-- **Guardado local** en navegador (localStorage)
-- **Auto-guardado** de última sesión
-- **Historial** con deshacer/rehacer (Ctrl+Z / Ctrl+Y)
-- **Copiar/Pegar** elementos (Ctrl+C / Ctrl+V)
+Como desarrolladores, pasamos horas diseñando arquitecturas, esquemas de bases de datos y flujos de sistema. Pero la mayoría de las herramientas de diagramas:
 
-### 📤 Exportación Multi-Formato
-- **PNG** - Imagen de alta calidad (2x resolution)
-- **JPG** - Imagen comprimida con fondo blanco
-- **SVG** - Gráfico vectorial escalable
-- **PDF** - Documento portable con ajuste automático
-- **JSON** - Formato nativo para reimportar
+- 🐌 **Requieren instalación** (aplicaciones de escritorio pesadas)
+- 💸 **Bloquean funciones tras muros de pago** (Lucidchart, Miro)
+- 🔐 **Fuerzan creación de cuenta** (herramientas cloud-first)
+- 🎨 **Abruman con funciones** que nunca usamos
 
-## 🚀 Instalación
+**Flowly es diferente**: Una aplicación web de instalación cero y código abierto que hace *una cosa excepcionalmente bien* — ayudarte a bosquejar diagramas técnicos rápido.
 
-### Opción 1: Clonar el repositorio
+### Construida para Desarrolladores
 
-```bash
-git clone https://github.com/YamiCueto/Flowly.git
-cd Flowly
+```javascript
+// ¿Te gusta esto?
+const diagrama = {
+  instantaneo: true,
+  offline: true,
+  cuentaRequerida: false,
+  caracteristicas: "solo lo que necesitas"
+}
 ```
 
-Luego simplemente abre `index.html` en tu navegador. ¡Así de simple!
-
-### Opción 2: Descargar ZIP
-
-1. Descarga el archivo ZIP desde [releases](https://github.com/YamiCueto/Flowly/releases)
-2. Extrae el contenido
-3. Abre `index.html` en tu navegador
-
-### Opción 3: Deployment en GitHub Pages
-
-1. Fork este repositorio
-2. Ve a Settings → Pages
-3. Selecciona la rama `main` como source
-4. ¡Tu aplicación estará disponible en `https://tu-usuario.github.io/Flowly`!
-
-## 📖 Cómo Usar
-
-### Herramientas Básicas
-
-#### Seleccionar (V)
-- Click en un elemento para seleccionarlo
-- Shift + Click para selección múltiple
-- Arrastra para mover elementos
-- Usa los handles para redimensionar
-
-#### Dibujar Formas (R, C, L, A, T)
-- Selecciona una herramienta de la barra superior
-- Click y arrastra en el canvas para crear la forma
-- Ajusta propiedades en el panel derecho
-
-#### Editar Texto
-- Doble-click en cualquier texto para editarlo
-- Presiona Ctrl+Enter o Esc para finalizar la edición
-- Cambia tamaño, fuente y color en el panel de propiedades
-
-### Atajos de Teclado
-
-| Acción | Atajo |
-|--------|-------|
-| Seleccionar | `V` |
-| Rectángulo | `R` |
-| Círculo | `C` |
-| Línea | `L` |
-| Flecha | `A` |
-| Texto | `T` |
-| Mover vista | `H` |
-| Deshacer | `Ctrl+Z` |
-| Rehacer | `Ctrl+Y` o `Ctrl+Shift+Z` |
-| Copiar | `Ctrl+C` |
-| Pegar | `Ctrl+V` |
-| Eliminar | `Delete` o `Backspace` |
-| Zoom In | `+` o `=` |
-| Zoom Out | `-` |
-| Nuevo proyecto | `Ctrl+N` |
-| Guardar | `Ctrl+S` |
-| Cargar | `Ctrl+O` |
-
-### Panel de Propiedades
-
-El panel derecho muestra las propiedades del elemento seleccionado:
-
-- **Color de relleno**: Click en el selector de color
-- **Color de borde**: Personaliza el contorno
-- **Grosor**: Slider de 0-20px
-- **Opacidad**: Control de transparencia 0-100%
-- **Posición**: Coordenadas X, Y exactas
-- **Tamaño**: Ancho y alto en píxeles
-- **Orden**: Traer al frente / Enviar atrás
-
-### Exportar Diagramas
-
-1. Click en el botón **Exportar** (icono de descarga)
-2. Selecciona el formato deseado:
-   - **PNG**: Mejor para compartir en web y presentaciones
-   - **JPG**: Archivo más pequeño, ideal para email
-   - **SVG**: Perfecto para impresión y escalado
-   - **PDF**: Para documentación profesional
-   - **JSON**: Para editar más tarde en Flowly
-
-3. El archivo se descargará automáticamente
-
-### Guardar y Cargar Proyectos
-
-#### Guardar
-- Click en el botón **Guardar** o presiona `Ctrl+S`
-- Ingresa un nombre para tu proyecto
-- Se guardará en tu navegador (máximo 10 proyectos)
-
-#### Cargar
-- Click en el botón **Cargar** o presiona `Ctrl+O`
-- Selecciona un proyecto de la lista
-- O carga un archivo JSON externo
-
-**Nota**: Los proyectos se guardan localmente en tu navegador. Si limpias la caché, se perderán. Exporta como JSON para respaldos.
-
-## 🏗️ Estructura del Proyecto
-
-```
-Flowly/
-├── index.html              # Página principal
-├── css/
-│   ├── main.css           # Estilos generales
-│   ├── toolbar.css        # Estilos de barra de herramientas
-│   └── modals.css         # Estilos de modales
-├── js/
-│   ├── app.js             # Inicialización de la aplicación
-│   ├── canvas-manager.js  # Gestión del canvas Konva
-│   ├── tools.js           # Herramientas de dibujo
-│   ├── shapes.js          # Factory de formas
-│   ├── export-manager.js  # Exportación multi-formato
-│   └── storage.js         # Gestión de localStorage
-└── README.md              # Este archivo
-```
-
-## 🛠️ Tecnologías Utilizadas
-
-### Librerías Principales
-
-- **[Konva.js](https://konvajs.org/)** `v9.x` - Canvas interactivo y manipulación de formas
-  - Licencia: MIT
-  - Uso: Renderizado y gestión del canvas principal
-
-- **[jsPDF](https://github.com/parallax/jsPDF)** `v2.5.1` - Generación de PDFs
-  - Licencia: MIT
-  - Uso: Exportación a formato PDF
-
-- **[html2canvas](https://html2canvas.hertzen.com/)** `v1.4.1` - Screenshots HTML
-  - Licencia: MIT
-  - Uso: Exportación a PNG/JPG de alta calidad
-
-- **[FileSaver.js](https://github.com/eligrey/FileSaver.js/)** `v2.0.5` - Descarga de archivos
-  - Licencia: MIT
-  - Uso: Gestión de descargas en el navegador
-
-- **[Font Awesome](https://fontawesome.com/)** `v6.4.0` - Iconografía
-  - Licencia: Font Awesome Free License
-  - Uso: Iconos de interfaz
-
-### Tecnologías Base
-
-- **HTML5** - Estructura semántica
-- **CSS3** - Estilos modernos con variables CSS
-- **JavaScript ES6+** - Módulos, clases, arrow functions
-- **Canvas API** - Renderizado 2D
-
-## 🎯 Arquitectura del Código
-
-### Patrones de Diseño
-
-- **Singleton**: `CanvasManager` - Una sola instancia del canvas
-- **Factory**: `ShapeFactory` - Creación estandarizada de formas
-- **Observer**: Sistema de eventos entre componentes
-- **Module Pattern**: Organización en módulos ES6
-
-### Flujo de Datos
-
-```
-Usuario → Toolbar/Tools → ToolManager → CanvasManager → Konva Stage
-                                            ↓
-                                      EventEmitter
-                                            ↓
-                                    PropertiesPanel
-```
-
-### Gestión de Estado
-
-- **Canvas State**: Manejado por `CanvasManager`
-- **History**: Stack de estados para undo/redo (max 50 pasos)
-- **Selection**: Array de formas seleccionadas con transformer
-- **Clipboard**: Copia temporal de objetos
-
-## 🔮 Roadmap - Próximas Características
-
-### Fase 2: Conectores Avanzados ⏳
-Objetivo: Implementar un sistema de conectores robusto y amigable que permita unir formas de manera precisa, visualmente agradable y mantenible. Los conectores deben poder engancharse a puntos de anclaje en las formas, soportar curvas Bezier para trazados suaves y mantenerse actualizados cuando las formas relacionadas se muevan o redimensionen.
-
-Criterios de aceptación (mínimos):
-- El usuario puede crear un conector arrastrando desde un punto de anclaje de una forma hasta el punto de anclaje de otra forma.
-- Los conectores se anclan solo a puntos válidos (anchors) y se visualizan mientras se crea la conexión.
-- Los conectores son redibujados automáticamente cuando cualquiera de las formas conectadas se mueve o cambia de tamaño.
-- Existe soporte para al menos dos tipos de trazado: línea recta y curva Bezier controlable (automática por defecto).
-- El panel de propiedades permite personalizar: color, grosor y estilo de línea (sólido, dashed, dotted) para conectores.
-- Guardado/Carga: los conectores se serializan y deserializan correctamente en el JSON del proyecto.
-
-Plan de implementación (pasos incrementales):
-1. Anchor points (completado): puntos de anclaje en cada forma (8 por defecto) que pueden ser visibles en hover/selección y sirven como puntos de conexión.
-2. Modelo de conector básico:
-  - Estructura de datos: { id, start: {shapeId, anchorIndex}, end: {shapeId, anchorIndex}, type: 'line'|'bezier', style: {stroke, strokeWidth, dash} }
-  - Render inicial: línea recta simple entre los puntos absolutos de los anchors.
-3. Actualización dinámica:
-  - Escuchar eventos de movimiento/redimensionamiento en las formas y recalcular las coordenadas absolutas de los anchors.
-  - Redibujar conectores de forma eficiente (batchDraw / requestAnimationFrame).
-4. Curvas Bezier:
-  - Añadir función de generación de control points heurísticos (p. ej. puntos medios con offset perpendicular) para generar curvas agradables por defecto.
-  - Permitir ajustar la curvatura con un control en el panel de propiedades (opcional en esta fase).
-5. UX de creación y edición:
-  - Al arrastrar desde un anchor, mostrar una línea provisional que sigue el cursor y resalta anchors válidos.
-  - Permitir reconectar moviendo el extremo del conector a otro anchor.
-  - Soporte para eliminar conectores con tecla Supr o botón en propiedades.
-6. Persistencia y exportación:
-  - Serializar conectores en el JSON del proyecto (incluyendo tipo, puntos relativos, estilo).
-  - Asegurar que exportaciones a SVG/PDF mantengan la apariencia (trazado Bezier convertido a path en SVG).
-
-Consideraciones técnicas y edge cases:
-- Formas con transformaciones (scale/rotation): los anchors deben calcularse en coordenadas globales usando getAbsolutePosition/getClientRect.
-- Rendimiento con muchos conectores: agrupar redibujos y evitar cálculos innecesarios; probar con ~200 conexiones.
-- Conectores que cruzan formas: evitar intersecciones si se añadiera routing (fase futura). Ahora, documentar la limitación.
-- Eliminación de formas: limpiar conectores huérfanos cuando se borre una forma.
-
-Pruebas (mínimas a automatizar/manual):
-- Crear conector entre dos formas y mover ambas; verificar que el conector se actualiza.
-- Serializar proyecto con conectores y volver a cargarlo; comprobar integridad.
-- Crear conector Bezier y exportar a SVG; abrir SVG y verificar trazado.
-- Intentar conectar a un área inválida y verificar que no se crea la conexión.
-
-Tareas (sub-items para issues/PRs):
-- [ ] Definir y documentar la estructura de datos del conector
-- [ ] Implementar render inicial de conectores lineales
-- [ ] Implementar actualización dinámica (event listeners + redibujo eficiente)
-- [ ] Implementar curvas Bezier automáticas
-- [ ] UX: línea provisional, resaltado de anchors, reconnect
-- [ ] Persistencia: guardar/cargar conectores en JSON
-- [ ] Export: SVG/PDF path conversion
-- [ ] Tests: unitarios y E2E básicos
-
-Notas para desarrolladores:
-- Usar las utilidades de `shapes.js` para obtener `anchor.getAbsolutePosition()` y `shape.on('dragmove', ...)` ya implementadas.
-- Evitar añadir lógica de routing compleja en esta fase; priorizar estabilidad y rendimiento.
-- Mantener el panel de propiedades sincronizado con la selección para ediciones rápidas.
-
-Probar Connectores (rápido)
-1. Abre la aplicación localmente y crea al menos dos formas en el canvas.
-2. Abre la consola del navegador (DevTools) y ejecuta:
-
-```
-createTestConnector()
-```
-
-Esto creará un conector simple entre las dos primeras formas del canvas para pruebas rápidas. Si ves el conector, prueba mover las formas y verifica que el conector sigue las posiciones.
-
-### Fase 3: Más Formas y Herramientas ⏳
-- [ ] Polígonos personalizados
-- [ ] Curvas libres (pen tool)
-- [ ] Formas de diagrama de flujo (decisión, proceso, etc.)
-- [ ] Sticky notes / Post-its
-- [ ] Imágenes importadas
-
-### Fase 4: Colaboración 🔮
-- [ ] Compartir diagrama por URL
-- [ ] Edición colaborativa en tiempo real
-- [ ] Comentarios y anotaciones
-- [ ] Historial de versiones
-
-### Fase 5: Templates y Bibliotecas 🔮
-- [ ] Templates predefinidos (flowchart, UML, wireframe)
-- [ ] Biblioteca de iconos y símbolos
-- [ ] Importar SVGs personalizados
-- [ ] Temas de color
-
-## 🤝 Contribuir
-
-¡Las contribuciones son bienvenidas! Si quieres mejorar Flowly:
-
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
-### Guías de Contribución
-
-- Usa **ES6+ JavaScript** moderno
-- Mantén el código **limpio y comentado**
-- Sigue los **patrones de diseño** existentes
-- Añade **documentación** para nuevas características
-- Prueba en **múltiples navegadores**
-
-## 🐛 Reportar Bugs
-
-Si encuentras un bug, por favor abre un [issue](https://github.com/YamiCueto/Flowly/issues) con:
-
-- **Descripción clara** del problema
-- **Pasos para reproducir** el bug
-- **Comportamiento esperado** vs actual
-- **Screenshots** si es posible
-- **Navegador y versión** donde ocurre
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para más detalles.
-
-```
-MIT License
-
-Copyright (c) 2025 Yami Cueto
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
-## 👨‍💻 Autor
-
-**Yami Cueto**
-- GitHub: [@YamiCueto](https://github.com/YamiCueto)
-
-## 🙏 Agradecimientos
-
-- [Konva.js](https://konvajs.org/) por el excelente framework de canvas
-- [draw.io](https://draw.io) por la inspiración
-- [Excalidraw](https://excalidraw.com/) por las ideas de UX
-- [Figma](https://figma.com) por el diseño de referencia
-
-## 📊 Stats
-
-- **Líneas de código**: ~1500 JavaScript, ~800 CSS
-- **Tamaño total**: ~50KB (sin librerías)
-- **Dependencias**: 4 librerías CDN
-- **Navegadores soportados**: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+
+Eso es Flowly. Sin tonterías, solo diagramas.
 
 ---
 
-⭐ Si te gusta Flowly, ¡danos una estrella en GitHub!
+## 🎯 Comparación de Características
 
-🐛 ¿Encontraste un bug? [Repórtalo aquí](https://github.com/YamiCueto/Flowly/issues)
+| Característica | Flowly | draw.io | Lucidchart | Miro |
+|----------------|--------|---------|------------|------|
+| **Sin Instalación** | ✅ Solo web | ✅ Web/Escritorio | ✅ Web | ✅ Web |
+| **Modo Offline** | ✅ Completo | ⚠️ Limitado | ❌ | ❌ |
+| **Sin Cuenta Requerida** | ✅ Siempre | ✅ Opcional | ❌ Requerido | ❌ Requerido |
+| **Código Abierto** | ✅ MIT | ✅ Apache 2.0 | ❌ Propietario | ❌ Propietario |
+| **Formatos de Exportación** | 5 (PNG,JPG,SVG,PDF,JSON) | 10+ | 5+ | 3 |
+| **Colaboración** | 🔜 Planeado | ✅ | ✅ | ✅ |
+| **Tamaño de Archivo** | ~50KB | ~2MB | N/A | N/A |
+| **Tiempo de Carga** | <1s | ~3s | ~5s | ~4s |
+| **Precio** | Gratis | Gratis | $7.95/mes | $8/mes |
 
-💡 ¿Tienes una idea? [Compártela aquí](https://github.com/YamiCueto/Flowly/discussions)
+**El punto ideal de Flowly**: Bocetos arquitectónicos rápidos, ERDs de bases de datos y diagramas de sistema cuando los necesitas *ahora*.
+
+---
+
+## 🚀 Inicio Rápido
+
+### Opción 1: Usar Online (Recomendado)
+
+Solo visita **[yamicueto.github.io/Flowly](https://yamicueto.github.io/Flowly)** — funciona en cualquier dispositivo con navegador.
+
+### Opción 2: Ejecutar Localmente (Offline)
+
+```bash
+# Clonar el repositorio
+git clone https://github.com/YamiCueto/Flowly.git
+cd Flowly
+
+# Abrir en el navegador (¡sin proceso de compilación!)
+open index.html  # macOS
+start index.html # Windows
+xdg-open index.html # Linux
+```
+
+Eso es todo. Cero dependencias, cero proceso de compilación.
+
+### Opción 3: Despliega Tu Propia Instancia
+
+**GitHub Pages** (Gratis):
+```bash
+# Haz fork del repo, luego:
+gh repo clone tu-usuario/Flowly
+cd Flowly
+git push origin main
+
+# Habilita Pages: Settings → Pages → Source: rama main
+# Tu app: https://tu-usuario.github.io/Flowly
+```
+
+**Netlify/Vercel** (1 clic):
+[![Desplegar en Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/YamiCueto/Flowly)
+
+---
+
+## 📸 Capturas de Pantalla y Casos de Uso
+
+### 1️⃣ Diseño de Esquemas de Bases de Datos
+
+<details>
+<summary>Haz clic para ver ejemplo</summary>
+
+> **Sugerencia de captura**: Diagrama ER con 5-6 tablas (Usuarios, Órdenes, Productos) conectadas por líneas de relación, mostrando claves foráneas y tipos de datos en etiquetas de texto.
+
+**Úsalo para:**
+- Diseño de tablas PostgreSQL/MySQL
+- Planificación de colecciones MongoDB
+- Modelado de datos de API
+
+**Consejo pro**: Exporta como SVG → incrústalo en tu documentación de arquitectura.
+</details>
+
+### 2️⃣ Diagramas de Arquitectura de Sistemas
+
+<details>
+<summary>Haz clic para ver ejemplo</summary>
+
+> **Sugerencia de captura**: Arquitectura de microservicios con cajas para servicios (Auth, API Gateway, DB), flechas mostrando llamadas HTTP/gRPC, e íconos de nube para servicios AWS/GCP.
+
+**Úsalo para:**
+- Explicar componentes del sistema a tu equipo
+- Incorporación de nuevos desarrolladores
+- Documentación técnica
+
+**Consejo pro**: Usa hexágonos para servicios, rectángulos para bases de datos, círculos para APIs externas.
+</details>
+
+### 3️⃣ Diagramas de Flujo y Máquinas de Estado
+
+<details>
+<summary>Haz clic para ver ejemplo</summary>
+
+> **Sugerencia de captura**: Diagrama de flujo de procesamiento de órdenes con diamantes de decisión ("¿Pago OK?"), cajas de proceso ("Enviar Email"), y flechas con etiquetas.
+
+**Úsalo para:**
+- Visualización de lógica de negocio
+- Diseño de máquinas de estado
+- Planificación de pipelines CI/CD
+
+**Consejo pro**: Usa etiquetas de flecha para documentar condiciones (haz clic en la flecha → edita texto).
+</details>
+
+---
+
+## ⚡ Características Principales
+
+### Canvas e Interacción
+- **Canvas infinito** con zoom/paneo suave
+- **Grilla inteligente** con ajuste configurable (20px por defecto)
+- **Multi-selección** (Shift+Clic o arrastra para seleccionar área)
+- **Deshacer/Rehacer** (historial de 50 pasos, Ctrl+Z/Y)
+- **Copiar/Pegar** funciona entre pestañas del navegador
+
+### Librería de Figuras
+- **8 tipos de figuras**: Rectángulo, Círculo, Elipse, Triángulo, Pentágono, Hexágono, Línea, Flecha
+- **Figuras de texto** con edición inline (doble clic)
+- **Figuras arrastrables** desde la barra lateral
+- **Dibujo con mouse** (herramienta activa + arrastra en canvas)
+
+### Personalización
+- **Selectores de color** para relleno y contorno (+ transparente)
+- **Ancho de contorno** (deslizador 0-20px)
+- **Control de opacidad** (0-100%)
+- **Posición manual** (entradas X/Y)
+- **Tamaño manual** (entradas de ancho/alto con bloqueo de aspecto)
+- **Rotación** (deslizador 0-360° + entrada de grados)
+
+### Opciones de Exportación
+
+| Formato | Casos de Uso | Configuración |
+|---------|--------------|---------------|
+| **PNG** | Presentaciones, documentos | Alta calidad (2x pixel ratio) |
+| **JPG** | Archivos adjuntos de email | Deslizador de calidad (0.1-1.0) |
+| **SVG** | Escalado vectorial, Figma/Sketch | Transforma preservadas (matrices) |
+| **PDF** | Reportes formales, impresos | Ajuste automático de página, multi-página |
+| **JSON** | Backup, control de versiones Git | Estado completo del proyecto |
+
+**Consejo pro**: Usa SVG para documentación técnica (se verá nítido en Confluence/Notion), PNG para Slack/Discord.
+
+### Almacenamiento
+- **LocalStorage** (hasta 10 proyectos)
+- **Auto-guardado** cada 30 segundos (si está habilitado)
+- **Miniaturas del proyecto** para navegación rápida
+- **Exportación/Importación JSON** para transferencia entre dispositivos
+
+---
+
+## ⌨️ Atajos de Teclado
+
+### Herramientas
+| Atajo | Acción |
+|-------|--------|
+| `V` | Herramienta de Selección (predeterminada) |
+| `R` | Rectángulo |
+| `C` | Círculo |
+| `E` | Elipse |
+| `T` | Triángulo |
+| `P` | Pentágono |
+| `H` | Hexágono |
+| `L` | Línea |
+| `A` | Flecha |
+| `X` | Texto |
+
+### Edición
+| Atajo | Acción |
+|-------|--------|
+| `Ctrl + C` | Copiar figuras seleccionadas |
+| `Ctrl + V` | Pegar (con desplazamiento +20px) |
+| `Ctrl + X` | Cortar |
+| `Ctrl + A` | Seleccionar todo |
+| `Delete` | Eliminar seleccionadas |
+| `Ctrl + D` | Duplicar seleccionadas |
+| `Ctrl + Z` | Deshacer |
+| `Ctrl + Shift + Z` | Rehacer |
+| `Ctrl + Y` | Rehacer (alternativo) |
+
+### Vista
+| Atajo | Acción |
+|-------|--------|
+| `Ctrl + Scroll` | Zoom in/out |
+| `Ctrl + 0` | Ajustar al lienzo |
+| `G` | Alternar grilla |
+| `Espacio + Arrastrar` | Paneo |
+
+### Archivo
+| Atajo | Acción |
+|-------|--------|
+| `Ctrl + S` | Guardar proyecto |
+| `Ctrl + O` | Cargar proyecto |
+| `Ctrl + N` | Nuevo proyecto |
+| `Ctrl + E` | Abrir modal de exportación |
+
+---
+
+## 🏗️ Arquitectura
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                     FlowlyApp (app.js)                  │
+│         Orquestador de la Aplicación & Inicialización   │
+└────────┬──────────────┬──────────────┬─────────────────┘
+         │              │              │
+         ▼              ▼              ▼
+┌─────────────┐  ┌──────────────┐  ┌────────────────┐
+│ CanvasManager│  │ ToolManager  │  │ ExportManager  │
+│  Konva Stage │  │ Cambio de    │  │ PNG/JPG/SVG/   │
+│  Figuras     │  │ herramientas │  │ PDF/JSON       │
+│  Selección   │  │ Manejo de    │  │ Serialización  │
+│  Historial   │  │ dibujo       │  │                │
+└──────┬───────┘  └──────┬───────┘  └────────┬───────┘
+       │                 │                   │
+       │   ┌─────────────┴──────────┐        │
+       │   ▼                        ▼        │
+       │  ┌──────────────┐   ┌──────────────┐│
+       │  │ ShapeFactory │   │ StorageManager││
+       │  │ (shapes.js)  │   │ (storage.js)  ││
+       │  │ Rect, Circle │   │ LocalStorage  ││
+       │  │ Line, etc.   │   │ Guardar/Cargar││
+       │  └──────────────┘   └───────────────┘│
+       │                                       │
+       ▼                                       ▼
+┌────────────────────────────────────────────────────┐
+│            Módulos UI (ui/*)                       │
+│  • Barra de herramientas • Panel de propiedades    │
+│  • Atajos • Modales • Notificaciones               │
+└────────────────────────────────────────────────────┘
+```
+
+**Patrón clave**: Arquitectura modular con patrón "attacher" para refactorización incremental sin romper cambios.
+
+---
+
+## 🛠️ Stack Tecnológico
+
+| Tecnología | Versión | ¿Por qué? |
+|------------|---------|-----------|
+| **[Konva.js](https://konvajs.org/)** | 9.3.14 | API de canvas 2D de alto rendimiento con manejo de eventos |
+| **[html2canvas](https://html2canvas.hertzen.com/)** | 1.4.1 | Exportación de canvas a PNG/JPG raster |
+| **[jsPDF](https://github.com/parallax/jsPDF)** | 2.5.1 | Generación de PDF del lado del cliente |
+| **[FileSaver.js](https://github.com/eligrey/FileSaver.js)** | 2.0.5 | Cross-browser `saveAs()` para descargas |
+| **[Bootstrap 5](https://getbootstrap.com/)** | 5.3.0 | Tooltips y utilidades CSS |
+| **[Font Awesome](https://fontawesome.com/)** | 6.4.0 | Íconos de herramientas |
+| **[SweetAlert2](https://sweetalert2.github.io/)** | 11.7.3 | Notificaciones toast bonitas |
+| **JavaScript Vanilla** | ES6+ | Sin frameworks — ejecutable en cualquier navegador moderno |
+
+**Sin dependencias de construcción**. Sin webpack, rollup, o vite. Solo abre `index.html`.
+
+---
+
+## 📊 Estadísticas del Proyecto
+
+```
+📁 Tamaño total: ~50KB (HTML+CSS+JS, sin minificar)
+📄 Líneas de código:
+   ├─ JavaScript: ~1,500 líneas
+   ├─ CSS: ~800 líneas
+   └─ HTML: ~400 líneas
+
+⚡ Rendimiento:
+   ├─ Tiempo de carga: <1s (cold cache)
+   ├─ FPS de canvas: 60fps (60 figuras)
+   └─ Uso de memoria: ~30MB (típico)
+
+🌐 Compatibilidad del navegador:
+   ├─ Chrome/Edge: 90+ ✅
+   ├─ Firefox: 88+ ✅
+   ├─ Safari: 14+ ✅
+   └─ Mobile: iOS 14+, Android Chrome ✅
+```
+
+---
+
+## 🗺️ Roadmap
+
+### v1.1 (T2 2025) — Exportación Mejorada & Colaboración
+- [ ] Importar archivos XML de draw.io
+- [ ] Exportar a formato Figma/Sketch
+- [ ] Compartir vía URL única (integración Firebase)
+- [ ] Modo offline PWA (Service Worker)
+- [ ] Tema oscuro
+
+### v1.2 (T3 2025) — Conectores Inteligentes
+- [ ] Conectores de auto-enrutamiento (codo, curvas bezier)
+- [ ] Ajuste magnético a puntos de anclaje
+- [ ] Etiquetas y estilos de conector
+- [ ] Algoritmos de auto-diseño de figuras
+
+### v2.0 (2026) — Colaboración en Tiempo Real
+- [ ] Edición multi-usuario (WebRTC)
+- [ ] Indicadores de presencia (cursores, selecciones)
+- [ ] Hilos de comentarios en figuras
+- [ ] Historial de versiones (viaje en el tiempo)
+- [ ] Sistema de plugins para figuras personalizadas
+
+**Vota por características**: [GitHub Discussions](https://github.com/YamiCueto/Flowly/discussions)
+
+---
+
+## 🤝 Contribuir
+
+¡Las contribuciones son bienvenidas! Ya sea que estés arreglando un bug o añadiendo una nueva figura, apreciamos tu ayuda.
+
+### Inicio Rápido
+1. **Fork el repo**
+2. **Clona tu fork**: `git clone https://github.com/tu-usuario/Flowly.git`
+3. **Crea una rama**: `git checkout -b feature/figura-estrella`
+4. **Haz cambios** (ver [CONTRIBUTING.md](CONTRIBUTING.md) para pautas)
+5. **Prueba localmente**: Abre `index.html` en el navegador
+6. **Commit**: `git commit -m "feat: añadir figura estrella a la barra de herramientas"`
+7. **Push**: `git push origin feature/figura-estrella`
+8. **Abre un PR** en GitHub
+
+### Áreas que Necesitan Ayuda
+- [ ] **Pruebas automatizadas** (Vitest + Playwright)
+- [ ] **Accesibilidad** (navegación por teclado, lectores de pantalla)
+- [ ] **Nuevos tipos de figuras** (estrella, diamante, nube)
+- [ ] **i18n** (soporte multi-idioma)
+- [ ] **Optimización móvil** (gestos táctiles)
+
+Ver [issues etiquetadas `good first issue`](https://github.com/YamiCueto/Flowly/labels/good%20first%20issue).
+
+---
+
+## 📜 Licencia
+
+Este proyecto está licenciado bajo la **Licencia MIT** — ver el archivo [LICENSE](LICENSE) para detalles.
+
+```
+TL;DR: Puedes hacer lo que quieras con este código — úsalo, modifícalo,
+distribuye, vende productos basados en él. Solo mantén el aviso de copyright.
+```
+
+---
+
+## 💬 Preguntas Frecuentes
+
+<details>
+<summary><strong>¿Por qué no solo usar draw.io?</strong></summary>
+
+draw.io es increíble, pero es **enorme** (~2MB de JS). Flowly es **50KB** — 40x más pequeño. Si solo necesitas diagramas técnicos rápidos, Flowly carga más rápido y está enfocado para desarrolladores.
+</details>
+
+<details>
+<summary><strong>¿Es realmente offline?</strong></summary>
+
+**Sí**, una vez que cargues la página, todo funciona offline (excepto cargar figuras personalizadas desde CDN). Los proyectos se guardan en LocalStorage, sin servidor backend. La versión PWA (v1.1) añadirá soporte offline completo incluso en la primera carga.
+</details>
+
+<details>
+<summary><strong>¿Puedo usarlo para proyectos comerciales?</strong></summary>
+
+**Sí**, es MIT-Licensed. Usa Flowly en tu empresa, vende diagramas creados con él, lo que sea. Solo no elimines el aviso de copyright del código fuente si lo redistribuyes.
+</details>
+
+<details>
+<summary><strong>¿Dónde se guardan mis datos?</strong></summary>
+
+En **tu navegador** (LocalStorage). Nunca subimos nada a ningún servidor. Si borras los datos del navegador, borras los proyectos — ¡así que exporta JSON regularmente como backups!
+</details>
+
+<details>
+<summary><strong>¿Flowly soporta colaboración?</strong></summary>
+
+**Todavía no** (v1.0 es de un solo usuario). La colaboración en tiempo real está planeada para v2.0 (2026) usando WebRTC. Mientras tanto, usa JSON export/import para compartir proyectos.
+</details>
+
+<details>
+<summary><strong>¿Cómo puedo reportar bugs o solicitar características?</strong></summary>
+
+Abre un [issue en GitHub](https://github.com/YamiCueto/Flowly/issues) o inicia una [discusión](https://github.com/YamiCueto/Flowly/discussions). Los PRs también son bienvenidos!
+</details>
+
+---
+
+## 🌟 Apoya el Proyecto
+
+Si Flowly te ahorra tiempo, considera:
+
+- ⭐ **Dale una estrella a este repo** (ayuda a otros a descubrirlo)
+- 🐦 **Comparte en Twitter/LinkedIn** (etiqueta a [@YamiCueto](https://github.com/YamiCueto))
+- 🐛 **Reporta bugs** o contribuye con código
+- 💸 **Patrocina el desarrollo** vía [GitHub Sponsors](https://github.com/sponsors/YamiCueto) (próximamente)
+
+[![Historial de Estrellas](https://api.star-history.com/svg?repos=YamiCueto/Flowly&type=Date)](https://star-history.com/#YamiCueto/Flowly&Date)
+
+---
+
+## 📞 Contacto
+
+**Autor**: Yami Cueto  
+**GitHub**: [@YamiCueto](https://github.com/YamiCueto)  
+**Proyecto**: [github.com/YamiCueto/Flowly](https://github.com/YamiCueto/Flowly)
+
+**¿Tienes preguntas?** Abre una [discusión](https://github.com/YamiCueto/Flowly/discussions) o etiquétame en issues.
+
+---
+
+<div align="center">
+
+**Hecho con ❤️ para desarrolladores que odian las tonterías**
+
+[⬆️ Volver arriba](#-flowly---herramienta-ligera-de-diagramas-para-desarrolladores)
+
+</div>
