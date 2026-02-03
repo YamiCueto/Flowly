@@ -17,31 +17,148 @@ export class ComponentLibrary {
      * Initialize all available components organized by category
      */
     initializeComponents() {
+        const awsBasePath = 'assets/aws/Architecture-Service-Icons_07312025';
+        const azureBasePath = 'assets/azure';
+
         return {
-            'AWS': [
-                { id: 'aws-ec2', name: 'EC2', icon: 'assets/aws/Resource-Icons_07312025/Res_Compute/Res_Amazon-EC2_Instance_48.png', color: '#FF9900', shape: 'rect', width: 80, height: 60, useImage: true },
-                { id: 'aws-s3', name: 'S3', icon: 'assets/aws/Resource-Icons_07312025/Res_Storage/Res_Amazon-Simple-Storage-Service_Bucket_48.png', color: '#569A31', shape: 'rect', width: 80, height: 60, useImage: true },
-                { id: 'aws-lambda', name: 'Lambda', icon: 'assets/aws/Resource-Icons_07312025/Res_Compute/Res_AWS-Lambda_Lambda-Function_48.png', color: '#FF9900', shape: 'rect', width: 80, height: 60, useImage: true },
-                { id: 'aws-rds', name: 'RDS', icon: 'assets/aws/Resource-Icons_07312025/Res_Database/Res_Amazon-RDS_Multi-AZ_48.png', color: '#527FFF', shape: 'rect', width: 80, height: 60, useImage: true },
-                { id: 'aws-dynamodb', name: 'DynamoDB', icon: 'assets/aws/Resource-Icons_07312025/Res_Database/Res_Amazon-DynamoDB_Table_48.png', color: '#4053D6', shape: 'rect', width: 80, height: 60, useImage: true },
-                { id: 'aws-sns', name: 'SNS', icon: 'assets/aws/Resource-Icons_07312025/Res_Application-Integration/Res_Amazon-Simple-Notification-Service_Topic_48.png', color: '#FF4F8B', shape: 'rect', width: 80, height: 60, useImage: true },
+            // ============ AWS CATEGORIES ============
+            'AWS Compute': [
+                { id: 'aws-ec2', name: 'EC2', icon: `${awsBasePath}/Arch_Compute/64/Arch_Amazon-EC2_64.svg`, color: '#FF9900', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-lambda', name: 'Lambda', icon: `${awsBasePath}/Arch_Compute/64/Arch_AWS-Lambda_64.svg`, color: '#FF9900', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-ecs', name: 'ECS', icon: `${awsBasePath}/Arch_Containers/64/Arch_Amazon-Elastic-Container-Service_64.svg`, color: '#FF9900', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-eks', name: 'EKS', icon: `${awsBasePath}/Arch_Containers/64/Arch_Amazon-Elastic-Kubernetes-Service_64.svg`, color: '#FF9900', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-fargate', name: 'Fargate', icon: `${awsBasePath}/Arch_Containers/64/Arch_AWS-Fargate_64.svg`, color: '#FF9900', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-batch', name: 'Batch', icon: `${awsBasePath}/Arch_Compute/64/Arch_AWS-Batch_64.svg`, color: '#FF9900', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-lightsail', name: 'Lightsail', icon: `${awsBasePath}/Arch_Compute/64/Arch_Amazon-Lightsail_64.svg`, color: '#FF9900', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-elastic-beanstalk', name: 'Elastic Beanstalk', icon: `${awsBasePath}/Arch_Compute/64/Arch_AWS-Elastic-Beanstalk_64.svg`, color: '#FF9900', shape: 'rect', width: 80, height: 60, useImage: true },
             ],
-            'Azure': [
-                { id: 'azure-vm', name: 'Virtual Machine', icon: '💻', color: '#0078D4', shape: 'rect', width: 80, height: 60 },
-                { id: 'azure-functions', name: 'Functions', icon: '⚡', color: '#0078D4', shape: 'rect', width: 80, height: 60 },
-                { id: 'azure-storage', name: 'Storage', icon: '📦', color: '#0078D4', shape: 'rect', width: 80, height: 60 },
-                { id: 'azure-sql', name: 'SQL Database', icon: '🗃️', color: '#0078D4', shape: 'rect', width: 80, height: 60 },
-                { id: 'azure-cosmos', name: 'Cosmos DB', icon: '🌍', color: '#0078D4', shape: 'rect', width: 80, height: 60 },
-                { id: 'azure-app-service', name: 'App Service', icon: '🚀', color: '#0078D4', shape: 'rect', width: 80, height: 60 },
+            'AWS Storage': [
+                { id: 'aws-s3', name: 'S3', icon: `${awsBasePath}/Arch_Storage/64/Arch_Amazon-Simple-Storage-Service_64.svg`, color: '#3F8624', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-ebs', name: 'EBS', icon: `${awsBasePath}/Arch_Storage/64/Arch_Amazon-Elastic-Block-Store_64.svg`, color: '#3F8624', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-efs', name: 'EFS', icon: `${awsBasePath}/Arch_Storage/64/Arch_Amazon-EFS_64.svg`, color: '#3F8624', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-glacier', name: 'S3 Glacier', icon: `${awsBasePath}/Arch_Storage/64/Arch_Amazon-Simple-Storage-Service-Glacier_64.svg`, color: '#3F8624', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-fsx', name: 'FSx', icon: `${awsBasePath}/Arch_Storage/64/Arch_Amazon-FSx_64.svg`, color: '#3F8624', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-backup', name: 'Backup', icon: `${awsBasePath}/Arch_Storage/64/Arch_AWS-Backup_64.svg`, color: '#3F8624', shape: 'rect', width: 80, height: 60, useImage: true },
             ],
-            'GCP': [
-                { id: 'gcp-compute', name: 'Compute Engine', icon: '⚙️', color: '#4285F4', shape: 'rect', width: 80, height: 60 },
-                { id: 'gcp-cloud-functions', name: 'Cloud Functions', icon: '⚡', color: '#4285F4', shape: 'rect', width: 80, height: 60 },
-                { id: 'gcp-storage', name: 'Cloud Storage', icon: '☁️', color: '#4285F4', shape: 'rect', width: 80, height: 60 },
-                { id: 'gcp-sql', name: 'Cloud SQL', icon: '🗄️', color: '#4285F4', shape: 'rect', width: 80, height: 60 },
-                { id: 'gcp-firestore', name: 'Firestore', icon: '🔥', color: '#4285F4', shape: 'rect', width: 80, height: 60 },
-                { id: 'gcp-pub-sub', name: 'Pub/Sub', icon: '📡', color: '#4285F4', shape: 'rect', width: 80, height: 60 },
+            'AWS Database': [
+                { id: 'aws-rds', name: 'RDS', icon: `${awsBasePath}/Arch_Database/64/Arch_Amazon-RDS_64.svg`, color: '#527FFF', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-dynamodb', name: 'DynamoDB', icon: `${awsBasePath}/Arch_Database/64/Arch_Amazon-DynamoDB_64.svg`, color: '#527FFF', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-aurora', name: 'Aurora', icon: `${awsBasePath}/Arch_Database/64/Arch_Amazon-Aurora_64.svg`, color: '#527FFF', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-elasticache', name: 'ElastiCache', icon: `${awsBasePath}/Arch_Database/64/Arch_Amazon-ElastiCache_64.svg`, color: '#527FFF', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-neptune', name: 'Neptune', icon: `${awsBasePath}/Arch_Database/64/Arch_Amazon-Neptune_64.svg`, color: '#527FFF', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-documentdb', name: 'DocumentDB', icon: `${awsBasePath}/Arch_Database/64/Arch_Amazon-DocumentDB_64.svg`, color: '#527FFF', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-redshift', name: 'Redshift', icon: `${awsBasePath}/Arch_Analytics/64/Arch_Amazon-Redshift_64.svg`, color: '#527FFF', shape: 'rect', width: 80, height: 60, useImage: true },
             ],
+            'AWS Networking': [
+                { id: 'aws-vpc', name: 'VPC', icon: `${awsBasePath}/Arch_Networking-Content-Delivery/64/Arch_Amazon-Virtual-Private-Cloud_64.svg`, color: '#8C4FFF', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-cloudfront', name: 'CloudFront', icon: `${awsBasePath}/Arch_Networking-Content-Delivery/64/Arch_Amazon-CloudFront_64.svg`, color: '#8C4FFF', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-route53', name: 'Route 53', icon: `${awsBasePath}/Arch_Networking-Content-Delivery/64/Arch_Amazon-Route-53_64.svg`, color: '#8C4FFF', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-api-gateway', name: 'API Gateway', icon: `${awsBasePath}/Arch_Networking-Content-Delivery/64/Arch_Amazon-API-Gateway_64.svg`, color: '#8C4FFF', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-elb', name: 'Load Balancer', icon: `${awsBasePath}/Arch_Networking-Content-Delivery/64/Arch_Elastic-Load-Balancing_64.svg`, color: '#8C4FFF', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-direct-connect', name: 'Direct Connect', icon: `${awsBasePath}/Arch_Networking-Content-Delivery/64/Arch_AWS-Direct-Connect_64.svg`, color: '#8C4FFF', shape: 'rect', width: 80, height: 60, useImage: true },
+            ],
+            'AWS AI/ML': [
+                { id: 'aws-sagemaker', name: 'SageMaker', icon: `${awsBasePath}/Arch_Artificial-Intelligence/64/Arch_Amazon-SageMaker-AI_64.svg`, color: '#01A88D', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-bedrock', name: 'Bedrock', icon: `${awsBasePath}/Arch_Artificial-Intelligence/64/Arch_Amazon-Bedrock_64.svg`, color: '#01A88D', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-lex', name: 'Lex', icon: `${awsBasePath}/Arch_Artificial-Intelligence/64/Arch_Amazon-Lex_64.svg`, color: '#01A88D', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-polly', name: 'Polly', icon: `${awsBasePath}/Arch_Artificial-Intelligence/64/Arch_Amazon-Polly_64.svg`, color: '#01A88D', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-rekognition', name: 'Rekognition', icon: `${awsBasePath}/Arch_Artificial-Intelligence/64/Arch_Amazon-Rekognition_64.svg`, color: '#01A88D', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-comprehend', name: 'Comprehend', icon: `${awsBasePath}/Arch_Artificial-Intelligence/64/Arch_Amazon-Comprehend_64.svg`, color: '#01A88D', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-textract', name: 'Textract', icon: `${awsBasePath}/Arch_Artificial-Intelligence/64/Arch_Amazon-Textract_64.svg`, color: '#01A88D', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-transcribe', name: 'Transcribe', icon: `${awsBasePath}/Arch_Artificial-Intelligence/64/Arch_Amazon-Transcribe_64.svg`, color: '#01A88D', shape: 'rect', width: 80, height: 60, useImage: true },
+            ],
+            'AWS Analytics': [
+                { id: 'aws-athena', name: 'Athena', icon: `${awsBasePath}/Arch_Analytics/64/Arch_Amazon-Athena_64.svg`, color: '#8C4FFF', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-kinesis', name: 'Kinesis', icon: `${awsBasePath}/Arch_Analytics/64/Arch_Amazon-Kinesis_64.svg`, color: '#8C4FFF', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-emr', name: 'EMR', icon: `${awsBasePath}/Arch_Analytics/64/Arch_Amazon-EMR_64.svg`, color: '#8C4FFF', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-quicksight', name: 'QuickSight', icon: `${awsBasePath}/Arch_Analytics/64/Arch_Amazon-QuickSight_64.svg`, color: '#8C4FFF', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-glue', name: 'Glue', icon: `${awsBasePath}/Arch_Analytics/64/Arch_AWS-Glue_64.svg`, color: '#8C4FFF', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-msk', name: 'MSK (Kafka)', icon: `${awsBasePath}/Arch_Analytics/64/Arch_Amazon-Managed-Streaming-for-Apache-Kafka_64.svg`, color: '#8C4FFF', shape: 'rect', width: 80, height: 60, useImage: true },
+            ],
+            'AWS Integration': [
+                { id: 'aws-sns', name: 'SNS', icon: `${awsBasePath}/Arch_App-Integration/64/Arch_Amazon-Simple-Notification-Service_64.svg`, color: '#E7157B', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-sqs', name: 'SQS', icon: `${awsBasePath}/Arch_App-Integration/64/Arch_Amazon-Simple-Queue-Service_64.svg`, color: '#E7157B', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-eventbridge', name: 'EventBridge', icon: `${awsBasePath}/Arch_App-Integration/64/Arch_Amazon-EventBridge_64.svg`, color: '#E7157B', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-step-functions', name: 'Step Functions', icon: `${awsBasePath}/Arch_App-Integration/64/Arch_AWS-Step-Functions_64.svg`, color: '#E7157B', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-appsync', name: 'AppSync', icon: `${awsBasePath}/Arch_App-Integration/64/Arch_AWS-AppSync_64.svg`, color: '#E7157B', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-mq', name: 'MQ', icon: `${awsBasePath}/Arch_App-Integration/64/Arch_Amazon-MQ_64.svg`, color: '#E7157B', shape: 'rect', width: 80, height: 60, useImage: true },
+            ],
+            'AWS Security': [
+                { id: 'aws-iam', name: 'IAM', icon: `${awsBasePath}/Arch_Security-Identity-Compliance/64/Arch_AWS-Identity-and-Access-Management_64.svg`, color: '#DD344C', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-cognito', name: 'Cognito', icon: `${awsBasePath}/Arch_Security-Identity-Compliance/64/Arch_Amazon-Cognito_64.svg`, color: '#DD344C', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-kms', name: 'KMS', icon: `${awsBasePath}/Arch_Security-Identity-Compliance/64/Arch_AWS-Key-Management-Service_64.svg`, color: '#DD344C', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-secrets-manager', name: 'Secrets Manager', icon: `${awsBasePath}/Arch_Security-Identity-Compliance/64/Arch_AWS-Secrets-Manager_64.svg`, color: '#DD344C', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-waf', name: 'WAF', icon: `${awsBasePath}/Arch_Security-Identity-Compliance/64/Arch_AWS-WAF_64.svg`, color: '#DD344C', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-shield', name: 'Shield', icon: `${awsBasePath}/Arch_Security-Identity-Compliance/64/Arch_AWS-Shield_64.svg`, color: '#DD344C', shape: 'rect', width: 80, height: 60, useImage: true },
+            ],
+
+            // ============ AZURE CATEGORIES ============
+            'Azure Compute': [
+                { id: 'azure-vm', name: 'Virtual Machine', icon: `${azureBasePath}/compute/10021-icon-service-Virtual-Machine.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-functions', name: 'Functions', icon: `${azureBasePath}/compute/10029-icon-service-Function-Apps.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-app-service', name: 'App Service', icon: `${azureBasePath}/appservices/10035-icon-service-App-Services.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-aks', name: 'AKS', icon: `${azureBasePath}/containers/10023-icon-service-Kubernetes-Services.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-container-instances', name: 'Container Instances', icon: `${azureBasePath}/containers/10104-icon-service-Container-Instances.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-batch', name: 'Batch', icon: `${azureBasePath}/containers/10031-icon-service-Batch-Accounts.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+            ],
+            'Azure Storage': [
+                { id: 'azure-storage', name: 'Storage Account', icon: `${azureBasePath}/storage/10086-icon-service-Storage-Accounts.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-blob', name: 'Blob Storage', icon: `${azureBasePath}/general/10780-icon-service-Blob-Block.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-files', name: 'File Share', icon: `${azureBasePath}/storage/10400-icon-service-Azure-Fileshares.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-netapp', name: 'NetApp Files', icon: `${azureBasePath}/storage/10096-icon-service-Azure-NetApp-Files.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-disk', name: 'Managed Disks', icon: `${azureBasePath}/compute/10032-icon-service-Disks.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-data-lake', name: 'Data Lake', icon: `${azureBasePath}/storage/10090-icon-service-Data-Lake-Storage-Gen1.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+            ],
+            'Azure Database': [
+                { id: 'azure-sql', name: 'SQL Database', icon: `${azureBasePath}/databases/10130-icon-service-SQL-Database.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-cosmos', name: 'Cosmos DB', icon: `${azureBasePath}/databases/10121-icon-service-Azure-Cosmos-DB.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-mysql', name: 'MySQL', icon: `${azureBasePath}/databases/10122-icon-service-Azure-Database-MySQL-Server.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-postgresql', name: 'PostgreSQL', icon: `${azureBasePath}/databases/10131-icon-service-Azure-Database-PostgreSQL-Server.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-redis', name: 'Redis Cache', icon: `${azureBasePath}/databases/10137-icon-service-Cache-Redis.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-sql-managed', name: 'SQL Managed', icon: `${azureBasePath}/databases/10136-icon-service-SQL-Managed-Instance.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+            ],
+            'Azure Networking': [
+                { id: 'azure-vnet', name: 'Virtual Network', icon: `${azureBasePath}/networking/10061-icon-service-Virtual-Networks.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-lb', name: 'Load Balancer', icon: `${azureBasePath}/networking/10062-icon-service-Load-Balancers.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-app-gateway', name: 'App Gateway', icon: `${azureBasePath}/networking/10076-icon-service-Application-Gateways.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-cdn', name: 'CDN', icon: `${azureBasePath}/appservices/00056-icon-service-CDN-Profiles.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-dns', name: 'DNS Zones', icon: `${azureBasePath}/networking/10064-icon-service-DNS-Zones.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-firewall', name: 'Firewall', icon: `${azureBasePath}/networking/10084-icon-service-Firewalls.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-front-door', name: 'Front Door', icon: `${azureBasePath}/networking/10073-icon-service-Front-Door-and-CDN-Profiles.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+            ],
+            'Azure AI/ML': [
+                { id: 'azure-ml', name: 'Machine Learning', icon: `${azureBasePath}/aimachinelearning/10166-icon-service-Machine-Learning.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-openai', name: 'OpenAI', icon: `${azureBasePath}/aimachinelearning/03438-icon-service-Azure-OpenAI.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-cognitive', name: 'Cognitive Services', icon: `${azureBasePath}/aimachinelearning/10162-icon-service-Cognitive-Services.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-bot', name: 'Bot Service', icon: `${azureBasePath}/aimachinelearning/10165-icon-service-Bot-Services.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-search', name: 'Cognitive Search', icon: `${azureBasePath}/aimachinelearning/10044-icon-service-Cognitive-Search.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-ai-studio', name: 'AI Studio', icon: `${azureBasePath}/aimachinelearning/03513-icon-service-AI-Studio.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-speech', name: 'Speech Services', icon: `${azureBasePath}/aimachinelearning/00797-icon-service-Speech-Services.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+            ],
+            'Azure Analytics': [
+                { id: 'azure-synapse', name: 'Synapse', icon: `${azureBasePath}/analytics/00606-icon-service-Azure-Synapse-Analytics.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-data-factory', name: 'Data Factory', icon: `${azureBasePath}/analytics/10126-icon-service-Data-Factories.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-databricks', name: 'Databricks', icon: `${azureBasePath}/analytics/10787-icon-service-Azure-Databricks.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-event-hub', name: 'Event Hubs', icon: `${azureBasePath}/analytics/00039-icon-service-Event-Hubs.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-stream-analytics', name: 'Stream Analytics', icon: `${azureBasePath}/analytics/00042-icon-service-Stream-Analytics-Jobs.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-hdinsight', name: 'HDInsight', icon: `${azureBasePath}/analytics/10142-icon-service-HD-Insight-Clusters.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+            ],
+            'Azure Security': [
+                { id: 'azure-ad', name: 'Entra ID', icon: `${azureBasePath}/identity/10222-icon-service-Entra-Domain-Services.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-key-vault', name: 'Key Vault', icon: `${azureBasePath}/security/10245-icon-service-Key-Vaults.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-sentinel', name: 'Sentinel', icon: `${azureBasePath}/security/10248-icon-service-Azure-Sentinel.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-defender', name: 'Defender', icon: `${azureBasePath}/security/10241-icon-service-Microsoft-Defender-for-Cloud.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-mfa', name: 'MFA', icon: `${azureBasePath}/identity/03256-icon-service-Multi-Factor-Authentication.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+            ],
+            'Azure DevOps': [
+                { id: 'azure-devops', name: 'Azure DevOps', icon: `${azureBasePath}/devops/10261-icon-service-Azure-DevOps.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-devtest', name: 'DevTest Labs', icon: `${azureBasePath}/devops/10264-icon-service-DevTest-Labs.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-api-mgmt', name: 'API Management', icon: `${azureBasePath}/devops/10042-icon-service-API-Management-Services.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-app-insights', name: 'App Insights', icon: `${azureBasePath}/devops/00012-icon-service-Application-Insights.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'azure-load-testing', name: 'Load Testing', icon: `${azureBasePath}/devops/02423-icon-service-Load-Testing.svg`, color: '#0078D4', shape: 'rect', width: 80, height: 60, useImage: true },
+            ],
+
+            // ============ GENERAL CATEGORIES ============
             'Databases': [
                 { id: 'db-mysql', name: 'MySQL', icon: '🐬', color: '#00758F', shape: 'cylinder', width: 80, height: 60 },
                 { id: 'db-postgresql', name: 'PostgreSQL', icon: '🐘', color: '#336791', shape: 'cylinder', width: 80, height: 60 },
@@ -97,11 +214,11 @@ export class ComponentLibrary {
     render() {
         this.container.innerHTML = `
             <div class="library-header">
-                <h3>Biblioteca Técnica</h3>
-                <input 
-                    type="text" 
-                    class="library-search" 
-                    placeholder="🔍 Buscar componente..."
+                <h3>Componentes</h3>
+                <input
+                    type="text"
+                    class="library-search"
+                    placeholder="Buscar componente..."
                     id="component-search"
                 />
             </div>
@@ -111,11 +228,30 @@ export class ComponentLibrary {
         `;
 
         this.searchInput = this.container.querySelector('#component-search');
-        
-        // Expand all categories by default
+
+        // Collapse all categories, then expand only the first one
         setTimeout(() => {
-            this.container.querySelectorAll('[data-components]').forEach(categoryEl => {
-                categoryEl.style.display = 'grid';
+            const allCategories = this.container.querySelectorAll('[data-components]');
+            allCategories.forEach((categoryEl, index) => {
+                if (index === 0) {
+                    // First category open
+                    categoryEl.style.display = 'grid';
+                    const header = categoryEl.previousElementSibling;
+                    if (header) {
+                        header.classList.add('expanded');
+                        const icon = header.querySelector('.category-icon');
+                        if (icon) icon.textContent = '▼';
+                    }
+                } else {
+                    // Rest collapsed
+                    categoryEl.style.display = 'none';
+                    const header = categoryEl.previousElementSibling;
+                    if (header) {
+                        header.classList.remove('expanded');
+                        const icon = header.querySelector('.category-icon');
+                        if (icon) icon.textContent = '▶';
+                    }
+                }
             });
         }, 0);
     }
@@ -217,20 +353,39 @@ export class ComponentLibrary {
     }
 
     /**
-     * Toggle category open/closed
+     * Toggle category open/closed (accordion behavior - only one open at a time)
      */
     toggleCategory(categoryName) {
         const categoryEl = this.container.querySelector(`[data-category="${categoryName}"]`);
         if (!categoryEl) return;
 
         const componentsEl = categoryEl.querySelector(`[data-components="${categoryName}"]`);
+        const headerEl = categoryEl.querySelector('.category-header');
         const iconEl = categoryEl.querySelector('.category-icon');
 
-        // Check if it's currently open (display is not 'none' or empty)
+        // Check if it's currently open
         const isOpen = componentsEl.style.display === '' || componentsEl.style.display === 'grid';
-        
+
+        // If opening this category, close all others first (accordion behavior)
+        if (!isOpen) {
+            this.container.querySelectorAll('.library-category').forEach(cat => {
+                const otherComponents = cat.querySelector('[data-components]');
+                const otherHeader = cat.querySelector('.category-header');
+                const otherIcon = cat.querySelector('.category-icon');
+                if (otherComponents && otherComponents !== componentsEl) {
+                    otherComponents.style.display = 'none';
+                    if (otherHeader) otherHeader.classList.remove('expanded');
+                    if (otherIcon) otherIcon.textContent = '▶';
+                }
+            });
+        }
+
+        // Toggle current category
         componentsEl.style.display = isOpen ? 'none' : 'grid';
         iconEl.textContent = isOpen ? '▶' : '▼';
+        if (headerEl) {
+            headerEl.classList.toggle('expanded', !isOpen);
+        }
     }
 
     /**
