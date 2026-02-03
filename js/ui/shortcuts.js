@@ -62,6 +62,20 @@ export function setupKeyboardShortcuts(app) {
             }
         }
 
+        // Sprint 4: Alignment shortcuts (Ctrl+Shift+Key)
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && app.alignmentManager) {
+            switch (e.key.toLowerCase()) {
+                case 'l': app.alignmentManager.alignLeft(); e.preventDefault(); break;
+                case 'r': app.alignmentManager.alignRight(); e.preventDefault(); break;
+                case 't': app.alignmentManager.alignTop(); e.preventDefault(); break;
+                case 'b': app.alignmentManager.alignBottom(); e.preventDefault(); break;
+                case 'h': app.alignmentManager.alignCenterHorizontal(); e.preventDefault(); break;
+                case 'v': app.alignmentManager.alignCenterVertical(); e.preventDefault(); break;
+                case 'd': app.alignmentManager.distributeHorizontal(); e.preventDefault(); break;
+                case 'e': app.alignmentManager.distributeVertical(); e.preventDefault(); break;
+            }
+        }
+
         // Zoom shortcuts
         if (e.key === '+' || e.key === '=') { app.canvasManager.zoomIn(); app.updateZoomDisplay(); e.preventDefault(); }
         else if (e.key === '-') { app.canvasManager.zoomOut(); app.updateZoomDisplay(); e.preventDefault(); }

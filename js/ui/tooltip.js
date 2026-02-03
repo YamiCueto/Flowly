@@ -33,16 +33,20 @@ export class TooltipManager {
     setupEventListeners() {
         // Use event delegation for better performance
         document.addEventListener('mouseenter', (e) => {
-            const target = e.target.closest('[data-tooltip]');
-            if (target) {
-                this.show(target);
+            if (e.target && e.target.closest) {
+                const target = e.target.closest('[data-tooltip]');
+                if (target) {
+                    this.show(target);
+                }
             }
         }, true);
 
         document.addEventListener('mouseleave', (e) => {
-            const target = e.target.closest('[data-tooltip]');
-            if (target) {
-                this.hide();
+            if (e.target && e.target.closest) {
+                const target = e.target.closest('[data-tooltip]');
+                if (target) {
+                    this.hide();
+                }
             }
         }, true);
 

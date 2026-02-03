@@ -8,6 +8,8 @@ import { ToolManager } from './tools.js';
 import { ExportManager } from './export-manager.js';
 import { StorageManager } from './storage.js';
 import { ConnectorsManager } from './connectors.js';
+import { AlignmentManager } from './canvas/alignment.js';
+import { ComponentLibrary } from './ui/component-library.js';
 import { attachNotificationHelpers } from './ui/notifications.js';
 import { setupToolbar } from './ui/toolbar.js';
 import { setupKeyboardShortcuts } from './ui/shortcuts.js';
@@ -45,16 +47,22 @@ class FlowlyApp {
 		this.connectorsManager = new ConnectorsManager(this.canvasManager);
 		this.tooltipManager = new TooltipManager(); // Initialize TooltipManager here
 		this.minimap = new Minimap(this.canvasManager); // Sprint 3: Mini-mapa
-		
-		// Cross-link managers for Sprint 2 features
-		this.canvasManager.toolManager = this.toolManager; // Enable smart guides in drag
-		
-		// Expose to canvas manager so it can create connectors during anchor-drag UX
-		this.canvasManager.connectorsManager = this.connectorsManager;
-
-		// Setup event listeners (delegated to modular helpers)
-		attachNotificationHelpers(this);
-		setupToolbar(this);
+	this.alignmentManager = new AlignmentManager(this.canvasManager); // Sprint 4: Alineación	
+	// Sprint 4: Component Library - Create container if doesn't exist
+	let componentsContainer = document.getElementById('components-library');
+	if (!componentsContainer) {
+		componentsContainer = document.createElement('div');
+		componentsContainer.id = 'components-library';
+		componentsContainer.className = 'components-library';
+		const leftSidebar = document.querySelector('.left-sidebar');
+		if (leftSidebar) {
+			leftSidebar.appendChild(componentsContainer);
+		}
+	}
+	this.componentLibrary = new ComponentLibrary(this); // Sprint 4: Biblioteca de componentes
+	
+	// Setup event listeners (delegated to modular helpers)
+	attachNotificationHelpers(this);		setupToolbar(this);
 		setupKeyboardShortcuts(this);
 		this.setupCanvasControls();
 		setupPropertiesPanel(this);

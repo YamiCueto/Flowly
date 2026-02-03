@@ -54,6 +54,37 @@ export function setupContextMenu(app) {
                 <span class="menu-label">Agrupar</span>
                 <span class="menu-shortcut">Ctrl+G</span>
             </button>
+            <div class="menu-separator" id="align-separator"></div>
+            <button data-action="align-left" class="context-menu-item align-option">
+                <span class="menu-icon">⬅️</span>
+                <span class="menu-label">Alinear izquierda</span>
+                <span class="menu-shortcut">Ctrl+Shift+L</span>
+            </button>
+            <button data-action="align-center-h" class="context-menu-item align-option">
+                <span class="menu-icon">↔️</span>
+                <span class="menu-label">Centrar horizontal</span>
+                <span class="menu-shortcut">Ctrl+Shift+H</span>
+            </button>
+            <button data-action="align-right" class="context-menu-item align-option">
+                <span class="menu-icon">➡️</span>
+                <span class="menu-label">Alinear derecha</span>
+                <span class="menu-shortcut">Ctrl+Shift+R</span>
+            </button>
+            <button data-action="align-top" class="context-menu-item align-option">
+                <span class="menu-icon">⬆️</span>
+                <span class="menu-label">Alinear arriba</span>
+                <span class="menu-shortcut">Ctrl+Shift+T</span>
+            </button>
+            <button data-action="align-center-v" class="context-menu-item align-option">
+                <span class="menu-icon">↕️</span>
+                <span class="menu-label">Centrar vertical</span>
+                <span class="menu-shortcut">Ctrl+Shift+V</span>
+            </button>
+            <button data-action="align-bottom" class="context-menu-item align-option">
+                <span class="menu-icon">⬇️</span>
+                <span class="menu-label">Alinear abajo</span>
+                <span class="menu-shortcut">Ctrl+Shift+B</span>
+            </button>
             <div class="menu-separator"></div>
             <label class="context-menu-item" style="cursor:pointer;padding:8px 12px">
                 <span class="menu-icon">🎨</span>
@@ -214,7 +245,18 @@ export function setupContextMenu(app) {
 			const fill = target.attrs && target.attrs.fill ? target.attrs.fill : '#3498db';
 			colorInput.value = fill;
 		} catch (e) { }
-
+	// Sprint 4: Show/hide alignment options based on selection
+	const alignOptions = menu.querySelectorAll('.align-option');
+	const alignSeparator = menu.querySelector('#align-separator');
+	const selectedCount = app.canvasManager.selectedShapes ? app.canvasManager.selectedShapes.length : 0;
+	const showAlign = selectedCount >= 2;
+	
+	alignOptions.forEach(opt => {
+		opt.style.display = showAlign ? 'flex' : 'none';
+	});
+	if (alignSeparator) {
+		alignSeparator.style.display = showAlign ? 'block' : 'none';
+	}
 		positionMenu(clientX, clientY);
 	};
 
@@ -271,17 +313,47 @@ export function setupContextMenu(app) {
 				hideMenu();
 				break;
 
-			case 'delete':
-				app.canvasManager.selectShape(target);
-				app.canvasManager.deleteSelected();
-				hideMenu();
-				break;
+		case 'align-left':
+			app.alignmentManager && app.alignmentManager.alignLeft();
+			hideMenu();
+			break;
 
-			case 'edit': {
-				hideMenu();
-				// If it's a Text node, open input. Otherwise, attempt to find linked Text node.
-				if (target.getClassName && target.getClassName() === 'Text') {
-					// Use SweetAlert2 if available for a nicer prompt
+		case 'align-right':
+			app.alignmentManager && app.alignmentManager.alignRight();
+			hideMenu();
+			break;
+
+		case 'align-top':
+			app.alignmentManager && app.alignmentManager.alignTop();
+			hideMenu();
+			break;
+
+		case 'align-bottom':
+			app.alignmentManager && app.alignmentManager.alignBottom();
+			hideMenu();
+			break;
+
+		case 'align-center-h':
+			app.alignmentManager && app.alignmentManager.alignCenterHorizontal();
+			hideMenu();
+			break;
+
+		case 'align-center-v':
+			app.alignmentManager && app.alignmentManager.alignCenterVertical();
+			hideMenu();
+			break;
+
+	case 'delete':
+		app.canvasManager.selectShape(target);
+		app.canvasManager.deleteSelected();
+		hideMenu();
+		break;
+
+	case 'edit': {
+		hideMenu();
+		// If it's a Text node, open input. Otherwise, attempt to find linked Text node.
+		if (target.getClassName && target.getClassName() === 'Text') {
+			// Use SweetAlert2 if available for a nicer prompt
 					if (window.Swal) {
 						window.Swal.fire({
 							title: 'Editar texto',
@@ -297,23 +369,22 @@ export function setupContextMenu(app) {
 								app.canvasManager.saveHistory();
 							}
 						});
-					} else {
-						const v = prompt('Editar texto', target.text() || '');
-						if (v !== null) {
-							target.text(v);
-							app.canvasManager.mainLayer.draw();
-							app.canvasManager.saveHistory();
-						}
-					}
-				} else {
-					// Not a text node
-					if (app.notify) app.notify('El elemento no contiene texto editable').catch(() => { });
+			} else {
+				const v = prompt('Editar texto', target.text() || '');
+				if (v !== null) {
+					target.text(v);
+					app.canvasManager.mainLayer.draw();
+					app.canvasManager.saveHistory();
 				}
-				break;
 			}
+		} else {
+			// Not a text node
+			if (app.notify) app.notify('El elemento no contiene texto editable').catch(() => { });
+		}
+		break;
+	}
 		}
 	});
-
 	// Color change handler
 	menu.querySelector('input[data-action="fill"]').addEventListener('input', (ev) => {
 		if (!currentTarget) return;

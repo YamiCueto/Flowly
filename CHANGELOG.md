@@ -7,6 +7,81 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [4.0.0] - 2026-02-03
+
+🚀 **Sprint 4: Biblioteca de Componentes Técnicos + Alineación Inteligente** — Herramientas para diagramas de arquitectura profesionales
+
+### Añadido
+
+#### 📚 Biblioteca de Componentes Técnicos
+- **7 categorías organizadas** — AWS, Azure, GCP, Databases, Servers, Network, Users & Devices
+- **40+ componentes predefinidos** — EC2, Lambda, S3, Azure Functions, PostgreSQL, Redis, Load Balancer, etc.
+- **Drag & Drop** — Arrastra componentes directamente al canvas desde la biblioteca
+- **Click to Add** — Click en componente para agregar al centro del canvas
+- **Iconos distintivos** — Cada componente tiene emoji/icono único y color característico
+- **Formas especializadas** — Rectángulos (servers), Círculos (users), Diamantes (network), Cilindros (databases)
+- **Categorías colapsables** — Expande/colapsa categorías para mejor organización
+- **Contador de componentes** — Badge muestra cantidad de items por categoría
+- **Labels automáticos** — Cada componente incluye etiqueta de texto editable
+- Nuevo archivo: `js/ui/component-library.js` (450 líneas)
+- Estilos en: `css/main.css` → `.components-library`
+
+#### 🔍 Búsqueda de Componentes
+- **Filtro en tiempo real** — Busca componentes por nombre o ID
+- **Resultados dinámicos** — Oculta categorías sin coincidencias
+- **Búsqueda rápida** — Input con placeholder "🔍 Buscar componente..."
+- **Case-insensitive** — Búsqueda sin distinción de mayúsculas/minúsculas
+
+#### ⚖️ Sistema de Alineación Inteligente
+- **Solo atajos de teclado** — Sin botones en toolbar, workflow sin interrupciones
+- **6 tipos de alineación**:
+  - `Ctrl+Shift+L` — Alinear izquierda
+  - `Ctrl+Shift+R` — Alinear derecha
+  - `Ctrl+Shift+T` — Alinear arriba (Top)
+  - `Ctrl+Shift+B` — Alinear abajo (Bottom)
+  - `Ctrl+Shift+H` — Centrar horizontal
+  - `Ctrl+Shift+V` — Centrar vertical
+- **Distribución uniforme**:
+  - `Ctrl+Shift+D` — Distribuir horizontalmente (mínimo 3 formas)
+  - `Ctrl+Shift+E` — Distribuir verticalmente (mínimo 3 formas)
+- **Opciones en menú contextual** — Aparecen al hacer clic derecho con 2+ formas seleccionadas
+- **Cálculo automático de bounds** — Determina área de selección para alineación precisa
+- **Historial integrado** — Cada alineación guarda punto de restauración (Ctrl+Z)
+- Nuevo archivo: `js/canvas/alignment.js` (320 líneas)
+
+### Mejorado
+
+#### 🎨 Menú Contextual
+- Opciones de alineación aparecen dinámicamente cuando hay 2+ formas seleccionadas
+- Separador visual antes de opciones de alineación
+- Iconos de dirección (⬅️➡️⬆️⬇️↔️↕️) para claridad visual
+- Shortcuts mostrados para todas las opciones de alineación
+
+#### ⌨️ Atajos de Teclado
+- Integración completa de `Ctrl+Shift` para alineación
+- No interfiere con atajos existentes (Ctrl solo)
+- Documentado en: `js/ui/shortcuts.js`
+
+### Técnico
+
+- **Arquitectura modular** — `AlignmentManager` como clase independiente
+- **Detección de selección** — Filtra shapes por atributo `selected`
+- **Bounding box calculation** — Sistema robusto para calcular área de múltiples formas
+- **Drag & Drop nativo** — Usa HTML5 Drag and Drop API
+- **Event delegation** — Listeners eficientes para biblioteca con muchos items
+- **Dynamic rendering** — Biblioteca renderizada en JavaScript para fácil extensión
+- **Separación de concerns** — Lógica de componentes separada de shapes básicas
+
+### Casos de Uso
+
+- **Diagramas de arquitectura cloud** — AWS/Azure/GCP con componentes oficiales
+- **Diseño de base de datos** — Múltiples DBs con iconos reconocibles
+- **Diagramas de red** — Routers, firewalls, load balancers, CDNs
+- **Flujos de usuario** — Iconos de usuarios, dispositivos móviles, IoT
+- **Alineación profesional** — Diagramas perfectamente alineados con atajos rápidos
+
+---
+
 ## [3.0.0] - 2026-02-03
 
 🚀 **Sprint 3: Navegación y Exportación Avanzada** — Mejoras en navegación y UX para diagramas complejos
