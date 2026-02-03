@@ -1,0 +1,151 @@
+/* ============================================
+   Flowly - Custom Tooltips with Keyboard Shortcuts
+   ============================================ */
+
+/* Tooltip Container */
+.flowly-tooltip {
+    position: fixed;
+    background: var(--secondary-color, #2c3e50);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 10000;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    max-width: 250px;
+    white-space: nowrap;
+}
+
+.flowly-tooltip.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Tooltip Arrow */
+.flowly-tooltip::before {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid var(--secondary-color, #2c3e50);
+}
+
+.flowly-tooltip.top::before {
+    bottom: -4px;
+    top: auto;
+    border-top: 5px solid var(--secondary-color, #2c3e50);
+    border-bottom: none;
+}
+
+.flowly-tooltip.bottom::before {
+    top: -4px;
+    bottom: auto;
+    border-bottom: 5px solid var(--secondary-color, #2c3e50);
+    border-top: none;
+}
+
+/* Tooltip Content Layout */
+.flowly-tooltip-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.flowly-tooltip-text {
+    flex: 1;
+}
+
+/* Keyboard Shortcut Badge */
+.flowly-tooltip-shortcut {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.5px;
+}
+
+.flowly-tooltip-shortcut kbd {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: inherit;
+    font-family: inherit;
+    color: inherit;
+}
+
+/* Multiple Keys */
+.flowly-tooltip-shortcut kbd + kbd::before {
+    content: '+';
+    margin: 0 2px;
+    opacity: 0.7;
+}
+
+/* Tooltip Variants */
+.flowly-tooltip.primary {
+    background: var(--primary-color, #3498db);
+}
+
+.flowly-tooltip.primary::before {
+    border-top-color: var(--primary-color, #3498db);
+}
+
+.flowly-tooltip.success {
+    background: var(--success, #27ae60);
+}
+
+.flowly-tooltip.success::before {
+    border-top-color: var(--success, #27ae60);
+}
+
+.flowly-tooltip.danger {
+    background: var(--danger, #e74c3c);
+}
+
+.flowly-tooltip.danger::before {
+    border-top-color: var(--danger, #e74c3c);
+}
+
+/* Animation */
+@keyframes tooltipFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.flowly-tooltip.animate {
+    animation: tooltipFadeIn 0.2s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .flowly-tooltip {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+    
+    .flowly-tooltip-shortcut {
+        font-size: 10px;
+        padding: 2px 6px;
+    }
+}

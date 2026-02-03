@@ -23,23 +23,23 @@
     --text-secondary: #7f8c8d;
     --danger: #e74c3c;
     --success: #27ae60;
-    
+
     /* Spacing */
     --spacing-xs: 4px;
     --spacing-sm: 8px;
     --spacing-md: 16px;
     --spacing-lg: 24px;
     --spacing-xl: 32px;
-    
+
     /* Sizes */
     --toolbar-height: 60px;
     --sidebar-width: 250px;
-    
+
     /* Shadows */
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
-    --shadow-lg: 0 10px 20px rgba(0,0,0,0.15);
-    
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.15);
+
     /* Transitions */
     --transition: all 0.2s ease;
 }
@@ -152,6 +152,7 @@ body {
     gap: var(--spacing-sm);
     font-size: 13px;
     cursor: pointer;
+    -webkit-user-select: none;
     user-select: none;
 }
 
@@ -163,9 +164,9 @@ body {
     flex: 1;
     position: relative;
     overflow: hidden;
-    background: 
-        linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px),
-        linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px);
+    background:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px);
     background-size: 20px 20px;
 }
 
@@ -210,6 +211,7 @@ body {
         opacity: 0;
         transform: translateY(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -367,6 +369,72 @@ body {
 .disabled {
     opacity: 0.5;
     pointer-events: none;
+}
+
+/* Custom Cursors for Tools */
+#canvas-wrapper {
+    cursor: default;
+}
+
+#canvas-wrapper.tool-select {
+    cursor: default;
+}
+
+#canvas-wrapper.tool-rectangle,
+#canvas-wrapper.tool-rounded-rectangle,
+#canvas-wrapper.tool-circle,
+#canvas-wrapper.tool-ellipse,
+#canvas-wrapper.tool-triangle,
+#canvas-wrapper.tool-pentagon,
+#canvas-wrapper.tool-hexagon {
+    cursor: crosshair;
+}
+
+#canvas-wrapper.tool-line,
+#canvas-wrapper.tool-arrow {
+    cursor: crosshair;
+}
+
+#canvas-wrapper.tool-text {
+    cursor: text;
+}
+
+#canvas-wrapper.tool-pan {
+    cursor: grab;
+}
+
+#canvas-wrapper.tool-pan.dragging {
+    cursor: grabbing;
+}
+
+/* Active Tool Indicator */
+.tool-btn.active {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+    position: relative;
+}
+
+.tool-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 3px;
+    background: white;
+    border-radius: 2px;
+}
+
+/* Tool Button Hover Enhancement */
+.tool-btn:hover:not(.active) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.tool-btn:active {
+    transform: translateY(0);
 }
 
 /* Responsive adjustments */

@@ -4,9 +4,41 @@ export function makeShapeSelectableImpl(canvas, shape) {
         if (e.evt.shiftKey) { canvas.addToSelection(shape); } else { canvas.selectShape(shape); }
     });
 
-    shape.on('dragstart', () => { if (!canvas.selectedShapes.includes(shape)) canvas.selectShape(shape); });
-    shape.on('dragmove', () => { if (canvas.snapToGrid) canvas.snapShapeToGrid(shape); });
-    shape.on('dragend', () => { canvas.saveHistory(); });
+    shape.on('dragstart', () => { 
+        if (!canvas.selectedShapes.includes(shape)) canvas.selectShape(shape); 
+    });
+    
+    shape.on('dragmove', () => { 
+        // Show smart guides if available
+        if (canvas.toolManager && canvas.toolManager.smartGuides) {
+            const snapPoints = canvas.toolManager.smartGuides.showGuides(shape);
+            
+            // Apply snap if guides are active
+            if (snapPoints) {
+                const snappedPos = canvas.toolManager.smartGuides.getSnappedPosition(shape, snapPoints);
+                if (snappedPos.x !== undefined) {
+                    shape.x(snappedPos.x);
+                }
+                if (snappedPos.y !== undefined) {
+                    shape.y(snappedPos.y);
+                }
+            }
+        }
+        
+        // Apply snap to grid if enabled (fallback)
+        if (canvas.snapToGrid && (!canvas.toolManager || !canvas.toolManager.smartGuides.enabled)) {
+            canvas.snapShapeToGrid(shape);
+        }
+    });
+    
+    shape.on('dragend', () => { 
+        // Clear smart guides
+        if (canvas.toolManager && canvas.toolManager.smartGuides) {
+            canvas.toolManager.smartGuides.clearGuides();
+        }
+        canvas.saveHistory(); 
+    });
+    
     shape.on('transformend', () => { canvas.saveHistory(); });
 
     // Create anchors for connection UX

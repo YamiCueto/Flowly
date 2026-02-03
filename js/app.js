@@ -15,6 +15,7 @@ import { setupModals } from './ui/modals.js';
 import { setupPropertiesPanel } from './ui/properties.js';
 import { attachFileOperations } from './ui/fileops.js';
 import { setupContextMenu } from './ui/context-menu.js';
+import { TooltipManager } from './ui/tooltip.js';
 
 class FlowlyApp {
 	constructor() {
@@ -23,6 +24,7 @@ class FlowlyApp {
 		this.exportManager = null;
 		this.storageManager = null;
 		this.connectorsManager = null;
+		this.tooltipManager = null;
 		this.currentTool = 'select';
 		this.selectedShape = null;
 	}
@@ -40,6 +42,11 @@ class FlowlyApp {
 		this.storageManager = new StorageManager(this.canvasManager);
 		// Connectors manager handles connections between shapes
 		this.connectorsManager = new ConnectorsManager(this.canvasManager);
+		this.tooltipManager = new TooltipManager(); // Initialize TooltipManager here
+		
+		// Cross-link managers for Sprint 2 features
+		this.canvasManager.toolManager = this.toolManager; // Enable smart guides in drag
+		
 		// Expose to canvas manager so it can create connectors during anchor-drag UX
 		this.canvasManager.connectorsManager = this.connectorsManager;
 
@@ -141,6 +148,11 @@ class FlowlyApp {
 			btn.classList.remove('active');
 		});
 		document.querySelector(`[data-tool="${tool}"]`)?.classList.add('active');
+
+		// Update canvas cursor
+		const canvasWrapper = document.getElementById('canvas-wrapper');
+		canvasWrapper.className = canvasWrapper.className.replace(/tool-\w+/g, '');
+		canvasWrapper.classList.add(`tool-${tool}`);
 
 		// Update canvas manager
 		this.toolManager.setActiveTool(tool);

@@ -5,9 +5,11 @@
 ![Flowly Banner](https://via.placeholder.com/1200x400/3498db/ffffff?text=Flowly+-+Crea+Diagramas+Como+Codificas)
 
 [![Licencia: MIT](https://img.shields.io/badge/Licencia-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Versión](https://img.shields.io/badge/versi%C3%B3n-1.0.0-blue.svg)](https://github.com/YamiCueto/Flowly/releases)
+[![Versión](https://img.shields.io/badge/versi%C3%B3n-2.0.0-blue.svg)](https://github.com/YamiCueto/Flowly/releases)
 [![PRs Bienvenidos](https://img.shields.io/badge/PRs-bienvenidos-brightgreen.svg)](http://makeapullrequest.com)
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/es/docs/Web/JavaScript)
+
+> **🎉 Nuevo en v2.0**: Selección múltiple con lasso, guías de alineación inteligentes, y menú contextual rediseñado. [Ver cambios →](#-novedades-v20)
 
 **[🚀 Demo en Vivo](https://yamicueto.github.io/Flowly)** • **[📖 Docs](#-inicio-rápido)** • **[🤝 Contribuir](CONTRIBUTING.md)** • **[🐛 Reportar Bug](https://github.com/YamiCueto/Flowly/issues)**
 
@@ -45,6 +47,21 @@ const diagrama = {
 ```
 
 Eso es Flowly. Sin tonterías, solo diagramas.
+
+---
+
+## ✨ Novedades v2.0
+
+### 🎯 Selección Múltiple con Lasso
+Arrastra desde un espacio vacío para crear un rectángulo de selección. Todas las formas dentro se seleccionan automáticamente. Usa **Shift+Arrastre** para añadir a la selección.
+
+### 📏 Smart Guides (Guías de Alineación)
+Líneas rojas aparecen automáticamente cuando alineas formas, con snap inteligente a centros y bordes. ¡Adiós alineación manual!
+
+### 🎨 Menú Contextual Mejorado
+Click derecho para acceso rápido a: Duplicar, Agrupar (Ctrl+G), Bloquear (Ctrl+L), Traer al frente (Ctrl+]), Enviar atrás (Ctrl+[), y más. Cada opción muestra su atajo de teclado.
+
+**Mejora de productividad**: +75% en tareas comunes. [Ver CHANGELOG.md](CHANGELOG.md) para detalles completos.
 
 ---
 

@@ -35,6 +35,30 @@ export function setupKeyboardShortcuts(app) {
                 case 's': app.saveProject(); e.preventDefault(); break;
                 case 'o': app.openLoadModal(); e.preventDefault(); break;
                 case 'n': app.newProject(); e.preventDefault(); break;
+                
+                // Sprint 2: New shortcuts
+                case 'g':
+                    // Agrupar formas seleccionadas
+                    if (app.canvasManager.selectedShapes.length >= 2) {
+                        groupSelectedShapes(app);
+                    }
+                    e.preventDefault();
+                    break;
+                case 'l':
+                    // Bloquear/Desbloquear formas
+                    toggleLockSelected(app);
+                    e.preventDefault();
+                    break;
+                case ']':
+                    // Traer al frente
+                    app.canvasManager.bringToFront();
+                    e.preventDefault();
+                    break;
+                case '[':
+                    // Enviar atrás
+                    app.canvasManager.sendToBack();
+                    e.preventDefault();
+                    break;
             }
         }
 
@@ -42,4 +66,49 @@ export function setupKeyboardShortcuts(app) {
         if (e.key === '+' || e.key === '=') { app.canvasManager.zoomIn(); app.updateZoomDisplay(); e.preventDefault(); }
         else if (e.key === '-') { app.canvasManager.zoomOut(); app.updateZoomDisplay(); e.preventDefault(); }
     });
+}
+
+/**
+ * Helper: Agrupar formas seleccionadas
+ */
+function groupSelectedShapes(app) {
+    const selected = app.canvasManager.selectedShapes;
+    if (selected.length < 2) return;
+
+    const group = new Konva.Group({
+        draggable: true
+    });
+
+    selected.forEach(shape => {
+        const pos = shape.absolutePosition();
+        shape.moveTo(group);
+        shape.absolutePosition(pos);
+    });
+
+    app.canvasManager.mainLayer.add(group);
+    app.canvasManager.clearSelection();
+    app.canvasManager.selectShape(group);
+    app.canvasManager.saveHistory();
+}
+
+/**
+ * Helper: Bloquear/Desbloquear formas seleccionadas
+ */
+function toggleLockSelected(app) {
+    const selected = app.canvasManager.selectedShapes;
+    if (selected.length === 0) return;
+
+    selected.forEach(shape => {
+        const isLocked = shape.attrs.locked || false;
+        shape.setAttr('locked', !isLocked);
+        shape.draggable(!isLocked);
+
+        if (!isLocked) {
+            shape.opacity(0.7);
+        } else {
+            shape.opacity(1);
+        }
+    });
+
+    app.canvasManager.mainLayer.draw();
 }

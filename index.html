@@ -43,6 +43,7 @@
 	<link rel="stylesheet" href="css/main.css">
 	<link rel="stylesheet" href="css/toolbar.css">
 	<link rel="stylesheet" href="css/modals.css">
+	<link rel="stylesheet" href="css/tooltip.css">
 
 	<!-- Font Awesome Icons -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -83,35 +84,38 @@
 
 		<div class="toolbar-section tools-section">
 			<!-- Selection Tool -->
-			<button class="tool-btn active" data-tool="select" title="Seleccionar (V)">
+			<button class="tool-btn active" data-tool="select" data-tooltip="Seleccionar" data-shortcut="V"
+				aria-label="Seleccionar">
 				<i class="fas fa-mouse-pointer"></i>
 			</button>
 
 			<div class="toolbar-divider"></div>
 
 			<!-- Shape Tools -->
-			<button class="tool-btn" data-tool="rectangle" title="Rectángulo (R)">
+			<button class="tool-btn" data-tool="rectangle" data-tooltip="Rectángulo" data-shortcut="R"
+				aria-label="Rectángulo">
 				<i class="far fa-square"></i>
 			</button>
-			<button class="tool-btn" data-tool="rounded-rectangle" title="Rectángulo Redondeado">
+			<button class="tool-btn" data-tool="rounded-rectangle" data-tooltip="Rectángulo Redondeado"
+				aria-label="Rectángulo Redondeado">
 				<i class="fas fa-square"></i>
 			</button>
-			<button class="tool-btn" data-tool="circle" title="Círculo (C)">
+			<button class="tool-btn" data-tool="circle" data-tooltip="Círculo" data-shortcut="C" aria-label="Círculo">
 				<i class="far fa-circle"></i>
 			</button>
-			<button class="tool-btn" data-tool="ellipse" title="Elipse">
+			<button class="tool-btn" data-tool="ellipse" data-tooltip="Elipse" aria-label="Elipse">
 				<i class="fas fa-circle"></i>
 			</button>
-			<button class="tool-btn" data-tool="triangle" title="Triángulo">
+			<button class="tool-btn" data-tool="triangle" data-tooltip="Triángulo" aria-label="Triángulo">
 				<i class="fas fa-play fa-rotate-270"></i>
 			</button>
-			<button class="tool-btn" data-tool="pentagon" title="Pentágono">
+			<button class="tool-btn" data-tool="pentagon" data-tooltip="Pentágono" aria-label="Pentágono">
 				<!-- pentagon icon -->
 				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 					<path d="M12 2l7 6v7l-7 7-7-7V8l7-6z" fill="currentColor" />
 				</svg>
 			</button>
-			<button class="tool-btn" data-tool="hexagon" title="Hexágono">
+			<button class="tool-btn" data-tool="hexagon" data-tooltip="Hexágono" aria-label="Hexágono">
 				<!-- hexagon icon -->
 				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 					<path d="M12 2l8 4v8l-8 4-8-4V6l8-4z" fill="currentColor" />
@@ -121,68 +125,71 @@
 			<div class="toolbar-divider"></div>
 
 			<!-- Line Tools -->
-			<button class="tool-btn" data-tool="line" title="Línea (L)">
+			<button class="tool-btn" data-tool="line" data-tooltip="Línea" data-shortcut="L" aria-label="Línea">
 				<i class="fas fa-minus"></i>
 			</button>
-			<button class="tool-btn" data-tool="arrow" title="Flecha (A)">
+			<button class="tool-btn" data-tool="arrow" data-tooltip="Flecha" data-shortcut="A" aria-label="Flecha">
 				<i class="fas fa-arrow-right"></i>
 			</button>
 
 			<div class="toolbar-divider"></div>
 
 			<!-- Text Tool -->
-			<button class="tool-btn" data-tool="text" title="Texto (T)">
+			<button class="tool-btn" data-tool="text" data-tooltip="Texto" data-shortcut="T" aria-label="Texto">
 				<i class="fas fa-font"></i>
 			</button>
 
 			<div class="toolbar-divider"></div>
 
 			<!-- Pan/Hand Tool -->
-			<button class="tool-btn" data-tool="pan" title="Mover Vista (H)">
+			<button class="tool-btn" data-tool="pan" data-tooltip="Mover Vista" data-shortcut="H"
+				aria-label="Mover Vista">
 				<i class="fas fa-hand-paper"></i>
 			</button>
 		</div>
 
 		<div class="toolbar-section actions-section">
 			<!-- Undo/Redo -->
-			<button class="action-btn" id="undo-btn" title="Deshacer (Ctrl+Z)">
+			<button class="action-btn" id="undo-btn" data-tooltip="Deshacer" data-shortcut="Ctrl+Z"
+				aria-label="Deshacer">
 				<i class="fas fa-undo"></i>
 			</button>
-			<button class="action-btn" id="redo-btn" title="Rehacer (Ctrl+Y)">
+			<button class="action-btn" id="redo-btn" data-tooltip="Rehacer" data-shortcut="Ctrl+Y" aria-label="Rehacer">
 				<i class="fas fa-redo"></i>
 			</button>
 
 			<div class="toolbar-divider"></div>
 
 			<!-- Zoom Controls -->
-			<button class="action-btn" id="zoom-out-btn" title="Alejar (-)">
+			<button class="action-btn" id="zoom-out-btn" data-tooltip="Alejar" data-shortcut="-" aria-label="Alejar">
 				<i class="fas fa-search-minus"></i>
 			</button>
 			<span class="zoom-display" id="zoom-display">100%</span>
-			<button class="action-btn" id="zoom-in-btn" title="Acercar (+)">
+			<button class="action-btn" id="zoom-in-btn" data-tooltip="Acercar" data-shortcut="+" aria-label="Acercar">
 				<i class="fas fa-search-plus"></i>
 			</button>
-			<button class="action-btn" id="zoom-fit-btn" title="Ajustar a pantalla">
+			<button class="action-btn" id="zoom-fit-btn" data-tooltip="Ajustar a pantalla"
+				aria-label="Ajustar a pantalla">
 				<i class="fas fa-expand"></i>
 			</button>
 
 			<div class="toolbar-divider"></div>
 
 			<!-- File Operations -->
-			<button class="action-btn" id="new-btn" title="Nuevo">
+			<button class="action-btn" id="new-btn" data-tooltip="Nuevo" data-shortcut="Ctrl+N" aria-label="Nuevo">
 				<i class="fas fa-file"></i>
 			</button>
-			<button class="action-btn" id="save-btn" title="Guardar">
+			<button class="action-btn" id="save-btn" data-tooltip="Guardar" data-shortcut="Ctrl+S" aria-label="Guardar">
 				<i class="fas fa-save"></i>
 			</button>
-			<button class="action-btn" id="load-btn" title="Cargar">
+			<button class="action-btn" id="load-btn" data-tooltip="Cargar" data-shortcut="Ctrl+O" aria-label="Cargar">
 				<i class="fas fa-folder-open"></i>
 			</button>
 
 			<div class="toolbar-divider"></div>
 
 			<!-- Export -->
-			<button class="action-btn" id="export-btn" title="Exportar">
+			<button class="action-btn" id="export-btn" data-tooltip="Exportar" aria-label="Exportar">
 				<i class="fas fa-download"></i>
 			</button>
 		</div>
@@ -451,7 +458,8 @@
 				</div>
 				<div class="load-file-section">
 					<p>O cargar desde archivo:</p>
-					<input title="Seleccionar archivo" type="file" id="file-input" accept=".json" style="display: none;">
+					<input title="Seleccionar archivo" type="file" id="file-input" accept=".json"
+						style="display: none;">
 					<button class="prop-btn" id="load-file-btn">
 						<i class="fas fa-upload"></i> Seleccionar Archivo JSON
 					</button>
