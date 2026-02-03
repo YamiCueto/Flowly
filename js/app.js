@@ -44,6 +44,8 @@ class FlowlyApp {
 		this.storageManager = new StorageManager(this.canvasManager);
 		// Connectors manager handles connections between shapes
 		this.connectorsManager = new ConnectorsManager(this.canvasManager);
+		// Assign connectorsManager to canvasManager so anchors can access it
+		this.canvasManager.connectorsManager = this.connectorsManager;
 		this.tooltipManager = new TooltipManager(); // Initialize TooltipManager here
 	this.alignmentManager = new AlignmentManager(this.canvasManager); // Sprint 4: Alineación	
 	// Sprint 4: Component Library - Create container if doesn't exist
