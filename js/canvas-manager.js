@@ -101,6 +101,7 @@ export class CanvasManager {
 
 		// Setup events
 		this.setupStageEvents();
+		this.setupZoomEvents();
 
 		// Handle window resize
 		window.addEventListener('resize', () => this.handleResize());
@@ -279,6 +280,45 @@ export class CanvasManager {
 	}
 
 	/**
+	 * Setup zoom events (wheel zoom)
+	 */
+	setupZoomEvents() {
+		const stage = this.stage;
+		const scaleBy = 1.05;
+
+		stage.on('wheel', (e) => {
+			e.evt.preventDefault();
+
+			const oldScale = stage.scaleX();
+			const pointer = stage.getPointerPosition();
+
+			const mousePointTo = {
+				x: (pointer.x - stage.x()) / oldScale,
+				y: (pointer.y - stage.y()) / oldScale,
+			};
+
+			const direction = e.evt.deltaY > 0 ? -1 : 1;
+			const newScale = direction > 0 ? oldScale * scaleBy : oldScale / scaleBy;
+
+			// Limit zoom
+			const limitedScale = Math.max(0.1, Math.min(5, newScale));
+
+			stage.scale({ x: limitedScale, y: limitedScale });
+
+			const newPos = {
+				x: pointer.x - mousePointTo.x * limitedScale,
+				y: pointer.y - mousePointTo.y * limitedScale,
+			};
+
+			stage.position(newPos);
+			stage.batchDraw();
+
+			this.zoom = limitedScale;
+			this.emit('zoomChanged', this.zoom);
+		});
+	}
+
+	/**
 	 * Zoom controls
 	 */
 	zoomIn() {
@@ -293,6 +333,7 @@ export class CanvasManager {
 		this.zoom = Math.max(0.1, Math.min(5, newZoom));
 		this.stage.scale({ x: this.zoom, y: this.zoom });
 		this.stage.draw();
+		this.emit('zoomChanged', this.zoom);
 	}
 
 	getZoom() {
@@ -302,6 +343,7 @@ export class CanvasManager {
 	fitToScreen() {
 		this.setZoom(1);
 		this.stage.position({ x: 0, y: 0 });
+		this.stage.draw();
 	}
 
 	/**

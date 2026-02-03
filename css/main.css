@@ -437,6 +437,30 @@ body {
     transform: translateY(0);
 }
 
+/* Minimap Styles */
+#minimap-container {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: var(--shadow-lg);
+    cursor: pointer;
+    transition: var(--transition);
+    z-index: 100;
+}
+
+#minimap-container:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+#minimap-canvas {
+    display: block;
+    border-radius: 2px;
+}
+
 /* Responsive adjustments */
 @media (max-width: 1200px) {
     .sidebar {

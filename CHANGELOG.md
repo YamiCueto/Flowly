@@ -7,6 +7,46 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [3.0.0] - 2026-02-03
+
+🚀 **Sprint 3: Navegación y Exportación Avanzada** — Mejoras en navegación y UX para diagramas complejos
+
+### Añadido
+
+#### 🔍 Zoom con Rueda del Ratón
+- **Zoom inteligente** — Zoom con `Ctrl + Rueda` mantiene posición del cursor
+- **Scaling suave** — Factor de 1.05 para zoom progresivo sin saltos
+- **Límites configurables** — Rango 0.1x a 5x para prevenir zoom excesivo
+- **Feedback visual** — Indicador de zoom actualizado en tiempo real
+- Implementación en: `js/canvas-manager.js` → `setupZoomEvents()`
+
+#### 🗺️ Mini-mapa de Navegación
+- **Vista general** — Canvas 200x150px en esquina inferior derecha
+- **Representación simplificada** — Formas renderizadas como rectángulos de colores
+- **Rectángulo de viewport** — Indicador rojo muestra área visible del canvas principal
+- **Navegación por click** — Click o arrastra en minimap para saltar a esa área
+- **Auto-actualización** — Actualiza cada 500ms para reflejar cambios en tiempo real
+- **Toggle de visibilidad** — Checkbox para mostrar/ocultar minimap
+- **Estilos premium** — Borde con hover effect, fondo semi-transparente, sombra
+- Nuevo archivo: `js/ui/minimap.js` (240 líneas)
+- Estilos en: `css/main.css` → `#minimap-container`
+
+### Mejorado
+
+#### 🎯 Sistema de Eventos
+- CanvasManager ahora emite evento `zoomChanged` para sincronización cross-manager
+- Minimap se actualiza automáticamente cuando el zoom cambia
+- Integración fluida entre zoom y minimap sin lógica duplicada
+
+### Técnico
+
+- **Arquitectura modular** — Minimap como clase independiente reutilizable
+- **Performance optimizada** — Rendering simplificado en minimap (sin textos ni detalles)
+- **Event-driven** — Uso de custom events para comunicación entre managers
+- **Compatibilidad** — Funciona perfectamente con selección lasso y smart guides
+
+---
+
 ## [2.0.0] - 2026-02-03
 
 🚀 **Sprint 2: Mejoras Avanzadas de Interacción** — Funcionalidades que mejoran la productividad en +75%
