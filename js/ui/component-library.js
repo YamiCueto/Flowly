@@ -19,12 +19,12 @@ export class ComponentLibrary {
     initializeComponents() {
         return {
             'AWS': [
-                { id: 'aws-ec2', name: 'EC2', icon: '🖥️', color: '#FF9900', shape: 'rect', width: 80, height: 60 },
-                { id: 'aws-s3', name: 'S3', icon: '🪣', color: '#569A31', shape: 'rect', width: 80, height: 60 },
-                { id: 'aws-lambda', name: 'Lambda', icon: 'λ', color: '#FF9900', shape: 'rect', width: 80, height: 60 },
-                { id: 'aws-rds', name: 'RDS', icon: '🗄️', color: '#527FFF', shape: 'rect', width: 80, height: 60 },
-                { id: 'aws-dynamodb', name: 'DynamoDB', icon: '⚡', color: '#4053D6', shape: 'rect', width: 80, height: 60 },
-                { id: 'aws-api-gateway', name: 'API Gateway', icon: '🌐', color: '#FF4F8B', shape: 'rect', width: 80, height: 60 },
+                { id: 'aws-ec2', name: 'EC2', icon: 'assets/aws/Resource-Icons_07312025/Res_Compute/Res_Amazon-EC2_Instance_48.png', color: '#FF9900', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-s3', name: 'S3', icon: 'assets/aws/Resource-Icons_07312025/Res_Storage/Res_Amazon-Simple-Storage-Service_Bucket_48.png', color: '#569A31', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-lambda', name: 'Lambda', icon: 'assets/aws/Resource-Icons_07312025/Res_Compute/Res_AWS-Lambda_Lambda-Function_48.png', color: '#FF9900', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-rds', name: 'RDS', icon: 'assets/aws/Resource-Icons_07312025/Res_Database/Res_Amazon-RDS_Multi-AZ_48.png', color: '#527FFF', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-dynamodb', name: 'DynamoDB', icon: 'assets/aws/Resource-Icons_07312025/Res_Database/Res_Amazon-DynamoDB_Table_48.png', color: '#4053D6', shape: 'rect', width: 80, height: 60, useImage: true },
+                { id: 'aws-sns', name: 'SNS', icon: 'assets/aws/Resource-Icons_07312025/Res_Application-Integration/Res_Amazon-Simple-Notification-Service_Topic_48.png', color: '#FF4F8B', shape: 'rect', width: 80, height: 60, useImage: true },
             ],
             'Azure': [
                 { id: 'azure-vm', name: 'Virtual Machine', icon: '💻', color: '#0078D4', shape: 'rect', width: 80, height: 60 },
@@ -111,6 +111,13 @@ export class ComponentLibrary {
         `;
 
         this.searchInput = this.container.querySelector('#component-search');
+        
+        // Expand all categories by default
+        setTimeout(() => {
+            this.container.querySelectorAll('[data-components]').forEach(categoryEl => {
+                categoryEl.style.display = 'grid';
+            });
+        }, 0);
     }
 
     /**
@@ -137,13 +144,17 @@ export class ComponentLibrary {
      * Render a single component item
      */
     renderComponent(component) {
+        const iconContent = component.useImage 
+            ? `<img src="${component.icon}" alt="${component.name}" style="width: 36px; height: 36px; object-fit: contain;" />`
+            : component.icon;
+        
         return `
             <div class="component-item" 
                  data-component-id="${component.id}"
                  draggable="true"
                  title="${component.name}">
                 <div class="component-icon" style="background-color: ${component.color}20; color: ${component.color}">
-                    ${component.icon}
+                    ${iconContent}
                 </div>
                 <div class="component-name">${component.name}</div>
             </div>
@@ -215,7 +226,8 @@ export class ComponentLibrary {
         const componentsEl = categoryEl.querySelector(`[data-components="${categoryName}"]`);
         const iconEl = categoryEl.querySelector('.category-icon');
 
-        const isOpen = componentsEl.style.display !== 'none';
+        // Check if it's currently open (display is not 'none' or empty)
+        const isOpen = componentsEl.style.display === '' || componentsEl.style.display === 'grid';
         
         componentsEl.style.display = isOpen ? 'none' : 'grid';
         iconEl.textContent = isOpen ? '▶' : '▼';
@@ -292,6 +304,58 @@ export class ComponentLibrary {
 
         // Create the shape based on component type
         let shape;
+        
+        // If component uses image, create Konva.Image instead of regular shape
+        if (component.useImage) {
+            const imageObj = new Image();
+            imageObj.onload = () => {
+                shape = new Konva.Image({
+                    x: x - component.width / 2,
+                    y: y - component.height / 2,
+                    image: imageObj,
+                    width: component.width,
+                    height: component.height,
+                    draggable: true,
+                    name: 'shape'
+                });
+                
+                // Add text label
+                const text = new Konva.Text({
+                    x: x - component.width,
+                    y: y + component.height / 2 + 5,
+                    text: component.name,
+                    fontSize: 12,
+                    fontFamily: 'Arial',
+                    fill: '#2c3e50',
+                    align: 'center',
+                    width: component.width * 2
+                });
+                
+                // Add to canvas
+                canvasManager.addShape(shape, true);
+                layer.add(text);
+                
+                // Link text to shape for movement
+                shape.on('dragmove', () => {
+                    text.position({
+                        x: shape.x() + shape.width() / 2 - component.width,
+                        y: shape.y() + shape.height() + 5
+                    });
+                });
+                
+                // Save history
+                canvasManager.saveHistory(`Añadido ${component.name}`);
+                layer.draw();
+                
+                // Notify user
+                if (this.app.notify) {
+                    this.app.notify(`${component.name} añadido al canvas`).catch(() => {});
+                }
+            };
+            imageObj.src = component.icon;
+            return; // Exit early since image loading is async
+        }
+        
         const commonAttrs = {
             x, y,
             fill: component.color,
@@ -307,7 +371,8 @@ export class ComponentLibrary {
                     ...commonAttrs,
                     width: component.width,
                     height: component.height,
-                    cornerRadius: 8
+                    cornerRadius: 8,
+                    name: 'shape'
                 });
                 break;
             
@@ -331,19 +396,13 @@ export class ComponentLibrary {
             
             case 'cylinder':
                 // Create a group for cylinder (ellipse top + rect body)
-                shape = new Konva.Group({
-                    x, y,
-                    draggable: true,
-                    name: 'shape'
-                });
-                
                 const cylinderW = component.width;
                 const cylinderH = component.height;
                 const ellipseH = cylinderH * 0.15;
                 
                 const body = new Konva.Rect({
-                    x: 0,
-                    y: ellipseH / 2,
+                    x: x - cylinderW / 2,
+                    y: y - cylinderH / 2 + ellipseH / 2,
                     width: cylinderW,
                     height: cylinderH - ellipseH,
                     fill: component.color,
@@ -352,8 +411,8 @@ export class ComponentLibrary {
                 });
                 
                 const topEllipse = new Konva.Ellipse({
-                    x: cylinderW / 2,
-                    y: ellipseH,
+                    x: x,
+                    y: y - cylinderH / 2 + ellipseH,
                     radiusX: cylinderW / 2,
                     radiusY: ellipseH,
                     fill: component.color,
@@ -362,8 +421,8 @@ export class ComponentLibrary {
                 });
                 
                 const bottomEllipse = new Konva.Ellipse({
-                    x: cylinderW / 2,
-                    y: cylinderH - ellipseH / 2,
+                    x: x,
+                    y: y + cylinderH / 2 - ellipseH / 2,
                     radiusX: cylinderW / 2,
                     radiusY: ellipseH,
                     fill: component.color,
@@ -371,9 +430,15 @@ export class ComponentLibrary {
                     strokeWidth: 2
                 });
                 
-                shape.add(body);
-                shape.add(bottomEllipse);
-                shape.add(topEllipse);
+                // Use body as the main shape and add others to layer separately
+                shape = body;
+                layer.add(topEllipse);
+                layer.add(bottomEllipse);
+                layer.add(body);
+                
+                // Store references for cleanup
+                shape.setAttr('_cylinderParts', [topEllipse, bottomEllipse]);
+                
                 break;
             
             default:
@@ -385,30 +450,47 @@ export class ComponentLibrary {
         }
 
         // Add text label
+        const shapeX = shape.x ? shape.x() : x;
+        const shapeY = shape.y ? shape.y() : y;
         const text = new Konva.Text({
-            x: shape.x ? shape.x() : x,
-            y: (shape.y ? shape.y() : y) + (component.height || 60) + 5,
+            x: shapeX - (component.width / 2),
+            y: shapeY + (component.height || 60) / 2 + 5,
             text: component.name,
             fontSize: 12,
             fontFamily: 'Arial',
             fill: '#2c3e50',
             align: 'center',
-            width: component.width
+            width: component.width * 2
         });
 
-        // Add to layer
-        layer.add(shape);
+        // Add to canvas using addShape for proper initialization
+        canvasManager.addShape(shape, true);
         layer.add(text);
-        
-        // Make selectable
-        canvasManager.makeShapeSelectable(shape);
         
         // Link text to shape for movement
         shape.on('dragmove', () => {
             text.position({
-                x: shape.x(),
-                y: shape.y() + (component.height || 60) + 5
+                x: shape.x() - (component.width / 2),
+                y: shape.y() + (component.height || 60) / 2 + 5
             });
+            
+            // Move cylinder parts if they exist
+            const cylinderParts = shape.getAttr('_cylinderParts');
+            if (cylinderParts) {
+                const [topEllipse, bottomEllipse] = cylinderParts;
+                const cylinderH = component.height;
+                const ellipseH = cylinderH * 0.15;
+                
+                topEllipse.position({
+                    x: shape.x(),
+                    y: shape.y() - cylinderH / 2 + ellipseH
+                });
+                
+                bottomEllipse.position({
+                    x: shape.x(),
+                    y: shape.y() + cylinderH / 2 - ellipseH / 2
+                });
+            }
         });
 
         // Save to history
