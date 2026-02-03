@@ -511,8 +511,12 @@ export class ToolManager {
             // Make it draggable
             duplicate.draggable(true);
 
-            // Setup event handlers for the duplicate
-            this.canvasManager.setupShapeEvents(duplicate);
+            // Setup event handlers for the duplicate (double-click for text editing)
+            if (duplicate.className === 'Text') {
+                duplicate.on('dblclick dbltap', () => {
+                    this.editText(duplicate);
+                });
+            }
 
             // Select the duplicate
             this.canvasManager.selectShape(duplicate);

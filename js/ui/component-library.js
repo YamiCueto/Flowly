@@ -504,7 +504,10 @@ export class ComponentLibrary {
                 
                 // Notify user
                 if (this.app.notify) {
-                    this.app.notify(`${component.name} añadido al canvas`).catch(() => {});
+                    const notification = this.app.notify(`${component.name} añadido al canvas`);
+                    if (notification && typeof notification.catch === 'function') {
+                        notification.catch(() => {});
+                    }
                 }
             };
             imageObj.src = component.icon;

@@ -17,13 +17,13 @@
 
 ## 💡 ¿Por qué otra herramienta de diagramas?
 
-> **Sugerencia de GIF**: Grabación de 30 segundos mostrando:
-> 1. Abrir Flowly (carga instantánea, sin login)
-> 2. Arrastrar y soltar 3-4 figuras rápidamente
-> 3. Conectarlas con flechas
-> 4. Ajustar colores/propiedades en tiempo real
-> 5. Exportar a SVG con un clic
-> *Texto: "De idea a diagrama en 30 segundos. Sin cuenta requerida."*
+<div align="center">
+
+![Flowly Demo](assets/Animation.gif)
+
+**De idea a diagrama en 30 segundos. Sin cuenta requerida.**
+
+</div>
 
 Como desarrolladores, pasamos horas diseñando arquitecturas, esquemas de bases de datos y flujos de sistema. Pero la mayoría de las herramientas de diagramas:
 
