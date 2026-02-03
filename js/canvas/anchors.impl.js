@@ -109,7 +109,7 @@ export function startConnectionFromAnchorImpl(canvas, anchor, shape) {
 
         let nearest = null;
         let minDist = Infinity;
-        const threshold = canvas.anchorSize * 2;
+        const threshold = canvas.anchorSize * 4;
 
         canvas.mainLayer.getChildren().forEach(node => {
             const s = node;
@@ -151,7 +151,7 @@ export function startConnectionFromAnchorImpl(canvas, anchor, shape) {
             const s = node; if (!s._anchors) return; s._anchors.forEach(a => { if (a === anchor) return; const ap = a.getAbsolutePosition(); const dx = ap.x - pos.x; const dy = ap.y - pos.y; const d = Math.sqrt(dx*dx+dy*dy); if (d < minDist) { minDist = d; nearest = { anchor: a, shape: s, dist: d }; } });
         });
 
-        const threshold = canvas.anchorSize * 2;
+        const threshold = canvas.anchorSize * 4;
         if (nearest && nearest.dist <= threshold && nearest.shape !== shape) {
             if (canvas.connectorsManager) {
                 canvas.connectorsManager.createConnector(shape, nearest.shape, { type: 'elbow' });

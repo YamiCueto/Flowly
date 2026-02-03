@@ -36,10 +36,10 @@ export class CanvasManager {
 		this.events = {};
 
 		// Anchor / connector interaction settings
-		this.anchorSize = 8;
+		this.anchorSize = 12;
 		this.anchorStroke = '#3498db';
 		this.anchorFill = '#ffffff';
-		this.anchorHoverSize = 10;
+		this.anchorHoverSize = 16;
 		this._connecting = null; // temp state when dragging from an anchor
 
 		// Attach modular responsibilities (these will bind existing prototype methods)
