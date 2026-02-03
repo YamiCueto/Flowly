@@ -18,7 +18,6 @@ import { setupPropertiesPanel } from './ui/properties.js';
 import { attachFileOperations } from './ui/fileops.js';
 import { setupContextMenu } from './ui/context-menu.js';
 import { TooltipManager } from './ui/tooltip.js';
-import { Minimap } from './ui/minimap.js';
 
 class FlowlyApp {
 	constructor() {
@@ -46,7 +45,6 @@ class FlowlyApp {
 		// Connectors manager handles connections between shapes
 		this.connectorsManager = new ConnectorsManager(this.canvasManager);
 		this.tooltipManager = new TooltipManager(); // Initialize TooltipManager here
-		this.minimap = new Minimap(this.canvasManager); // Sprint 3: Mini-mapa
 	this.alignmentManager = new AlignmentManager(this.canvasManager); // Sprint 4: Alineación	
 	// Sprint 4: Component Library - Create container if doesn't exist
 	let componentsContainer = document.getElementById('components-library');
@@ -134,14 +132,6 @@ class FlowlyApp {
 		document.getElementById('snap-toggle').addEventListener('change', (e) => {
 			this.canvasManager.setSnapToGrid(e.target.checked);
 		});
-
-		// Sprint 3: Mini-mapa toggle
-		const minimapToggle = document.getElementById('minimap-toggle');
-		if (minimapToggle) {
-			minimapToggle.addEventListener('change', (e) => {
-				this.minimap.toggle();
-			});
-		}
 	}
 
 

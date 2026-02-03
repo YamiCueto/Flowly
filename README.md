@@ -341,25 +341,43 @@ git push origin main
 
 ## 🗺️ Roadmap
 
-### v1.1 (T2 2025) — Exportación Mejorada & Colaboración
+### ✅ v1.0-4.0 (Completado - Feb 2026)
+- [x] **Sprint 1**: Sistema de Conectores con Anclajes
+- [x] **Sprint 2**: Gestión de Formas Avanzada (Copy/Paste, Layers, Context Menu)
+- [x] **Sprint 3**: Navegación Avanzada (Zoom con rueda, Pan, Export PNG/SVG/JSON)
+- [x] **Sprint 4**: Biblioteca de Componentes Técnicos (AWS/Azure/GCP, 40+ componentes)
+- [x] **Sprint 4**: Sistema de Alineación Inteligente (8 tipos de alineación con shortcuts)
+- [x] Historial Undo/Redo ilimitado
+- [x] Grid y Snap to Grid
+- [x] Exportación multi-formato (PNG, SVG, JSON)
+- [x] Atajos de teclado completos
+- [x] Almacenamiento local persistente
+
+### 🚧 v5.0 (Q2 2026) — Conectores Avanzados
+- [ ] Conectores de auto-enrutamiento (codo ortogonal, curvas bezier)
+- [ ] Etiquetas de texto en conectores
+- [ ] Estilos de conector personalizados (punteado, grosor variable)
+- [ ] Validación de conexiones (tipos permitidos)
+
+### 📋 v6.0 (Q3 2026) — Exportación e Importación Avanzada
 - [ ] Importar archivos XML de draw.io
 - [ ] Exportar a formato Figma/Sketch
-- [ ] Compartir vía URL única (integración Firebase)
-- [ ] Modo offline PWA (Service Worker)
+- [ ] Importar desde Lucidchart
+- [ ] Plantillas predefinidas (AWS Well-Architected, Microservices, etc.)
+
+### 🌙 v7.0 (Q4 2026) — UX y Colaboración Básica
 - [ ] Tema oscuro
+- [ ] Modo offline PWA (Service Worker)
+- [ ] Compartir vía URL única (integración Firebase)
+- [ ] Algoritmos de auto-layout de figuras
+- [ ] Búsqueda de formas en canvas
 
-### v1.2 (T3 2025) — Conectores Inteligentes
-- [ ] Conectores de auto-enrutamiento (codo, curvas bezier)
-- [ ] Ajuste magnético a puntos de anclaje
-- [ ] Etiquetas y estilos de conector
-- [ ] Algoritmos de auto-diseño de figuras
-
-### v2.0 (2026) — Colaboración en Tiempo Real
+### 🚀 v8.0 (2027) — Colaboración en Tiempo Real
 - [ ] Edición multi-usuario (WebRTC)
 - [ ] Indicadores de presencia (cursores, selecciones)
 - [ ] Hilos de comentarios en figuras
 - [ ] Historial de versiones (viaje en el tiempo)
-- [ ] Sistema de plugins para figuras personalizadas
+- [ ] Sistema de plugins para componentes personalizados
 
 **Vota por características**: [GitHub Discussions](https://github.com/YamiCueto/Flowly/discussions)
 
@@ -398,6 +416,36 @@ Este proyecto está licenciado bajo la **Licencia MIT** — ver el archivo [LICE
 TL;DR: Puedes hacer lo que quieras con este código — úsalo, modifícalo,
 distribuye, vende productos basados en él. Solo mantén el aviso de copyright.
 ```
+
+---
+
+## 🎨 Atribuciones y Licencias de Iconos
+
+### AWS Architecture Icons
+Los iconos de AWS utilizados en la biblioteca técnica están disponibles bajo los términos de uso de AWS y son proporcionados por Amazon Web Services, Inc.
+
+- **Fuente**: [AWS Architecture Icons](https://aws.amazon.com/architecture/icons/)
+- **Versión**: Resource Icons (Julio 2025)
+- **Licencia**: Uso permitido para crear diagramas de arquitectura que representen servicios y recursos de AWS
+- **Restricciones**: Los iconos no pueden ser modificados y deben usarse según las [Directrices de uso de marcas comerciales de AWS](https://aws.amazon.com/trademark-guidelines/)
+
+### Microsoft Azure Icons
+Los iconos de Azure utilizados en la biblioteca técnica son proporcionados por Microsoft Corporation bajo los términos de uso de Microsoft.
+
+- **Fuente**: [Azure Public Service Icons](https://learn.microsoft.com/en-us/azure/architecture/icons/)
+- **Versión**: Azure Public Service Icons V23
+- **Licencia**: Uso permitido para crear diagramas de arquitectura que representen servicios de Azure
+- **Términos de uso**: Consulte [Microsoft Terms of Use](https://www.microsoft.com/en-us/legal/terms-of-use)
+- **Restricciones**: 
+  - No modificar los iconos originales
+  - No usar para crear productos competidores
+  - Mantener la atribución a Microsoft Azure
+
+### Notas Importantes
+- Los iconos de AWS y Azure son marcas registradas de sus respectivos propietarios
+- El uso de estos iconos en Flowly tiene fines educativos y de creación de diagramas de arquitectura
+- Flowly no está afiliado, patrocinado ni respaldado por Amazon Web Services o Microsoft Corporation
+- Los usuarios son responsables de cumplir con los términos de uso al exportar y compartir diagramas
 
 ---
 
