@@ -143,12 +143,11 @@ export class TemplateManager {
                 const imageObj = new Image();
                 imageObj.onload = () => {
                     const shape = new Konva.Image({
-                        x: attrs.x || 0,
-                        y: attrs.y || 0,
+                        x: 0,
+                        y: 0,
                         image: imageObj,
                         width: attrs.width || 80,
                         height: attrs.height || 60,
-                        draggable: true,
                         name: 'shape'
                     });
 
@@ -159,8 +158,8 @@ export class TemplateManager {
                         const labelColor = isDarkMode ? '#E6E0E9' : '#2c3e50';
                         
                         const label = new Konva.Text({
-                            x: attrs.x || 0,
-                            y: (attrs.y || 0) + (attrs.height || 60) + 5,
+                            x: 0,
+                            y: (attrs.height || 60) + 5,
                             text: attrs.label,
                             fontSize: 12,
                             fontWeight: 'bold',
@@ -168,18 +167,28 @@ export class TemplateManager {
                             width: attrs.width || 80,
                             align: 'center'
                         });
-                        this.canvasManager.mainLayer.add(label);
 
-                        // Link label to shape movement
-                        shape.on('dragmove', () => {
-                            label.position({
-                                x: shape.x(),
-                                y: shape.y() + shape.height() + 5
-                            });
+                        // Create a group containing both shape and label
+                        const group = new Konva.Group({
+                            x: attrs.x || 0,
+                            y: attrs.y || 0,
+                            draggable: true,
+                            name: 'shape'
                         });
-                    }
 
-                    resolve(shape);
+                        group.add(shape);
+                        group.add(label);
+
+                        resolve(group);
+                    } else {
+                        // No label, just return the shape with draggable and position
+                        shape.setAttrs({
+                            x: attrs.x || 0,
+                            y: attrs.y || 0,
+                            draggable: true
+                        });
+                        resolve(shape);
+                    }
                 };
                 imageObj.onerror = () => {
                     console.warn(`Failed to load icon: ${icon}`);

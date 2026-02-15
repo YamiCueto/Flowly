@@ -464,13 +464,12 @@ export class ComponentLibrary {
         if (component.useImage) {
             const imageObj = new Image();
             imageObj.onload = () => {
-                shape = new Konva.Image({
-                    x: x - component.width / 2,
-                    y: y - component.height / 2,
+                const image = new Konva.Image({
+                    x: 0,
+                    y: 0,
                     image: imageObj,
                     width: component.width,
                     height: component.height,
-                    draggable: true,
                     name: 'shape'
                 });
                 
@@ -478,8 +477,8 @@ export class ComponentLibrary {
                 const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
                 const labelColor = isDarkMode ? '#E6E0E9' : '#2c3e50';
                 const text = new Konva.Text({
-                    x: x - component.width,
-                    y: y + component.height / 2 + 5,
+                    x: -component.width / 2,
+                    y: component.height + 5,
                     text: component.name,
                     fontSize: 12,
                     fontFamily: 'Arial',
@@ -488,17 +487,19 @@ export class ComponentLibrary {
                     width: component.width * 2
                 });
                 
-                // Add to canvas
-                canvasManager.addShape(shape, true);
-                layer.add(text);
-                
-                // Link text to shape for movement
-                shape.on('dragmove', () => {
-                    text.position({
-                        x: shape.x() + shape.width() / 2 - component.width,
-                        y: shape.y() + shape.height() + 5
-                    });
+                // Create group with both image and text
+                const group = new Konva.Group({
+                    x: x,
+                    y: y - component.height / 2,
+                    draggable: true,
+                    name: 'shape'
                 });
+                
+                group.add(image);
+                group.add(text);
+                
+                // Add to canvas
+                canvasManager.addShape(group, true);
                 
                 // Save history
                 canvasManager.saveHistory(`Añadido ${component.name}`);
@@ -612,11 +613,9 @@ export class ComponentLibrary {
         // Add text label with theme-aware color
         const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
         const labelColor = isDarkMode ? '#E6E0E9' : '#2c3e50';
-        const shapeX = shape.x ? shape.x() : x;
-        const shapeY = shape.y ? shape.y() : y;
         const text = new Konva.Text({
-            x: shapeX - (component.width / 2),
-            y: shapeY + (component.height || 60) / 2 + 5,
+            x: -(component.width / 2),
+            y: (component.height || 60) / 2 + 5,
             text: component.name,
             fontSize: 12,
             fontFamily: 'Arial',
@@ -625,35 +624,52 @@ export class ComponentLibrary {
             width: component.width * 2
         });
 
-        // Add to canvas using addShape for proper initialization
-        canvasManager.addShape(shape, true);
-        layer.add(text);
-        
-        // Link text to shape for movement
-        shape.on('dragmove', () => {
-            text.position({
-                x: shape.x() - (component.width / 2),
-                y: shape.y() + (component.height || 60) / 2 + 5
+        // Get shape position
+        const shapeX = shape.x ? shape.x() : x;
+        const shapeY = shape.y ? shape.y() : y;
+
+        // Create group with both shape and text
+        const group = new Konva.Group({
+            x: shapeX,
+            y: shapeY,
+            draggable: true,
+            name: 'shape'
+        });
+
+        // Reset shape position to relative coordinates within group
+        shape.setAttrs({
+            x: 0,
+            y: 0,
+            draggable: false
+        });
+
+        // If shape has cylinder parts, add them to the group and adjust positions
+        const cylinderParts = shape.getAttr('_cylinderParts');
+        if (cylinderParts) {
+            const [topEllipse, bottomEllipse] = cylinderParts;
+            const cylinderH = component.height;
+            const ellipseH = cylinderH * 0.15;
+            
+            // Adjust cylinder parts to be relative to group
+            topEllipse.setAttrs({
+                x: 0,
+                y: -cylinderH / 2 + ellipseH
             });
             
-            // Move cylinder parts if they exist
-            const cylinderParts = shape.getAttr('_cylinderParts');
-            if (cylinderParts) {
-                const [topEllipse, bottomEllipse] = cylinderParts;
-                const cylinderH = component.height;
-                const ellipseH = cylinderH * 0.15;
-                
-                topEllipse.position({
-                    x: shape.x(),
-                    y: shape.y() - cylinderH / 2 + ellipseH
-                });
-                
-                bottomEllipse.position({
-                    x: shape.x(),
-                    y: shape.y() + cylinderH / 2 - ellipseH / 2
-                });
-            }
-        });
+            bottomEllipse.setAttrs({
+                x: 0,
+                y: cylinderH / 2 - ellipseH / 2
+            });
+            
+            group.add(topEllipse);
+            group.add(bottomEllipse);
+        }
+
+        group.add(shape);
+        group.add(text);
+
+        // Add to canvas using addShape for proper initialization
+        canvasManager.addShape(group, true);
 
         // Save to history
         canvasManager.saveHistory(`Añadido ${component.name}`);
