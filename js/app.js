@@ -159,30 +159,57 @@ class FlowlyApp {
 	 * Setup sidebar toggle for collapse/expand functionality
 	 */
 	setupSidebarToggle() {
-		const sidebar = document.getElementById('left-sidebar');
-		const toggleBtn = document.getElementById('sidebar-toggle');
+		// Left Sidebar
+		const leftSidebar = document.getElementById('left-sidebar');
+		const leftToggleBtn = document.getElementById('sidebar-toggle');
 		
-		if (!sidebar || !toggleBtn) return;
+		if (leftSidebar && leftToggleBtn) {
+			// Load saved state from localStorage
+			const savedState = localStorage.getItem('leftSidebarCollapsed');
+			if (savedState === 'true') {
+				leftSidebar.classList.add('collapsed');
+			}
 
-		// Load saved state from localStorage
-		const savedState = localStorage.getItem('sidebarCollapsed');
-		if (savedState === 'true') {
-			sidebar.classList.add('collapsed');
+			// Toggle sidebar on button click
+			leftToggleBtn.addEventListener('click', () => {
+				leftSidebar.classList.toggle('collapsed');
+				const isCollapsed = leftSidebar.classList.contains('collapsed');
+				
+				// Save state to localStorage
+				localStorage.setItem('leftSidebarCollapsed', isCollapsed);
+				
+				// Resize canvas to fit new space
+				setTimeout(() => {
+					this.canvasManager.fitStageIntoParentContainer();
+				}, 300); // Wait for CSS transition to complete
+			});
 		}
 
-		// Toggle sidebar on button click
-		toggleBtn.addEventListener('click', () => {
-			sidebar.classList.toggle('collapsed');
-			const isCollapsed = sidebar.classList.contains('collapsed');
-			
-			// Save state to localStorage
-			localStorage.setItem('sidebarCollapsed', isCollapsed);
-			
-			// Resize canvas to fit new space
-			setTimeout(() => {
-				this.canvasManager.fitStageIntoParentContainer();
-			}, 300); // Wait for CSS transition to complete
-		});
+		// Right Sidebar
+		const rightSidebar = document.getElementById('right-sidebar');
+		const rightToggleBtn = document.getElementById('right-sidebar-toggle');
+		
+		if (rightSidebar && rightToggleBtn) {
+			// Load saved state from localStorage
+			const savedState = localStorage.getItem('rightSidebarCollapsed');
+			if (savedState === 'true') {
+				rightSidebar.classList.add('collapsed');
+			}
+
+			// Toggle sidebar on button click
+			rightToggleBtn.addEventListener('click', () => {
+				rightSidebar.classList.toggle('collapsed');
+				const isCollapsed = rightSidebar.classList.contains('collapsed');
+				
+				// Save state to localStorage
+				localStorage.setItem('rightSidebarCollapsed', isCollapsed);
+				
+				// Resize canvas to fit new space
+				setTimeout(() => {
+					this.canvasManager.fitStageIntoParentContainer();
+				}, 300); // Wait for CSS transition to complete
+			});
+		}
 	}
 
 	/**

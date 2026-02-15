@@ -167,6 +167,28 @@ body {
     transform: rotate(180deg);
 }
 
+/* Right Sidebar Collapsed State */
+.right-sidebar.collapsed {
+    width: 48px;
+    overflow: hidden;
+}
+
+.right-sidebar.collapsed .sidebar-header,
+.right-sidebar.collapsed .properties-panel {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Right Sidebar Toggle Button */
+.sidebar-toggle-right {
+    right: auto;
+    left: 8px;
+}
+
+.right-sidebar.collapsed .sidebar-toggle-right i {
+    transform: rotate(180deg);
+}
+
 .right-sidebar {
     border-right: none;
     border-left: none;
