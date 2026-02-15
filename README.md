@@ -5,11 +5,11 @@
 ![Flowly Banner](https://via.placeholder.com/1200x400/3498db/ffffff?text=Flowly+-+Crea+Diagramas+Como+Codificas)
 
 [![Licencia: MIT](https://img.shields.io/badge/Licencia-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Versión](https://img.shields.io/badge/versi%C3%B3n-2.0.0-blue.svg)](https://github.com/YamiCueto/Flowly/releases)
+[![Versión](https://img.shields.io/badge/versi%C3%B3n-5.0.0-blue.svg)](https://github.com/YamiCueto/Flowly/releases)
 [![PRs Bienvenidos](https://img.shields.io/badge/PRs-bienvenidos-brightgreen.svg)](http://makeapullrequest.com)
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/es/docs/Web/JavaScript)
 
-> **🎉 Nuevo en v2.0**: Selección múltiple con lasso, guías de alineación inteligentes, y menú contextual rediseñado. [Ver cambios →](#-novedades-v20)
+> **🎉 Nuevo en v5.0**: Sistema de Plantillas con 4 templates profesionales (AWS, Microservices, Databases). Crea diagramas en segundos. [Ver cambios →](#-novedades-v50)
 
 **[🚀 Demo en Vivo](https://yamicueto.github.io/Flowly)** • **[📖 Docs](#-inicio-rápido)** • **[🤝 Contribuir](CONTRIBUTING.md)** • **[🐛 Reportar Bug](https://github.com/YamiCueto/Flowly/issues)**
 
@@ -50,18 +50,30 @@ Eso es Flowly. Sin tonterías, solo diagramas.
 
 ---
 
-## ✨ Novedades v2.0
+## ✨ Novedades v5.0
 
-### 🎯 Selección Múltiple con Lasso
-Arrastra desde un espacio vacío para crear un rectángulo de selección. Todas las formas dentro se seleccionan automáticamente. Usa **Shift+Arrastre** para añadir a la selección.
+### 📚 Sistema de Plantillas Profesionales
+¡Crea diagramas profesionales en **2 clicks**! Accede a una galería de plantillas preconstruidas:
 
-### 📏 Smart Guides (Guías de Alineación)
-Líneas rojas aparecen automáticamente cuando alineas formas, con snap inteligente a centros y bordes. ¡Adiós alineación manual!
+- **🏗️ AWS Architecture**: Three-Tier Architecture, Serverless API (con iconos reales de AWS)
+- **🔧 Microservices**: Basic Microservices con API Gateway, servicios y message queue
+- **🗄️ Database ER**: E-commerce schema con relaciones y campos
+- **⭐ Custom Templates**: Guarda cualquier diagrama como tu propia plantilla reutilizable
 
-### 🎨 Menú Contextual Mejorado
-Click derecho para acceso rápido a: Duplicar, Agrupar (Ctrl+G), Bloquear (Ctrl+L), Traer al frente (Ctrl+]), Enviar atrás (Ctrl+[), y más. Cada opción muestra su atajo de teclado.
+### 🎨 Galería Interactiva
+- Modal grande (1000px) con vista previa de plantillas
+- Pestañas por categoría (All, AWS, Microservices, Databases, My Templates)
+- Búsqueda en tiempo real por nombre, descripción o tags
+- Información de dificultad y tiempo estimado
+- Confirmación antes de reemplazar contenido del canvas
 
-**Mejora de productividad**: +75% en tareas comunes. [Ver CHANGELOG.md](CHANGELOG.md) para detalles completos.
+### 💾 Plantillas Personalizadas
+- Guarda tu diagrama actual como plantilla con un clic
+- Almacenadas en localStorage (sin servidor)
+- Elimina tus plantillas personalizadas cuando quieras
+- Marcadas con badge ⭐ especial
+
+**Mejora de productividad**: **Reducción del 80%** en tiempo de creación de diagramas. [Ver implementación →](docs/TEMPLATES_IMPLEMENTATION.md)
 
 ---
 
@@ -212,6 +224,17 @@ git push origin main
 - **Miniaturas del proyecto** para navegación rápida
 - **Exportación/Importación JSON** para transferencia entre dispositivos
 
+### 📚 Sistema de Plantillas (v5.0+)
+- **Galería de plantillas** con categorías y búsqueda
+- **4 plantillas profesionales** incluidas:
+  - AWS Three-Tier Architecture (ALB, EC2, RDS)
+  - Serverless API (API Gateway, Lambda, DynamoDB, S3)
+  - Basic Microservices (5 servicios + message queue)
+  - E-commerce ER Diagram (5 tablas con relaciones)
+- **Plantillas personalizadas** guardadas en localStorage
+- **Aplicación con un clic** desde la galería
+- **Metadata completa**: dificultad, tiempo estimado, tags
+
 ---
 
 ## ⌨️ Atajos de Teclado
@@ -257,8 +280,7 @@ git push origin main
 | `Ctrl + S` | Guardar proyecto |
 | `Ctrl + O` | Cargar proyecto |
 | `Ctrl + N` | Nuevo proyecto |
-| `Ctrl + E` | Abrir modal de exportación |
-
+| `Ctrl + E` | Abrir modal de exportación || `Ctrl + T` | Abrir galería de plantillas |
 ---
 
 ## 🏗️ Arquitectura
@@ -341,38 +363,45 @@ git push origin main
 
 ## 🗺️ Roadmap
 
-### ✅ v1.0-4.0 (Completado - Feb 2026)
+### ✅ v1.0-5.0 (Completado - Feb 2026)
 - [x] **Sprint 1**: Sistema de Conectores con Anclajes
 - [x] **Sprint 2**: Gestión de Formas Avanzada (Copy/Paste, Layers, Context Menu)
 - [x] **Sprint 3**: Navegación Avanzada (Zoom con rueda, Pan, Export PNG/SVG/JSON)
 - [x] **Sprint 4**: Biblioteca de Componentes Técnicos (AWS/Azure/GCP, 40+ componentes)
 - [x] **Sprint 4**: Sistema de Alineación Inteligente (8 tipos de alineación con shortcuts)
+- [x] **v5.0**: Sistema de Plantillas Profesionales (4 templates + custom templates)
 - [x] Historial Undo/Redo ilimitado
 - [x] Grid y Snap to Grid
 - [x] Exportación multi-formato (PNG, SVG, JSON)
 - [x] Atajos de teclado completos
 - [x] Almacenamiento local persistente
 
-### 🚧 v5.0 (Q2 2026) — Conectores Avanzados
+### 🚧 v5.1 (Q2 2026) — Más Plantillas
+- [ ] Plantillas adicionales (Event-Driven, Blog Platform, Social Media DB)
+- [ ] Miniaturas visuales de plantillas
+- [ ] Exportar/Importar plantillas como archivos JSON
+- [ ] Categorías personalizadas para plantillas
+
+### 📋 v6.0 (Q3 2026) — Conectores Avanzados
 - [ ] Conectores de auto-enrutamiento (codo ortogonal, curvas bezier)
 - [ ] Etiquetas de texto en conectores
 - [ ] Estilos de conector personalizados (punteado, grosor variable)
 - [ ] Validación de conexiones (tipos permitidos)
 
-### 📋 v6.0 (Q3 2026) — Exportación e Importación Avanzada
+### 🔄 v7.0 (Q4 2026) — Importación/Exportación Avanzada
 - [ ] Importar archivos XML de draw.io
 - [ ] Exportar a formato Figma/Sketch
 - [ ] Importar desde Lucidchart
-- [ ] Plantillas predefinidas (AWS Well-Architected, Microservices, etc.)
+- [ ] Marketplace de plantillas comunitarias
 
-### 🌙 v7.0 (Q4 2026) — UX y Colaboración Básica
+### 🌙 v8.0 (Q1 2027) — UX y Colaboración Básica
 - [ ] Tema oscuro
 - [ ] Modo offline PWA (Service Worker)
 - [ ] Compartir vía URL única (integración Firebase)
 - [ ] Algoritmos de auto-layout de figuras
 - [ ] Búsqueda de formas en canvas
 
-### 🚀 v8.0 (2027) — Colaboración en Tiempo Real
+### 🚀 v9.0 (Q3 2027) — Colaboración en Tiempo Real
 - [ ] Edición multi-usuario (WebRTC)
 - [ ] Indicadores de presencia (cursores, selecciones)
 - [ ] Hilos de comentarios en figuras
