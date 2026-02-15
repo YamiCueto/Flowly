@@ -154,13 +154,17 @@ export class TemplateManager {
 
                     // Add label if provided
                     if (attrs.label) {
+                        // Detect current theme for text color
+                        const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+                        const labelColor = isDarkMode ? '#E6E0E9' : '#2c3e50';
+                        
                         const label = new Konva.Text({
                             x: attrs.x || 0,
                             y: (attrs.y || 0) + (attrs.height || 60) + 5,
                             text: attrs.label,
                             fontSize: 12,
                             fontWeight: 'bold',
-                            fill: '#2c3e50',
+                            fill: labelColor,
                             width: attrs.width || 80,
                             align: 'center'
                         });

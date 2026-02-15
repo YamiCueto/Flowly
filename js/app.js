@@ -79,6 +79,7 @@ class FlowlyApp {
 		setupKeyboardShortcuts(this);
 		this.setupCanvasControls();
 		this.setupSidebarToggle(); // Setup sidebar collapse/expand
+		this.setupThemeToggle(); // Setup dark mode toggle
 		setupPropertiesPanel(this);
 		attachFileOperations(this);
 		setupModals(this);
@@ -209,6 +210,67 @@ class FlowlyApp {
 					this.canvasManager.fitStageIntoParentContainer();
 				}, 300); // Wait for CSS transition to complete
 			});
+		}
+	}
+
+	/**
+	 * Setup theme toggle for dark/light mode
+	 */
+	setupThemeToggle() {
+		const themeToggleBtn = document.getElementById('theme-toggle-btn');
+		if (!themeToggleBtn) return;
+
+		// Load saved theme preference or default to light
+		const savedTheme = localStorage.getItem('theme') || 'light';
+		this.setTheme(savedTheme);
+
+		// Toggle theme on button click
+		themeToggleBtn.addEventListener('click', () => {
+			const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+			const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+			this.setTheme(newTheme);
+		});
+	}
+
+	/**
+	 * Set theme and update UI
+	 */
+	setTheme(theme) {
+		// Update data-theme attribute
+		document.documentElement.setAttribute('data-theme', theme);
+		
+		// Update button icon
+		const themeToggleBtn = document.getElementById('theme-toggle-btn');
+		if (themeToggleBtn) {
+			const icon = themeToggleBtn.querySelector('i');
+			if (theme === 'dark') {
+				icon.className = 'fas fa-sun';
+				themeToggleBtn.setAttribute('data-tooltip', 'Modo Claro');
+			} else {
+				icon.className = 'fas fa-moon';
+				themeToggleBtn.setAttribute('data-tooltip', 'Modo Oscuro');
+			}
+		}
+		
+		// Save preference
+		localStorage.setItem('theme', theme);
+		
+		// Update text colors on canvas for better contrast
+		if (this.canvasManager && this.canvasManager.mainLayer) {
+			const textColor = theme === 'dark' ? '#E6E0E9' : '#2c3e50';
+			
+			// Update all text elements
+			this.canvasManager.mainLayer.find('Text').forEach(textNode => {
+				// Only update if it's not using a custom color
+				const currentFill = textNode.fill();
+				if (currentFill === '#2c3e50' || currentFill === '#E6E0E9' || 
+				    currentFill === '#1D1B20' || currentFill === 'black') {
+					textNode.fill(textColor);
+				}
+			});
+			
+			// Redraw canvas
+			this.canvasManager.mainLayer.draw();
 		}
 	}
 

@@ -165,8 +165,13 @@ export class ShapeFactory {
      * Create text
      */
     static createText(options) {
+        // Detect current theme for text color
+        const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+        const textColor = isDarkMode ? '#E6E0E9' : '#000000';
+        
         return new Konva.Text({
             ...this.textProps,
+            fill: textColor,
             text: 'Texto',
             ...options
         });

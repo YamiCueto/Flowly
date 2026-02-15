@@ -246,3 +246,81 @@
         font-size: 18px;
     }
 }
+
+/* ============================================
+   Dark Mode Modal Styles
+   ============================================ */
+
+[data-theme="dark"] .modal-content {
+    background: var(--md-surface-container);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="dark"] .modal-header {
+    border-bottom-color: var(--md-outline-variant);
+}
+
+[data-theme="dark"] .modal-header h2 {
+    color: var(--md-on-surface);
+}
+
+[data-theme="dark"] .modal-close {
+    color: var(--md-on-surface-variant);
+}
+
+[data-theme="dark"] .modal-close:hover {
+    background: var(--md-surface-container-highest);
+    color: var(--md-on-surface);
+}
+
+[data-theme="dark"] .export-option {
+    background: var(--md-surface-container-high);
+    border-color: var(--md-outline-variant);
+}
+
+[data-theme="dark"] .export-option:hover {
+    background: var(--md-surface-container-highest);
+    border-color: var(--md-primary);
+}
+
+[data-theme="dark"] .export-option.selected {
+    background: var(--md-primary-container);
+    border-color: var(--md-primary);
+}
+
+[data-theme="dark"] .export-option i {
+    color: var(--md-on-surface);
+}
+
+[data-theme="dark"] .export-option h3 {
+    color: var(--md-on-surface);
+}
+
+[data-theme="dark"] .export-option p {
+    color: var(--md-on-surface-variant);
+}
+
+/* Form inputs in dark mode */
+[data-theme="dark"] input[type="text"],
+[data-theme="dark"] input[type="email"],
+[data-theme="dark"] input[type="password"],
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+    background: var(--md-surface-container-high);
+    border-color: var(--md-outline);
+    color: var(--md-on-surface);
+}
+
+[data-theme="dark"] input[type="text"]:focus,
+[data-theme="dark"] input[type="email"]:focus,
+[data-theme="dark"] input[type="password"]:focus,
+[data-theme="dark"] textarea:focus,
+[data-theme="dark"] select:focus {
+    border-color: var(--md-primary);
+    background: var(--md-surface-container-highest);
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+    color: var(--md-on-surface-variant);
+}

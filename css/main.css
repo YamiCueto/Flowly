@@ -89,6 +89,67 @@
     --transition-slow: all 0.3s cubic-bezier(0.2, 0, 0, 1);
 }
 
+/* Dark Mode - Material Design 3 Dark Theme */
+[data-theme="dark"] {
+    /* Material Design 3 Dark Color Palette */
+    --md-primary: #D0BCFF;
+    --md-primary-container: #4F378B;
+    --md-on-primary: #381E72;
+    --md-on-primary-container: #EADDFF;
+    --md-secondary: #CCC2DC;
+    --md-secondary-container: #4A4458;
+    --md-tertiary: #EFB8C8;
+    --md-tertiary-container: #633B48;
+
+    /* Dark Surface Colors - Not pure black for better readability */
+    --md-surface: #141218;
+    --md-surface-dim: #141218;
+    --md-surface-bright: #3B383E;
+    --md-surface-container-lowest: #0F0D13;
+    --md-surface-container-low: #1D1B20;
+    --md-surface-container: #211F26;
+    --md-surface-container-high: #2B2930;
+    --md-surface-container-highest: #36343B;
+
+    /* Dark Text Colors - High contrast for readability */
+    --md-on-surface: #E6E0E9;
+    --md-on-surface-variant: #CAC4D0;
+    --md-outline: #938F99;
+    --md-outline-variant: #49454F;
+
+    /* Dark State Colors - Adjusted for dark backgrounds */
+    --md-error: #F2B8B5;
+    --md-error-container: #8C1D18;
+    --md-success: #79DD8F;
+    --md-success-container: #0F5223;
+
+    /* Legacy compatibility */
+    --primary-color: var(--md-primary);
+    --primary-dark: #B8A1E8;
+    --secondary-color: var(--md-secondary);
+    --background: var(--md-surface-container);
+    --surface: var(--md-surface-container-lowest);
+    --surface-hover: var(--md-surface-container-high);
+    --border-color: var(--md-outline-variant);
+    --text-primary: var(--md-on-surface);
+    --text-secondary: var(--md-on-surface-variant);
+    --danger: var(--md-error);
+    --success: var(--md-success);
+
+    /* Dark Mode Elevated Shadows - Lighter for dark backgrounds */
+    --md-elevation-1: 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
+    --md-elevation-2: 0 2px 6px 2px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
+    --md-elevation-3: 0 4px 8px 3px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.4);
+    --shadow-sm: var(--md-elevation-1);
+    --shadow-md: var(--md-elevation-2);
+    --shadow-lg: var(--md-elevation-3);
+}
+
+/* Smooth transition when switching themes */
+body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: var(--background);
@@ -1560,4 +1621,146 @@ body {
 .swal2-textarea {
     min-height: 80px;
     resize: vertical;
+}
+
+/* ============================================
+   Dark Mode Specific Adjustments
+   Enhanced contrast and readability
+   ============================================ */
+
+/* Canvas Background in Dark Mode */
+[data-theme="dark"] #canvas-wrapper {
+    background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-color: #1A1A1A;
+}
+
+[data-theme="dark"] #canvas-wrapper.hide-grid {
+    background: #1A1A1A;
+}
+
+/* Input Fields in Dark Mode - Better Contrast */
+[data-theme="dark"] .property-group input[type="number"],
+[data-theme="dark"] .color-input-group input[type="text"] {
+    background: var(--md-surface-container-high);
+    border-color: var(--md-outline);
+    color: var(--md-on-surface);
+}
+
+[data-theme="dark"] .property-group input[type="number"]:hover,
+[data-theme="dark"] .color-input-group input[type="text"]:hover {
+    border-color: var(--md-primary);
+    background: var(--md-surface-container-highest);
+}
+
+[data-theme="dark"] .property-group input[type="number"]:focus,
+[data-theme="dark"] .color-input-group input[type="text"]:focus {
+    border-color: var(--md-primary);
+    background: var(--md-surface-container-highest);
+}
+
+/* Template Preview Images in Dark Mode */
+[data-theme="dark"] .template-preview-image {
+    background: #2A2A2A;
+    border: 1px solid var(--md-outline-variant);
+}
+
+/* Template Cards in Dark Mode */
+[data-theme="dark"] .template-card {
+    background: var(--md-surface-container-low);
+    border-color: var(--md-outline-variant);
+}
+
+[data-theme="dark"] .template-card:hover {
+    background: var(--md-surface-container);
+    border-color: var(--md-primary);
+}
+
+/* Template Thumbnail in Dark Mode */
+[data-theme="dark"] .template-thumbnail {
+    background: linear-gradient(135deg, var(--md-surface-container-high) 0%, var(--md-surface-container-highest) 100%);
+    border-color: var(--md-outline);
+}
+
+/* Buttons in Dark Mode - Better Hover States */
+[data-theme="dark"] .action-btn:hover,
+[data-theme="dark"] .tool-btn:hover {
+    background: var(--md-surface-container-highest);
+}
+
+[data-theme="dark"] .action-btn.active,
+[data-theme="dark"] .tool-btn.active {
+    background: var(--md-primary-container);
+    color: var(--md-on-primary-container);
+}
+
+/* Component Items in Dark Mode */
+[data-theme="dark"] .component-item {
+    background: var(--md-surface-container);
+    border-color: var(--md-outline-variant);
+}
+
+[data-theme="dark"] .component-item:hover {
+    background: var(--md-surface-container-high);
+    border-color: var(--md-primary);
+}
+
+/* No Selection Panel in Dark Mode */
+[data-theme="dark"] .no-selection {
+    color: var(--md-on-surface-variant);
+}
+
+/* Search Input in Dark Mode */
+[data-theme="dark"] .templates-search-input {
+    background: var(--md-surface-container);
+    border-color: var(--md-outline);
+    color: var(--md-on-surface);
+}
+
+[data-theme="dark"] .templates-search-input:focus {
+    border-color: var(--md-primary);
+    background: var(--md-surface-container-high);
+}
+
+[data-theme="dark"] .templates-search-input::placeholder {
+    color: var(--md-on-surface-variant);
+}
+
+/* Toolbar in Dark Mode */
+[data-theme="dark"] .toolbar {
+    background: var(--md-surface-container-low);
+    border-bottom-color: var(--md-outline-variant);
+}
+
+/* Sidebar Header in Dark Mode */
+[data-theme="dark"] .sidebar-header {
+    background: linear-gradient(180deg, var(--md-surface-container) 0%, var(--md-surface-container-low) 100%);
+}
+
+/* Modal Overlay in Dark Mode - Darker background */
+[data-theme="dark"] .modal {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* Ensure high contrast text in all dark mode contexts */
+[data-theme="dark"] h1, 
+[data-theme="dark"] h2, 
+[data-theme="dark"] h3, 
+[data-theme="dark"] h4 {
+    color: var(--md-on-surface);
+}
+
+[data-theme="dark"] p,
+[data-theme="dark"] span,
+[data-theme="dark"] label {
+    color: var(--md-on-surface-variant);
+}
+
+/* Ensure tooltips are visible in dark mode */
+[data-theme="dark"] .tooltip {
+    background: var(--md-surface-container-highest);
+    color: var(--md-on-surface);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
 }

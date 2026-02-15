@@ -474,14 +474,16 @@ export class ComponentLibrary {
                     name: 'shape'
                 });
                 
-                // Add text label
+                // Add text label with theme-aware color
+                const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+                const labelColor = isDarkMode ? '#E6E0E9' : '#2c3e50';
                 const text = new Konva.Text({
                     x: x - component.width,
                     y: y + component.height / 2 + 5,
                     text: component.name,
                     fontSize: 12,
                     fontFamily: 'Arial',
-                    fill: '#2c3e50',
+                    fill: labelColor,
                     align: 'center',
                     width: component.width * 2
                 });
@@ -607,7 +609,9 @@ export class ComponentLibrary {
                 });
         }
 
-        // Add text label
+        // Add text label with theme-aware color
+        const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+        const labelColor = isDarkMode ? '#E6E0E9' : '#2c3e50';
         const shapeX = shape.x ? shape.x() : x;
         const shapeY = shape.y ? shape.y() : y;
         const text = new Konva.Text({
@@ -616,7 +620,7 @@ export class ComponentLibrary {
             text: component.name,
             fontSize: 12,
             fontFamily: 'Arial',
-            fill: '#2c3e50',
+            fill: labelColor,
             align: 'center',
             width: component.width * 2
         });
