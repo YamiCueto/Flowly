@@ -353,8 +353,16 @@ export class ConnectorsManager {
                         listening: true
                     });
                 } else {
+                    // Calculate points based on type
+                    let points;
+                    if (newType === 'elbow') {
+                        points = this.computeElbowPoints(startPoint, endPoint);
+                    } else {
+                        points = [startPoint.x, startPoint.y, endPoint.x, endPoint.y];
+                    }
+                    
                     newNode = new Konva.Line({
-                        points: [startPoint.x, startPoint.y, endPoint.x, endPoint.y],
+                        points: points,
                         stroke: connector.options.stroke,
                         strokeWidth: connector.options.strokeWidth,
                         dash: connector.options.dash || [],
@@ -411,7 +419,7 @@ export class ConnectorsManager {
                             }
                         } catch (e) {}
                     }
-                    if (connector.type === 'bezier' || connector.type === 'line') {
+                    if (connector.type === 'bezier' || connector.type === 'line' || connector.type === 'elbow') {
                         // If elbow type, recompute points
                         if (connector.type === 'elbow') {
                             try {
