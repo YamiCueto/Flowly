@@ -275,6 +275,10 @@ body {
     gap: var(--spacing-sm);
 }
 
+.right-sidebar .sidebar-header h3 {
+    margin-left: 44px;
+}
+
 .sidebar-header h3::before {
     content: '';
     width: 4px;
