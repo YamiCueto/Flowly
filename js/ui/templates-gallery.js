@@ -260,10 +260,16 @@ export class TemplatesGallery {
 
         const difficultyColor = difficultyColors[template.difficulty] || '#95a5a6';
 
+        // Get thumbnail if available
+        const thumbnail = template.thumbnail || this.templateManager.getThumbnail(template.id);
+        const thumbnailContent = thumbnail 
+            ? `<img src="${thumbnail}" alt="${template.name}" class="template-preview-image">` 
+            : `<div class="template-icon">${template.icon || '📄'}</div>`;
+
         return `
 			<div class="template-card">
 				<div class="template-thumbnail">
-					<div class="template-icon">${template.icon || '📄'}</div>
+					${thumbnailContent}
 					${template.isCustom ? '<span class="custom-badge">⭐ Custom</span>' : ''}
 				</div>
 				<div class="template-info">

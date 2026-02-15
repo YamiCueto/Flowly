@@ -118,6 +118,53 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     box-shadow: var(--md-elevation-1);
+    position: relative;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.left-sidebar.collapsed {
+    width: 48px;
+    overflow: hidden;
+}
+
+.left-sidebar.collapsed #components-library {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Sidebar Toggle Button */
+.sidebar-toggle {
+    position: absolute;
+    top: 12px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    background: var(--md-surface-container-highest);
+    border: 1px solid var(--md-outline-variant);
+    border-radius: var(--md-shape-medium);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
+    color: var(--md-on-surface);
+}
+
+.sidebar-toggle:hover {
+    background: var(--md-primary);
+    color: var(--md-on-primary);
+    transform: translateX(2px);
+    box-shadow: var(--md-elevation-2);
+}
+
+.sidebar-toggle i {
+    font-size: 14px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.left-sidebar.collapsed .sidebar-toggle i {
+    transform: rotate(180deg);
 }
 
 .right-sidebar {
@@ -1282,6 +1329,19 @@ body {
 .template-card:hover .template-icon {
     transform: scale(1.1);
     opacity: 1;
+}
+
+.template-preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 8px;
+    background: #ffffff;
+    transition: var(--transition);
+}
+
+.template-card:hover .template-preview-image {
+    transform: scale(1.05);
 }
 
 .custom-badge {

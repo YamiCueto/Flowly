@@ -78,6 +78,7 @@ class FlowlyApp {
 		attachNotificationHelpers(this); setupToolbar(this);
 		setupKeyboardShortcuts(this);
 		this.setupCanvasControls();
+		this.setupSidebarToggle(); // Setup sidebar collapse/expand
 		setupPropertiesPanel(this);
 		attachFileOperations(this);
 		setupModals(this);
@@ -154,9 +155,35 @@ class FlowlyApp {
 		});
 	}
 
+	/**
+	 * Setup sidebar toggle for collapse/expand functionality
+	 */
+	setupSidebarToggle() {
+		const sidebar = document.getElementById('left-sidebar');
+		const toggleBtn = document.getElementById('sidebar-toggle');
+		
+		if (!sidebar || !toggleBtn) return;
 
+		// Load saved state from localStorage
+		const savedState = localStorage.getItem('sidebarCollapsed');
+		if (savedState === 'true') {
+			sidebar.classList.add('collapsed');
+		}
 
-
+		// Toggle sidebar on button click
+		toggleBtn.addEventListener('click', () => {
+			sidebar.classList.toggle('collapsed');
+			const isCollapsed = sidebar.classList.contains('collapsed');
+			
+			// Save state to localStorage
+			localStorage.setItem('sidebarCollapsed', isCollapsed);
+			
+			// Resize canvas to fit new space
+			setTimeout(() => {
+				this.canvasManager.fitStageIntoParentContainer();
+			}, 300); // Wait for CSS transition to complete
+		});
+	}
 
 	/**
 	 * Setup shapes library

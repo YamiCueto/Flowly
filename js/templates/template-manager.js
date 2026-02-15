@@ -115,6 +115,11 @@ export class TemplateManager {
             this.canvasManager.mainLayer.draw();
             this.canvasManager.saveHistory();
 
+            // Generate and cache thumbnail after template is applied
+            setTimeout(() => {
+                this.generateAndCacheThumbnail(templateId);
+            }, 500);
+
             console.log(`✅ Applied template: ${templateData.name}`);
             return true;
         } catch (error) {
@@ -231,12 +236,100 @@ export class TemplateManager {
     }
 
     /**
+     * Generate thumbnail from current canvas state
+     * @returns {Promise<string>} Data URL of the thumbnail
+     */
+    async generateThumbnail() {
+        try {
+            const stage = this.canvasManager.stage;
+            
+            // Get bounding box of all shapes
+            const shapes = this.canvasManager.mainLayer.getChildren();
+            if (shapes.length === 0) {
+                return null;
+            }
+
+            // Calculate bounds
+            let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+            shapes.forEach(shape => {
+                const box = shape.getClientRect();
+                minX = Math.min(minX, box.x);
+                minY = Math.min(minY, box.y);
+                maxX = Math.max(maxX, box.x + box.width);
+                maxY = Math.max(maxY, box.y + box.height);
+            });
+
+            // Add padding
+            const padding = 20;
+            minX -= padding;
+            minY -= padding;
+            maxX += padding;
+            maxY += padding;
+
+            const width = maxX - minX;
+            const height = maxY - minY;
+
+            // Calculate scale to fit in thumbnail (max 320x240)
+            const maxWidth = 320;
+            const maxHeight = 240;
+            const scale = Math.min(maxWidth / width, maxHeight / height, 1);
+
+            // Generate thumbnail
+            const dataURL = stage.toDataURL({
+                x: minX,
+                y: minY,
+                width: width,
+                height: height,
+                pixelRatio: scale
+            });
+
+            return dataURL;
+        } catch (error) {
+            console.error('Error generating thumbnail:', error);
+            return null;
+        }
+    }
+
+    /**
+     * Generate and cache thumbnail for a template
+     */
+    async generateAndCacheThumbnail(templateId) {
+        try {
+            const thumbnail = await this.generateThumbnail();
+            if (thumbnail) {
+                // Store in localStorage with a separate key
+                const thumbnailKey = `flowly-thumbnail-${templateId}`;
+                localStorage.setItem(thumbnailKey, thumbnail);
+                console.log(`✅ Cached thumbnail for template: ${templateId}`);
+            }
+        } catch (error) {
+            console.error('Error caching thumbnail:', error);
+        }
+    }
+
+    /**
+     * Get cached thumbnail for a template
+     */
+    getThumbnail(templateId) {
+        try {
+            const thumbnailKey = `flowly-thumbnail-${templateId}`;
+            return localStorage.getItem(thumbnailKey);
+        } catch (error) {
+            console.error('Error loading thumbnail:', error);
+            return null;
+        }
+    }
+
+    /**
      * Save current canvas as custom template
      */
     async saveAsTemplate(name, description, category = 'custom') {
         try {
             // Export current canvas state
             const canvasData = this.canvasManager.exportToJSON();
+
+            // Generate thumbnail
+            const thumbnail = await this.generateThumbnail();
 
             // Create template object
             const template = {
@@ -251,6 +344,7 @@ export class TemplateManager {
                 icon: '⭐',
                 isCustom: true,
                 data: canvasData,
+                thumbnail: thumbnail, // Store thumbnail with template
                 createdAt: new Date().toISOString()
             };
 
@@ -260,6 +354,12 @@ export class TemplateManager {
 
             // Save to localStorage
             this.saveCustomTemplates();
+
+            // Also cache thumbnail separately for consistency
+            if (thumbnail) {
+                const thumbnailKey = `flowly-thumbnail-${template.id}`;
+                localStorage.setItem(thumbnailKey, thumbnail);
+            }
 
             console.log(`✅ Saved custom template: ${name}`);
             return template;
@@ -278,6 +378,15 @@ export class TemplateManager {
             this.customTemplates.splice(index, 1);
             this.templates = this.templates.filter(t => t.id !== templateId);
             this.saveCustomTemplates();
+            
+            // Also delete cached thumbnail
+            try {
+                const thumbnailKey = `flowly-thumbnail-${templateId}`;
+                localStorage.removeItem(thumbnailKey);
+            } catch (error) {
+                console.error('Error deleting thumbnail:', error);
+            }
+            
             console.log(`✅ Deleted custom template: ${templateId}`);
             return true;
         }
