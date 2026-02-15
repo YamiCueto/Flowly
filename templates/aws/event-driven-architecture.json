@@ -28,28 +28,13 @@
         },
         {
             "id": "api-gateway",
-            "type": "component",
-            "componentType": "aws-api-gateway",
+            "type": "image",
+            "icon": "assets/aws/Architecture-Service-Icons_07312025/Arch_Networking-Content-Delivery/64/Arch_Amazon-API-Gateway_64.svg",
             "x": 100,
             "y": 150,
-            "width": 100,
-            "height": 100,
-            "fill": "#FF9900",
-            "stroke": "#232F3E",
-            "strokeWidth": 2,
+            "width": 80,
+            "height": 80,
             "label": "API Gateway"
-        },
-        {
-            "id": "api-label",
-            "type": "text",
-            "x": 80,
-            "y": 260,
-            "text": "API Gateway",
-            "fontSize": 14,
-            "fontWeight": "bold",
-            "fill": "#232F3E",
-            "width": 140,
-            "align": "center"
         },
         {
             "id": "eventbridge",
