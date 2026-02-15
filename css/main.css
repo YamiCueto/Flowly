@@ -1113,10 +1113,12 @@ body {
     gap: var(--spacing-md);
     margin-bottom: var(--spacing-lg);
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .templates-search-input {
     flex: 1;
+    min-width: 250px;
     padding: var(--spacing-md);
     border: 2px solid var(--md-outline-variant);
     border-radius: var(--md-shape-md);
@@ -1132,7 +1134,15 @@ body {
     box-shadow: 0 0 0 3px var(--md-primary-container);
 }
 
-.btn-save-template {
+.template-actions-bar {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+}
+
+.btn-save-template,
+.btn-import-template,
+.btn-export-templates {
     padding: var(--spacing-md) var(--spacing-lg);
     background: var(--md-primary);
     color: var(--md-on-primary);
@@ -1148,12 +1158,35 @@ body {
     white-space: nowrap;
 }
 
-.btn-save-template:hover {
-    background: var(--primary-dark);
-    box-shadow: var(--md-elevation-2);
+.btn-import-template {
+    background: var(--md-secondary);
+    color: var(--md-on-secondary);
 }
 
-.btn-save-template i {
+.btn-export-templates {
+    background: var(--md-tertiary);
+    color: var(--md-on-tertiary);
+}
+
+.btn-save-template:hover,
+.btn-import-template:hover,
+.btn-export-templates:hover {
+    background: var(--primary-dark);
+    box-shadow: var(--md-elevation-2);
+    transform: translateY(-1px);
+}
+
+.btn-import-template:hover {
+    background: #5a4db3;
+}
+
+.btn-export-templates:hover {
+    background: #0277bd;
+}
+
+.btn-save-template i,
+.btn-import-template i,
+.btn-export-templates i {
     font-size: 16px;
 }
 
@@ -1221,21 +1254,34 @@ body {
 /* Template Thumbnail */
 .template-thumbnail {
     width: 100%;
-    height: 140px;
+    height: 160px;
     background: linear-gradient(135deg, var(--md-surface-container) 0%, var(--md-surface-container-high) 100%);
-    border-radius: var(--md-shape-sm);
+    border-radius: var(--md-shape-md);
     margin-bottom: var(--spacing-md);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
     position: relative;
-    border: 1px solid var(--md-outline-variant);
+    border: 2px solid var(--md-outline-variant);
+    transition: var(--transition);
+}
+
+.template-card:hover .template-thumbnail {
+    border-color: var(--md-primary);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .template-icon {
-    font-size: 56px;
-    opacity: 0.8;
+    font-size: 72px;
+    opacity: 0.85;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    transition: var(--transition);
+}
+
+.template-card:hover .template-icon {
+    transform: scale(1.1);
+    opacity: 1;
 }
 
 .custom-badge {
@@ -1360,6 +1406,27 @@ body {
 .template-delete-btn:hover {
     background: var(--md-error);
     color: white;
+}
+
+.template-export-btn {
+    padding: var(--spacing-md);
+    background: var(--md-secondary-container);
+    color: var(--md-secondary);
+    border: none;
+    border-radius: var(--md-shape-md);
+    cursor: pointer;
+    transition: var(--transition);
+    width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.template-export-btn:hover {
+    background: var(--md-secondary);
+    color: white;
+    box-shadow: var(--md-elevation-1);
+    transform: translateY(-1px);
 }
 
 /* No Templates Message */

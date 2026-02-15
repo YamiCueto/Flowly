@@ -1,0 +1,560 @@
+{
+    "name": "Social Media Platform Database",
+    "description": "Schema completo para plataforma de redes sociales con posts, follows, likes y mensajes",
+    "version": "1.0.0",
+    "author": "Flowly Templates",
+    "category": "databases",
+    "difficulty": "advanced",
+    "estimatedTime": "12 min",
+    "tags": ["database", "social-media", "postgresql", "mysql", "instagram", "twitter"],
+    "canvas": {
+        "width": 1600,
+        "height": 1000,
+        "gridSize": 20,
+        "backgroundColor": "#FFFFFF"
+    },
+    "shapes": [
+        {
+            "id": "title",
+            "type": "text",
+            "x": 550,
+            "y": 30,
+            "text": "📱 Social Media Platform Database Schema",
+            "fontSize": 24,
+            "fontWeight": "bold",
+            "fill": "#1D1B20",
+            "width": 500,
+            "align": "center"
+        },
+        {
+            "id": "users-table",
+            "type": "rounded-rectangle",
+            "x": 100,
+            "y": 100,
+            "width": 280,
+            "height": 280,
+            "fill": "#E8F5E9",
+            "stroke": "#4CAF50",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "users-header",
+            "type": "text",
+            "x": 110,
+            "y": 110,
+            "text": "👤 USERS",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#2E7D32",
+            "width": 260
+        },
+        {
+            "id": "users-fields",
+            "type": "text",
+            "x": 110,
+            "y": 145,
+            "text": "id (PK) - INTEGER\nusername - VARCHAR(50)\nemail - VARCHAR(255)\npassword_hash - VARCHAR(255)\nfull_name - VARCHAR(150)\nbio - TEXT\nprofile_picture - VARCHAR(500)\ncover_photo - VARCHAR(500)\nverified - BOOLEAN\nprivate_account - BOOLEAN\nfollowers_count - INTEGER\nfollowing_count - INTEGER\nposts_count - INTEGER\ncreated_at - TIMESTAMP\nupdated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 260,
+            "lineHeight": 1.45
+        },
+        {
+            "id": "posts-table",
+            "type": "rounded-rectangle",
+            "x": 500,
+            "y": 100,
+            "width": 280,
+            "height": 240,
+            "fill": "#E3F2FD",
+            "stroke": "#2196F3",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "posts-header",
+            "type": "text",
+            "x": 510,
+            "y": 110,
+            "text": "📸 POSTS",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#0D47A1",
+            "width": 260
+        },
+        {
+            "id": "posts-fields",
+            "type": "text",
+            "x": 510,
+            "y": 145,
+            "text": "id (PK) - INTEGER\nuser_id (FK) - INTEGER\ncaption - TEXT\nimage_url - VARCHAR(500)\nvideo_url - VARCHAR(500)\nlocation - VARCHAR(255)\nlike_count - INTEGER\ncomment_count - INTEGER\nshare_count - INTEGER\nis_archived - BOOLEAN\ncreated_at - TIMESTAMP\nupdated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 260,
+            "lineHeight": 1.5
+        },
+        {
+            "id": "comments-table",
+            "type": "rounded-rectangle",
+            "x": 900,
+            "y": 100,
+            "width": 280,
+            "height": 200,
+            "fill": "#FFF3E0",
+            "stroke": "#FF9800",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "comments-header",
+            "type": "text",
+            "x": 910,
+            "y": 110,
+            "text": "💬 COMMENTS",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#E65100",
+            "width": 260
+        },
+        {
+            "id": "comments-fields",
+            "type": "text",
+            "x": 910,
+            "y": 145,
+            "text": "id (PK) - INTEGER\npost_id (FK) - INTEGER\nuser_id (FK) - INTEGER\nparent_id (FK) - INTEGER\ncomment_text - TEXT\nlike_count - INTEGER\ncreated_at - TIMESTAMP\nupdated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 260,
+            "lineHeight": 1.5
+        },
+        {
+            "id": "likes-table",
+            "type": "rounded-rectangle",
+            "x": 1280,
+            "y": 100,
+            "width": 250,
+            "height": 150,
+            "fill": "#FFEBEE",
+            "stroke": "#F44336",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "likes-header",
+            "type": "text",
+            "x": 1290,
+            "y": 110,
+            "text": "❤️ LIKES",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#B71C1C",
+            "width": 230
+        },
+        {
+            "id": "likes-fields",
+            "type": "text",
+            "x": 1290,
+            "y": 145,
+            "text": "id (PK) - INTEGER\npost_id (FK) - INTEGER\nuser_id (FK) - INTEGER\ncreated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 230,
+            "lineHeight": 1.5
+        },
+        {
+            "id": "follows-table",
+            "type": "rounded-rectangle",
+            "x": 100,
+            "y": 450,
+            "width": 280,
+            "height": 160,
+            "fill": "#F3E5F5",
+            "stroke": "#9C27B0",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "follows-header",
+            "type": "text",
+            "x": 110,
+            "y": 460,
+            "text": "👥 FOLLOWS",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#4A148C",
+            "width": 260
+        },
+        {
+            "id": "follows-fields",
+            "type": "text",
+            "x": 110,
+            "y": 495,
+            "text": "id (PK) - INTEGER\nfollower_id (FK) - INTEGER\nfollowing_id (FK) - INTEGER\nstatus - ENUM(pending,accepted)\ncreated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 260,
+            "lineHeight": 1.5
+        },
+        {
+            "id": "messages-table",
+            "type": "rounded-rectangle",
+            "x": 500,
+            "y": 420,
+            "width": 280,
+            "height": 200,
+            "fill": "#FCE4EC",
+            "stroke": "#E91E63",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "messages-header",
+            "type": "text",
+            "x": 510,
+            "y": 430,
+            "text": "✉️ MESSAGES",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#880E4F",
+            "width": 260
+        },
+        {
+            "id": "messages-fields",
+            "type": "text",
+            "x": 510,
+            "y": 465,
+            "text": "id (PK) - INTEGER\nconversation_id (FK) - INTEGER\nsender_id (FK) - INTEGER\nreceiver_id (FK) - INTEGER\nmessage_text - TEXT\nimage_url - VARCHAR(500)\nis_read - BOOLEAN\ncreated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 260,
+            "lineHeight": 1.5
+        },
+        {
+            "id": "conversations-table",
+            "type": "rounded-rectangle",
+            "x": 900,
+            "y": 380,
+            "width": 280,
+            "height": 160,
+            "fill": "#E1F5FE",
+            "stroke": "#03A9F4",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "conversations-header",
+            "type": "text",
+            "x": 910,
+            "y": 390,
+            "text": "💭 CONVERSATIONS",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#01579B",
+            "width": 260
+        },
+        {
+            "id": "conversations-fields",
+            "type": "text",
+            "x": 910,
+            "y": 425,
+            "text": "id (PK) - INTEGER\nuser1_id (FK) - INTEGER\nuser2_id (FK) - INTEGER\nlast_message_at - TIMESTAMP\ncreated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 260,
+            "lineHeight": 1.5
+        },
+        {
+            "id": "stories-table",
+            "type": "rounded-rectangle",
+            "x": 1280,
+            "y": 330,
+            "width": 250,
+            "height": 180,
+            "fill": "#FFF9C4",
+            "stroke": "#F57F17",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "stories-header",
+            "type": "text",
+            "x": 1290,
+            "y": 340,
+            "text": "⏱️ STORIES",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#F57F17",
+            "width": 230
+        },
+        {
+            "id": "stories-fields",
+            "type": "text",
+            "x": 1290,
+            "y": 375,
+            "text": "id (PK) - INTEGER\nuser_id (FK) - INTEGER\nimage_url - VARCHAR(500)\nvideo_url - VARCHAR(500)\nview_count - INTEGER\nexpires_at - TIMESTAMP\ncreated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 230,
+            "lineHeight": 1.5
+        },
+        {
+            "id": "hashtags-table",
+            "type": "rounded-rectangle",
+            "x": 100,
+            "y": 680,
+            "width": 250,
+            "height": 150,
+            "fill": "#E0F2F1",
+            "stroke": "#009688",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "hashtags-header",
+            "type": "text",
+            "x": 110,
+            "y": 690,
+            "text": "#️⃣ HASHTAGS",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#004D40",
+            "width": 230
+        },
+        {
+            "id": "hashtags-fields",
+            "type": "text",
+            "x": 110,
+            "y": 725,
+            "text": "id (PK) - INTEGER\nname - VARCHAR(100)\npost_count - INTEGER\ncreated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 230,
+            "lineHeight": 1.5
+        },
+        {
+            "id": "post-hashtags-table",
+            "type": "rounded-rectangle",
+            "x": 450,
+            "y": 700,
+            "width": 280,
+            "height": 140,
+            "fill": "#EFEBE9",
+            "stroke": "#795548",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "post-hashtags-header",
+            "type": "text",
+            "x": 460,
+            "y": 710,
+            "text": "🔗 POST_HASHTAGS",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#3E2723",
+            "width": 260
+        },
+        {
+            "id": "post-hashtags-fields",
+            "type": "text",
+            "x": 460,
+            "y": 745,
+            "text": "id (PK) - INTEGER\npost_id (FK) - INTEGER\nhashtag_id (FK) - INTEGER\ncreated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 260,
+            "lineHeight": 1.5
+        },
+        {
+            "id": "notifications-table",
+            "type": "rounded-rectangle",
+            "x": 850,
+            "y": 640,
+            "width": 280,
+            "height": 220,
+            "fill": "#F8BBD0",
+            "stroke": "#C2185B",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "notifications-header",
+            "type": "text",
+            "x": 860,
+            "y": 650,
+            "text": "🔔 NOTIFICATIONS",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#880E4F",
+            "width": 260
+        },
+        {
+            "id": "notifications-fields",
+            "type": "text",
+            "x": 860,
+            "y": 685,
+            "text": "id (PK) - INTEGER\nuser_id (FK) - INTEGER\nactor_id (FK) - INTEGER\ntype - ENUM(like,comment,follow,mention)\npost_id (FK) - INTEGER\ncomment_id (FK) - INTEGER\nis_read - BOOLEAN\ncreated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 260,
+            "lineHeight": 1.5
+        },
+        {
+            "id": "saved-posts-table",
+            "type": "rounded-rectangle",
+            "x": 1240,
+            "y": 600,
+            "width": 250,
+            "height": 150,
+            "fill": "#D1C4E9",
+            "stroke": "#673AB7",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "saved-posts-header",
+            "type": "text",
+            "x": 1250,
+            "y": 610,
+            "text": "🔖 SAVED_POSTS",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#311B92",
+            "width": 230
+        },
+        {
+            "id": "saved-posts-fields",
+            "type": "text",
+            "x": 1250,
+            "y": 645,
+            "text": "id (PK) - INTEGER\nuser_id (FK) - INTEGER\npost_id (FK) - INTEGER\ncreated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 230,
+            "lineHeight": 1.5
+        }
+    ],
+    "connectors": [
+        {
+            "from": "users-table",
+            "to": "posts-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "posts-table",
+            "to": "comments-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "users-table",
+            "to": "comments-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "posts-table",
+            "to": "likes-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "users-table",
+            "to": "likes-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "users-table",
+            "to": "follows-table",
+            "type": "arrow",
+            "label": "1:N (follower)",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "users-table",
+            "to": "messages-table",
+            "type": "arrow",
+            "label": "1:N (sender)",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "conversations-table",
+            "to": "messages-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "users-table",
+            "to": "conversations-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "users-table",
+            "to": "stories-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "posts-table",
+            "to": "post-hashtags-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "hashtags-table",
+            "to": "post-hashtags-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "users-table",
+            "to": "notifications-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "users-table",
+            "to": "saved-posts-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "posts-table",
+            "to": "saved-posts-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        }
+    ]
+}

@@ -350,4 +350,158 @@ export class TemplateManager {
 
         return categories;
     }
+
+    /**
+     * Export a custom template as JSON file
+     */
+    exportTemplate(templateId) {
+        try {
+            const template = this.customTemplates.find(t => t.id === templateId);
+            if (!template) {
+                throw new Error('Template not found');
+            }
+
+            // Create exportable data
+            const exportData = {
+                id: template.id,
+                name: template.name,
+                description: template.description,
+                category: template.category,
+                difficulty: template.difficulty,
+                estimatedTime: template.estimatedTime,
+                tags: template.tags,
+                icon: template.icon,
+                data: template.data,
+                exportedAt: new Date().toISOString(),
+                flowlyVersion: '5.0.0'
+            };
+
+            // Convert to JSON
+            const jsonString = JSON.stringify(exportData, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+
+            // Create download link
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `flowly-template-${template.id}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            console.log(`✅ Exported template: ${template.name}`);
+            return true;
+        } catch (error) {
+            console.error('Error exporting template:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Import a template from JSON file
+     */
+    async importTemplate(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                try {
+                    const importData = JSON.parse(e.target.result);
+
+                    // Validate required fields
+                    if (!importData.name || !importData.data) {
+                        throw new Error('Invalid template file: missing required fields');
+                    }
+
+                    // Check if template with same ID already exists
+                    const existingIndex = this.customTemplates.findIndex(t => t.id === importData.id);
+                    if (existingIndex !== -1) {
+                        // Update existing template
+                        this.customTemplates[existingIndex] = {
+                            id: importData.id,
+                            name: importData.name,
+                            description: importData.description || '',
+                            category: 'custom',
+                            difficulty: importData.difficulty || 'intermediate',
+                            estimatedTime: importData.estimatedTime || '5 min',
+                            tags: importData.tags || [],
+                            icon: importData.icon || '📄',
+                            isCustom: true,
+                            data: importData.data
+                        };
+                    } else {
+                        // Add new template
+                        const newTemplate = {
+                            id: importData.id || `custom-${Date.now()}`,
+                            name: importData.name,
+                            description: importData.description || '',
+                            category: 'custom',
+                            difficulty: importData.difficulty || 'intermediate',
+                            estimatedTime: importData.estimatedTime || '5 min',
+                            tags: importData.tags || [],
+                            icon: importData.icon || '📄',
+                            isCustom: true,
+                            data: importData.data
+                        };
+                        this.customTemplates.push(newTemplate);
+                    }
+
+                    // Save to localStorage
+                    this.saveCustomTemplates();
+
+                    // Reload templates list
+                    this.templates = [...this.metadata?.templates || [], ...this.customTemplates];
+
+                    console.log(`✅ Imported template: ${importData.name}`);
+                    resolve(importData);
+                } catch (error) {
+                    console.error('Error importing template:', error);
+                    reject(error);
+                }
+            };
+
+            reader.onerror = () => {
+                reject(new Error('Failed to read file'));
+            };
+
+            reader.readAsText(file);
+        });
+    }
+
+    /**
+     * Export all custom templates as a single JSON file
+     */
+    exportAllCustomTemplates() {
+        try {
+            if (this.customTemplates.length === 0) {
+                throw new Error('No custom templates to export');
+            }
+
+            const exportData = {
+                templates: this.customTemplates,
+                exportedAt: new Date().toISOString(),
+                flowlyVersion: '5.0.0',
+                count: this.customTemplates.length
+            };
+
+            const jsonString = JSON.stringify(exportData, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `flowly-templates-backup-${Date.now()}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            console.log(`✅ Exported ${this.customTemplates.length} custom templates`);
+            return true;
+        } catch (error) {
+            console.error('Error exporting templates:', error);
+            throw error;
+        }
+    }
 }

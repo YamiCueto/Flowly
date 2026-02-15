@@ -56,15 +56,24 @@ export class TemplatesGallery {
 						</button>
 					</div>
 					<div class="modal-body">
-						<!-- Search bar -->
+						<!-- Search bar and actions -->
 						<div class="templates-search-bar">
 							<input type="text" 
 								   id="templates-search" 
 								   class="templates-search-input" 
 								   placeholder="🔍 Buscar plantillas...">
-							<button class="btn-save-template" id="save-template-btn">
-								<i class="fas fa-save"></i> Guardar como Plantilla
-							</button>
+							<div class="template-actions-bar">
+								<button class="btn-save-template" id="save-template-btn" title="Guardar canvas actual como plantilla">
+									<i class="fas fa-save"></i> Guardar como Plantilla
+								</button>
+								<button class="btn-import-template" id="import-template-btn" title="Importar plantilla desde archivo">
+									<i class="fas fa-file-import"></i> Importar
+								</button>
+								<button class="btn-export-templates" id="export-all-templates-btn" title="Exportar todas las plantillas personalizadas">
+									<i class="fas fa-file-export"></i> Exportar Todas
+								</button>
+							</div>
+							<input type="file" id="import-template-input" accept=".json" style="display: none;">
 						</div>
 
 						<!-- Category tabs -->
@@ -116,6 +125,25 @@ export class TemplatesGallery {
         // Save template button
         document.getElementById('save-template-btn').addEventListener('click', () => {
             this.showSaveTemplateDialog();
+        });
+
+        // Import template button
+        document.getElementById('import-template-btn').addEventListener('click', () => {
+            document.getElementById('import-template-input').click();
+        });
+
+        // Import template file input
+        document.getElementById('import-template-input').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                await this.importTemplate(file);
+                e.target.value = ''; // Reset input
+            }
+        });
+
+        // Export all templates button
+        document.getElementById('export-all-templates-btn').addEventListener('click', () => {
+            this.exportAllTemplates();
         });
 
         // ESC key to close
@@ -200,6 +228,15 @@ export class TemplatesGallery {
             });
         });
 
+        // Add export listeners for custom templates
+        gridContainer.querySelectorAll('.template-export-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                const templateId = e.currentTarget.dataset.templateId;
+                await this.exportTemplate(templateId);
+            });
+        });
+
         // Add delete listeners for custom templates
         gridContainer.querySelectorAll('.template-delete-btn').forEach(btn => {
             btn.addEventListener('click', async (e) => {
@@ -251,7 +288,10 @@ export class TemplatesGallery {
 						<i class="fas fa-plus-circle"></i> Usar Plantilla
 					</button>
 					${template.isCustom ? `
-						<button class="template-delete-btn" data-template-id="${template.id}">
+						<button class="template-export-btn" data-template-id="${template.id}" title="Exportar plantilla">
+							<i class="fas fa-file-export"></i>
+						</button>
+						<button class="template-delete-btn" data-template-id="${template.id}" title="Eliminar plantilla">
 							<i class="fas fa-trash"></i>
 						</button>
 					` : ''}
@@ -400,6 +440,95 @@ export class TemplatesGallery {
                 text: 'La plantilla se ha eliminado',
                 timer: 2000,
                 showConfirmButton: false
+            });
+        }
+    }
+
+    /**
+     * Export a single custom template
+     */
+    async exportTemplate(templateId) {
+        try {
+            this.templateManager.exportTemplate(templateId);
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Exportado',
+                text: 'La plantilla se ha exportado correctamente',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo exportar la plantilla: ' + error.message
+            });
+        }
+    }
+
+    /**
+     * Import a template from file
+     */
+    async importTemplate(file) {
+        try {
+            Swal.fire({
+                title: 'Importando plantilla...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            const templateData = await this.templateManager.importTemplate(file);
+
+            // Refresh templates
+            this.renderTemplates();
+
+            Swal.fire({
+                icon: 'success',
+                title: '¡Importado!',
+                text: `Plantilla "${templateData.name}" importada correctamente`,
+                timer: 2000,
+                showConfirmButton: false
+            });
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al importar',
+                text: error.message
+            });
+        }
+    }
+
+    /**
+     * Export all custom templates
+     */
+    async exportAllTemplates() {
+        try {
+            if (this.templateManager.customTemplates.length === 0) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Sin plantillas',
+                    text: 'No tienes plantillas personalizadas para exportar'
+                });
+                return;
+            }
+
+            this.templateManager.exportAllCustomTemplates();
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Exportado',
+                text: `${this.templateManager.customTemplates.length} plantilla(s) exportada(s) correctamente`,
+                timer: 2500,
+                showConfirmButton: false
+            });
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudieron exportar las plantillas: ' + error.message
             });
         }
     }

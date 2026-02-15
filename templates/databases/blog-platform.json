@@ -1,0 +1,376 @@
+{
+    "name": "Blog Platform Database",
+    "description": "Schema completo para plataforma de blog con usuarios, posts, comentarios y tags",
+    "version": "1.0.0",
+    "author": "Flowly Templates",
+    "category": "databases",
+    "difficulty": "intermediate",
+    "estimatedTime": "8 min",
+    "tags": ["database", "blog", "cms", "postgresql", "mysql"],
+    "canvas": {
+        "width": 1400,
+        "height": 900,
+        "gridSize": 20,
+        "backgroundColor": "#FFFFFF"
+    },
+    "shapes": [
+        {
+            "id": "title",
+            "type": "text",
+            "x": 500,
+            "y": 30,
+            "text": "📝 Blog Platform Database Schema",
+            "fontSize": 24,
+            "fontWeight": "bold",
+            "fill": "#1D1B20",
+            "width": 400,
+            "align": "center"
+        },
+        {
+            "id": "users-table",
+            "type": "rounded-rectangle",
+            "x": 100,
+            "y": 100,
+            "width": 250,
+            "height": 220,
+            "fill": "#E8F5E9",
+            "stroke": "#4CAF50",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "users-header",
+            "type": "text",
+            "x": 110,
+            "y": 110,
+            "text": "👤 USERS",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#2E7D32",
+            "width": 230
+        },
+        {
+            "id": "users-fields",
+            "type": "text",
+            "x": 110,
+            "y": 145,
+            "text": "id (PK) - INTEGER\nusername - VARCHAR(50)\nemail - VARCHAR(255)\npassword_hash - VARCHAR(255)\nfirst_name - VARCHAR(100)\nlast_name - VARCHAR(100)\nbio - TEXT\navatar_url - VARCHAR(500)\nis_active - BOOLEAN\nrole - ENUM(admin,author,reader)\ncreated_at - TIMESTAMP\nupdated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 230,
+            "lineHeight": 1.5
+        },
+        {
+            "id": "posts-table",
+            "type": "rounded-rectangle",
+            "x": 450,
+            "y": 100,
+            "width": 280,
+            "height": 260,
+            "fill": "#E3F2FD",
+            "stroke": "#2196F3",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "posts-header",
+            "type": "text",
+            "x": 460,
+            "y": 110,
+            "text": "📄 POSTS",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#0D47A1",
+            "width": 260
+        },
+        {
+            "id": "posts-fields",
+            "type": "text",
+            "x": 460,
+            "y": 145,
+            "text": "id (PK) - INTEGER\nauthor_id (FK) - INTEGER\ncategory_id (FK) - INTEGER\ntitle - VARCHAR(255)\nslug - VARCHAR(255)\nexcerpt - TEXT\ncontent - LONGTEXT\nfeatured_image - VARCHAR(500)\nstatus - ENUM(draft,published,archived)\nview_count - INTEGER\nis_featured - BOOLEAN\npublished_at - TIMESTAMP\ncreated_at - TIMESTAMP\nupdated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 260,
+            "lineHeight": 1.5
+        },
+        {
+            "id": "comments-table",
+            "type": "rounded-rectangle",
+            "x": 850,
+            "y": 100,
+            "width": 280,
+            "height": 200,
+            "fill": "#FFF3E0",
+            "stroke": "#FF9800",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "comments-header",
+            "type": "text",
+            "x": 860,
+            "y": 110,
+            "text": "💬 COMMENTS",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#E65100",
+            "width": 260
+        },
+        {
+            "id": "comments-fields",
+            "type": "text",
+            "x": 860,
+            "y": 145,
+            "text": "id (PK) - INTEGER\npost_id (FK) - INTEGER\nuser_id (FK) - INTEGER\nparent_id (FK) - INTEGER\ncontent - TEXT\nis_approved - BOOLEAN\nip_address - VARCHAR(45)\nuser_agent - VARCHAR(255)\ncreated_at - TIMESTAMP\nupdated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 260,
+            "lineHeight": 1.5
+        },
+        {
+            "id": "categories-table",
+            "type": "rounded-rectangle",
+            "x": 100,
+            "y": 400,
+            "width": 250,
+            "height": 180,
+            "fill": "#F3E5F5",
+            "stroke": "#9C27B0",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "categories-header",
+            "type": "text",
+            "x": 110,
+            "y": 410,
+            "text": "🏷️ CATEGORIES",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#4A148C",
+            "width": 230
+        },
+        {
+            "id": "categories-fields",
+            "type": "text",
+            "x": 110,
+            "y": 445,
+            "text": "id (PK) - INTEGER\nname - VARCHAR(100)\nslug - VARCHAR(100)\ndescription - TEXT\nparent_id (FK) - INTEGER\npost_count - INTEGER\ncreated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 230,
+            "lineHeight": 1.5
+        },
+        {
+            "id": "tags-table",
+            "type": "rounded-rectangle",
+            "x": 450,
+            "y": 450,
+            "width": 250,
+            "height": 150,
+            "fill": "#FCE4EC",
+            "stroke": "#E91E63",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "tags-header",
+            "type": "text",
+            "x": 460,
+            "y": 460,
+            "text": "🔖 TAGS",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#880E4F",
+            "width": 230
+        },
+        {
+            "id": "tags-fields",
+            "type": "text",
+            "x": 460,
+            "y": 495,
+            "text": "id (PK) - INTEGER\nname - VARCHAR(50)\nslug - VARCHAR(50)\npost_count - INTEGER\ncreated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 230,
+            "lineHeight": 1.5
+        },
+        {
+            "id": "post-tags-table",
+            "type": "rounded-rectangle",
+            "x": 800,
+            "y": 400,
+            "width": 250,
+            "height": 140,
+            "fill": "#FFF9C4",
+            "stroke": "#F57F17",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "post-tags-header",
+            "type": "text",
+            "x": 810,
+            "y": 410,
+            "text": "🔗 POST_TAGS",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#F57F17",
+            "width": 230
+        },
+        {
+            "id": "post-tags-fields",
+            "type": "text",
+            "x": 810,
+            "y": 445,
+            "text": "id (PK) - INTEGER\npost_id (FK) - INTEGER\ntag_id (FK) - INTEGER\ncreated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 230,
+            "lineHeight": 1.5
+        },
+        {
+            "id": "media-table",
+            "type": "rounded-rectangle",
+            "x": 100,
+            "y": 650,
+            "width": 280,
+            "height": 180,
+            "fill": "#E0F2F1",
+            "stroke": "#009688",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "media-header",
+            "type": "text",
+            "x": 110,
+            "y": 660,
+            "text": "🖼️ MEDIA",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#004D40",
+            "width": 260
+        },
+        {
+            "id": "media-fields",
+            "type": "text",
+            "x": 110,
+            "y": 695,
+            "text": "id (PK) - INTEGER\nuser_id (FK) - INTEGER\nfilename - VARCHAR(255)\nfile_path - VARCHAR(500)\nfile_type - VARCHAR(50)\nfile_size - INTEGER\nalt_text - VARCHAR(255)\ncreated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 260,
+            "lineHeight": 1.5
+        },
+        {
+            "id": "likes-table",
+            "type": "rounded-rectangle",
+            "x": 450,
+            "y": 680,
+            "width": 250,
+            "height": 150,
+            "fill": "#FFEBEE",
+            "stroke": "#F44336",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "likes-header",
+            "type": "text",
+            "x": 460,
+            "y": 690,
+            "text": "❤️ POST_LIKES",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#B71C1C",
+            "width": 230
+        },
+        {
+            "id": "likes-fields",
+            "type": "text",
+            "x": 460,
+            "y": 725,
+            "text": "id (PK) - INTEGER\npost_id (FK) - INTEGER\nuser_id (FK) - INTEGER\ncreated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 230,
+            "lineHeight": 1.5
+        }
+    ],
+    "connectors": [
+        {
+            "from": "users-table",
+            "to": "posts-table",
+            "type": "arrow",
+            "label": "1:N (author)",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "categories-table",
+            "to": "posts-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "posts-table",
+            "to": "comments-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "users-table",
+            "to": "comments-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "posts-table",
+            "to": "post-tags-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "tags-table",
+            "to": "post-tags-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "users-table",
+            "to": "media-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "posts-table",
+            "to": "likes-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "users-table",
+            "to": "likes-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        }
+    ]
+}

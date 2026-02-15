@@ -25,15 +25,15 @@
       "icon": "⚡"
     },
     {
-      "id": "aws-microservices-ecs",
-      "name": "Microservices on ECS",
-      "description": "Arquitectura de microservicios usando ECS, ALB y RDS compartido",
+      "id": "aws-event-driven",
+      "name": "Event-Driven Architecture",
+      "description": "Arquitectura basada en eventos con AWS EventBridge, SNS, SQS y Lambda",
       "category": "aws",
-      "file": "aws/microservices-ecs.json",
-      "tags": ["aws", "microservices", "ecs", "containers", "docker"],
-      "difficulty": "advanced",
-      "estimatedTime": "8 min",
-      "icon": "🐳"
+      "file": "aws/event-driven-architecture.json",
+      "tags": ["aws", "event-driven", "serverless", "eventbridge", "sns", "sqs", "lambda"],
+      "difficulty": "intermediate",
+      "estimatedTime": "10 min",
+      "icon": "⚡"
     },
     {
       "id": "microservices-basic",
@@ -47,28 +47,6 @@
       "icon": "🔷"
     },
     {
-      "id": "event-driven",
-      "name": "Event-Driven Architecture",
-      "description": "Arquitectura orientada a eventos con Event Bus y productores/consumidores",
-      "category": "microservices",
-      "file": "microservices/event-driven.json",
-      "tags": ["microservices", "events", "messaging", "kafka"],
-      "difficulty": "advanced",
-      "estimatedTime": "7 min",
-      "icon": "📡"
-    },
-    {
-      "id": "api-gateway-pattern",
-      "name": "API Gateway Pattern",
-      "description": "Patrón de API Gateway como punto único de entrada a microservicios",
-      "category": "microservices",
-      "file": "microservices/api-gateway-pattern.json",
-      "tags": ["microservices", "api-gateway", "routing"],
-      "difficulty": "intermediate",
-      "estimatedTime": "4 min",
-      "icon": "🚪"
-    },
-    {
       "id": "ecommerce-er",
       "name": "E-commerce Database Schema",
       "description": "Schema completo para tienda online con usuarios, productos y órdenes",
@@ -80,26 +58,26 @@
       "icon": "🛒"
     },
     {
-      "id": "social-media-schema",
-      "name": "Social Media Schema",
-      "description": "Schema de red social con usuarios, posts, comentarios y relaciones",
-      "category": "databases",
-      "file": "databases/social-media-schema.json",
-      "tags": ["database", "er-diagram", "social-media", "relationships"],
-      "difficulty": "intermediate",
-      "estimatedTime": "6 min",
-      "icon": "👥"
-    },
-    {
       "id": "blog-platform",
-      "name": "Blog Platform Schema",
-      "description": "Schema de plataforma de blog con posts, categorías, tags y comentarios",
+      "name": "Blog Platform Database",
+      "description": "Schema completo para plataforma de blog con usuarios, posts, comentarios y tags",
       "category": "databases",
       "file": "databases/blog-platform.json",
-      "tags": ["database", "er-diagram", "blog", "cms"],
-      "difficulty": "beginner",
-      "estimatedTime": "3 min",
+      "tags": ["database", "blog", "cms", "postgresql", "mysql"],
+      "difficulty": "intermediate",
+      "estimatedTime": "8 min",
       "icon": "📝"
+    },
+    {
+      "id": "social-media-platform",
+      "name": "Social Media Platform Database",
+      "description": "Schema completo para plataforma de redes sociales con posts, follows, likes y mensajes",
+      "category": "databases",
+      "file": "databases/social-media-platform.json",
+      "tags": ["database", "social-media", "postgresql", "mysql", "instagram", "twitter"],
+      "difficulty": "advanced",
+      "estimatedTime": "12 min",
+      "icon": "📱"
     }
   ],
   "categories": [
