@@ -21,7 +21,10 @@ export class ShapeFactory {
     };
 
     static lineProps = {
-        stroke: '#2c3e50',
+        get stroke() {
+            const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+            return isDarkMode ? '#60A5FA' : '#2c3e50';
+        },
         strokeWidth: 2,
         lineCap: 'round',
         lineJoin: 'round',
@@ -140,8 +143,15 @@ export class ShapeFactory {
      * Create line
      */
     static createLine(options) {
+        const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+        const defaultStroke = isDarkMode ? '#60A5FA' : '#2c3e50';
+        
         return new Konva.Line({
-            ...this.lineProps,
+            stroke: defaultStroke,
+            strokeWidth: 2,
+            lineCap: 'round',
+            lineJoin: 'round',
+            draggable: true,
             points: [0, 0, 100, 0],
             ...options
         });
@@ -151,12 +161,19 @@ export class ShapeFactory {
      * Create arrow
      */
     static createArrow(options) {
+        const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+        const defaultStroke = isDarkMode ? '#60A5FA' : '#2c3e50';
+        
         return new Konva.Arrow({
-            ...this.lineProps,
+            stroke: defaultStroke,
+            strokeWidth: 2,
+            lineCap: 'round',
+            lineJoin: 'round',
+            draggable: true,
             points: [0, 0, 100, 0],
             pointerLength: 10,
             pointerWidth: 10,
-            fill: options.stroke || this.lineProps.stroke,
+            fill: options.stroke || defaultStroke,
             ...options
         });
     }
@@ -184,8 +201,16 @@ export class ShapeFactory {
         const startPos = startShape.position();
         const endPos = endShape.position();
         
+        // Get theme-aware color
+        const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+        const defaultStroke = isDarkMode ? '#60A5FA' : '#2c3e50';
+        
         const arrow = new Konva.Arrow({
-            ...this.lineProps,
+            stroke: defaultStroke,
+            strokeWidth: 2,
+            lineCap: 'round',
+            lineJoin: 'round',
+            draggable: true,
             points: [
                 startPos.x + startShape.width() / 2,
                 startPos.y + startShape.height() / 2,
@@ -194,7 +219,7 @@ export class ShapeFactory {
             ],
             pointerLength: 10,
             pointerWidth: 10,
-            fill: options.stroke || this.lineProps.stroke,
+            fill: options.stroke || defaultStroke,
             ...options
         });
         
@@ -221,12 +246,23 @@ export class ShapeFactory {
      * Get default properties for a shape type
      */
     static getDefaultProps(type) {
+        const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+        
         switch(type) {
             case 'text':
-                return { ...this.textProps };
+                return { 
+                    ...this.textProps,
+                    fill: isDarkMode ? '#E6E0E9' : '#000000'
+                };
             case 'line':
             case 'arrow':
-                return { ...this.lineProps };
+                return { 
+                    stroke: isDarkMode ? '#60A5FA' : '#2c3e50',
+                    strokeWidth: 2,
+                    lineCap: 'round',
+                    lineJoin: 'round',
+                    draggable: true
+                };
             default:
                 return { ...this.defaultProps };
         }

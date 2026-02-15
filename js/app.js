@@ -255,9 +255,10 @@ class FlowlyApp {
 		// Save preference
 		localStorage.setItem('theme', theme);
 		
-		// Update text colors on canvas for better contrast
+		// Update text and connector colors on canvas for better contrast
 		if (this.canvasManager && this.canvasManager.mainLayer) {
 			const textColor = theme === 'dark' ? '#E6E0E9' : '#2c3e50';
+			const lineColor = theme === 'dark' ? '#60A5FA' : '#2c3e50';
 			
 			// Update all text elements
 			this.canvasManager.mainLayer.find('Text').forEach(textNode => {
@@ -266,6 +267,23 @@ class FlowlyApp {
 				if (currentFill === '#2c3e50' || currentFill === '#E6E0E9' || 
 				    currentFill === '#1D1B20' || currentFill === 'black') {
 					textNode.fill(textColor);
+				}
+			});
+			
+			// Update all arrows (connectors)
+			this.canvasManager.mainLayer.find('Arrow').forEach(arrow => {
+				const currentStroke = arrow.stroke();
+				if (currentStroke === '#2c3e50' || currentStroke === '#60A5FA') {
+					arrow.stroke(lineColor);
+					arrow.fill(lineColor); // Update arrowhead fill
+				}
+			});
+			
+			// Update all lines
+			this.canvasManager.mainLayer.find('Line').forEach(line => {
+				const currentStroke = line.stroke();
+				if (currentStroke === '#2c3e50' || currentStroke === '#60A5FA') {
+					line.stroke(lineColor);
 				}
 			});
 			

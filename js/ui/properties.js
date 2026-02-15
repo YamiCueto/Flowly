@@ -48,8 +48,12 @@ export function setupPropertiesPanel(app) {
         const conn = app.connectorsManager.findConnectorByArrow(sel);
         if (!conn) return;
 
+        // Get theme-aware default stroke
+        const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+        const defaultStroke = isDarkMode ? '#60A5FA' : '#2c3e50';
+
         const opts = {
-            stroke: connectorStroke.value || '#2c3e50',
+            stroke: connectorStroke.value || defaultStroke,
             strokeWidth: parseInt(connectorWidth.value, 10) || 2,
             dash: connectorDashed.checked ? [6, 4] : [],
             type: connectorType.value,

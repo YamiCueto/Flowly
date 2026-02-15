@@ -32,6 +32,10 @@ export class ConnectorsManager {
      * Create a connector between two shapes
      */
     createConnector(shape1, shape2, options = {}) {
+        // Detect theme for connector color
+        const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+        const defaultStroke = isDarkMode ? '#60A5FA' : '#2c3e50';
+        
         const connector = {
             id: Date.now().toString(),
             startShape: shape1,
@@ -39,7 +43,7 @@ export class ConnectorsManager {
             arrow: null,
             type: options.type || 'arrow', // 'arrow' | 'line' | 'bezier'
             options: {
-                stroke: '#2c3e50',
+                stroke: defaultStroke,
                 strokeWidth: 2,
                 pointerLength: 10,
                 pointerWidth: 10,
