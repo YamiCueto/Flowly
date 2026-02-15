@@ -1,0 +1,219 @@
+{
+    "name": "E-commerce Database Schema",
+    "description": "Schema completo para tienda online",
+    "version": "1.0.0",
+    "author": "Flowly Templates",
+    "category": "databases",
+    "canvas": {
+        "width": 1200,
+        "height": 800,
+        "gridSize": 20,
+        "backgroundColor": "#FFFFFF"
+    },
+    "shapes": [
+        {
+            "id": "users-table",
+            "type": "rounded-rectangle",
+            "x": 100,
+            "y": 100,
+            "width": 220,
+            "height": 200,
+            "fill": "#E8F5E9",
+            "stroke": "#4CAF50",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "users-header",
+            "type": "text",
+            "x": 110,
+            "y": 110,
+            "text": "👤 USERS",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#2E7D32",
+            "width": 200
+        },
+        {
+            "id": "users-fields",
+            "type": "text",
+            "x": 110,
+            "y": 145,
+            "text": "id (PK) - INTEGER\nemail - VARCHAR(255)\npassword_hash - VARCHAR(255)\nfirst_name - VARCHAR(100)\nlast_name - VARCHAR(100)\nphone - VARCHAR(20)\ncreated_at - TIMESTAMP\nupdated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 200,
+            "lineHeight": 1.6
+        },
+        {
+            "id": "products-table",
+            "type": "rounded-rectangle",
+            "x": 850,
+            "y": 100,
+            "width": 250,
+            "height": 220,
+            "fill": "#FFF3E0",
+            "stroke": "#FF9800",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "products-header",
+            "type": "text",
+            "x": 860,
+            "y": 110,
+            "text": "📦 PRODUCTS",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#E65100",
+            "width": 230
+        },
+        {
+            "id": "products-fields",
+            "type": "text",
+            "x": 860,
+            "y": 145,
+            "text": "id (PK) - INTEGER\nname - VARCHAR(255)\ndescription - TEXT\nprice - DECIMAL(10,2)\nstock_quantity - INTEGER\ncategory_id (FK) - INTEGER\nimage_url - VARCHAR(500)\nis_active - BOOLEAN\ncreated_at - TIMESTAMP\nupdated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 230,
+            "lineHeight": 1.6
+        },
+        {
+            "id": "orders-table",
+            "type": "rounded-rectangle",
+            "x": 450,
+            "y": 100,
+            "width": 250,
+            "height": 220,
+            "fill": "#E3F2FD",
+            "stroke": "#2196F3",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "orders-header",
+            "type": "text",
+            "x": 460,
+            "y": 110,
+            "text": "🛒 ORDERS",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#0D47A1",
+            "width": 230
+        },
+        {
+            "id": "orders-fields",
+            "type": "text",
+            "x": 460,
+            "y": 145,
+            "text": "id (PK) - INTEGER\nuser_id (FK) - INTEGER\norder_number - VARCHAR(50)\ntotal_amount - DECIMAL(10,2)\nstatus - ENUM\nshipping_address - TEXT\nbilling_address - TEXT\npayment_method - VARCHAR(50)\ncreated_at - TIMESTAMP\nupdated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 230,
+            "lineHeight": 1.6
+        },
+        {
+            "id": "order-items-table",
+            "type": "rounded-rectangle",
+            "x": 450,
+            "y": 400,
+            "width": 250,
+            "height": 180,
+            "fill": "#F3E5F5",
+            "stroke": "#9C27B0",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "order-items-header",
+            "type": "text",
+            "x": 460,
+            "y": 410,
+            "text": "📋 ORDER_ITEMS",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#4A148C",
+            "width": 230
+        },
+        {
+            "id": "order-items-fields",
+            "type": "text",
+            "x": 460,
+            "y": 445,
+            "text": "id (PK) - INTEGER\norder_id (FK) - INTEGER\nproduct_id (FK) - INTEGER\nquantity - INTEGER\nunit_price - DECIMAL(10,2)\nsubtotal - DECIMAL(10,2)\ncreated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 230,
+            "lineHeight": 1.6
+        },
+        {
+            "id": "categories-table",
+            "type": "rounded-rectangle",
+            "x": 850,
+            "y": 400,
+            "width": 250,
+            "height": 150,
+            "fill": "#FCE4EC",
+            "stroke": "#E91E63",
+            "strokeWidth": 3,
+            "cornerRadius": 8
+        },
+        {
+            "id": "categories-header",
+            "type": "text",
+            "x": 860,
+            "y": 410,
+            "text": "🏷️ CATEGORIES",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "fill": "#880E4F",
+            "width": 230
+        },
+        {
+            "id": "categories-fields",
+            "type": "text",
+            "x": 860,
+            "y": 445,
+            "text": "id (PK) - INTEGER\nname - VARCHAR(100)\ndescription - TEXT\nparent_id (FK) - INTEGER\ncreated_at - TIMESTAMP",
+            "fontSize": 12,
+            "fill": "#1D1B20",
+            "width": 230,
+            "lineHeight": 1.6
+        }
+    ],
+    "connectors": [
+        {
+            "from": "users-table",
+            "to": "orders-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "orders-table",
+            "to": "order-items-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "products-table",
+            "to": "order-items-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "categories-table",
+            "to": "products-table",
+            "type": "arrow",
+            "label": "1:N",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        }
+    ]
+}

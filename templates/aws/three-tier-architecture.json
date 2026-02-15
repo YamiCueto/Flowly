@@ -1,0 +1,193 @@
+{
+    "name": "AWS Three-Tier Architecture",
+    "description": "Arquitectura clásica de 3 capas con ALB, EC2 y RDS",
+    "version": "1.0.0",
+    "author": "Flowly Templates",
+    "category": "aws",
+    "canvas": {
+        "width": 1200,
+        "height": 800,
+        "gridSize": 20,
+        "backgroundColor": "#FFFFFF"
+    },
+    "shapes": [
+        {
+            "id": "internet",
+            "type": "text",
+            "x": 580,
+            "y": 30,
+            "text": "🌐 Internet",
+            "fontSize": 20,
+            "fontWeight": "bold",
+            "fill": "#1D1B20",
+            "width": 150,
+            "align": "center"
+        },
+        {
+            "id": "alb",
+            "type": "image",
+            "icon": "assets/aws/Architecture-Service-Icons_07312025/Arch_Networking-Content-Delivery/64/Arch_Elastic-Load-Balancing_64.svg",
+            "x": 550,
+            "y": 120,
+            "width": 80,
+            "height": 60,
+            "label": "Application\nLoad Balancer"
+        },
+        {
+            "id": "web-tier-label",
+            "type": "text",
+            "x": 50,
+            "y": 280,
+            "text": "Web Tier",
+            "fontSize": 16,
+            "fontWeight": "bold",
+            "fill": "#6750A4",
+            "width": 100
+        },
+        {
+            "id": "ec2-1",
+            "type": "image",
+            "icon": "assets/aws/Architecture-Service-Icons_07312025/Arch_Compute/64/Arch_Amazon-EC2_64.svg",
+            "x": 400,
+            "y": 260,
+            "width": 80,
+            "height": 60,
+            "label": "Web Server 1"
+        },
+        {
+            "id": "ec2-2",
+            "type": "image",
+            "icon": "assets/aws/Architecture-Service-Icons_07312025/Arch_Compute/64/Arch_Amazon-EC2_64.svg",
+            "x": 550,
+            "y": 260,
+            "width": 80,
+            "height": 60,
+            "label": "Web Server 2"
+        },
+        {
+            "id": "ec2-3",
+            "type": "image",
+            "icon": "assets/aws/Architecture-Service-Icons_07312025/Arch_Compute/64/Arch_Amazon-EC2_64.svg",
+            "x": 700,
+            "y": 260,
+            "width": 80,
+            "height": 60,
+            "label": "Web Server 3"
+        },
+        {
+            "id": "app-tier-label",
+            "type": "text",
+            "x": 50,
+            "y": 420,
+            "text": "Application Tier",
+            "fontSize": 16,
+            "fontWeight": "bold",
+            "fill": "#6750A4",
+            "width": 150
+        },
+        {
+            "id": "app-server",
+            "type": "image",
+            "icon": "assets/aws/Architecture-Service-Icons_07312025/Arch_Compute/64/Arch_Amazon-EC2_64.svg",
+            "x": 550,
+            "y": 400,
+            "width": 80,
+            "height": 60,
+            "label": "App Servers"
+        },
+        {
+            "id": "data-tier-label",
+            "type": "text",
+            "x": 50,
+            "y": 560,
+            "text": "Data Tier",
+            "fontSize": 16,
+            "fontWeight": "bold",
+            "fill": "#6750A4",
+            "width": 100
+        },
+        {
+            "id": "rds-primary",
+            "type": "image",
+            "icon": "assets/aws/Architecture-Service-Icons_07312025/Arch_Database/64/Arch_Amazon-RDS_64.svg",
+            "x": 480,
+            "y": 540,
+            "width": 80,
+            "height": 60,
+            "label": "RDS Primary"
+        },
+        {
+            "id": "rds-replica",
+            "type": "image",
+            "icon": "assets/aws/Architecture-Service-Icons_07312025/Arch_Database/64/Arch_Amazon-RDS_64.svg",
+            "x": 620,
+            "y": 540,
+            "width": 80,
+            "height": 60,
+            "label": "RDS Replica"
+        }
+    ],
+    "connectors": [
+        {
+            "from": "alb",
+            "to": "ec2-1",
+            "type": "arrow",
+            "stroke": "#6750A4",
+            "strokeWidth": 2
+        },
+        {
+            "from": "alb",
+            "to": "ec2-2",
+            "type": "arrow",
+            "stroke": "#6750A4",
+            "strokeWidth": 2
+        },
+        {
+            "from": "alb",
+            "to": "ec2-3",
+            "type": "arrow",
+            "stroke": "#6750A4",
+            "strokeWidth": 2
+        },
+        {
+            "from": "ec2-1",
+            "to": "app-server",
+            "type": "arrow",
+            "stroke": "#FF9800",
+            "strokeWidth": 2
+        },
+        {
+            "from": "ec2-2",
+            "to": "app-server",
+            "type": "arrow",
+            "stroke": "#FF9800",
+            "strokeWidth": 2
+        },
+        {
+            "from": "ec2-3",
+            "to": "app-server",
+            "type": "arrow",
+            "stroke": "#FF9800",
+            "strokeWidth": 2
+        },
+        {
+            "from": "app-server",
+            "to": "rds-primary",
+            "type": "arrow",
+            "stroke": "#2196F3",
+            "strokeWidth": 2
+        },
+        {
+            "from": "rds-primary",
+            "to": "rds-replica",
+            "type": "arrow",
+            "stroke": "#9C27B0",
+            "strokeWidth": 2,
+            "dash": [
+                5,
+                5
+            ],
+            "label": "Replication"
+        }
+    ]
+}

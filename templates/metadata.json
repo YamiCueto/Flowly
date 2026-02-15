@@ -1,0 +1,125 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-02-15",
+  "templates": [
+    {
+      "id": "aws-three-tier",
+      "name": "AWS Three-Tier Architecture",
+      "description": "Arquitectura clásica de 3 capas con ALB, EC2 y RDS para aplicaciones web escalables",
+      "category": "aws",
+      "file": "aws/three-tier-architecture.json",
+      "tags": ["aws", "web", "database", "load-balancer", "ec2", "rds"],
+      "difficulty": "intermediate",
+      "estimatedTime": "5 min",
+      "icon": "🏗️"
+    },
+    {
+      "id": "aws-serverless-api",
+      "name": "Serverless API",
+      "description": "API serverless con API Gateway, Lambda y DynamoDB para aplicaciones sin servidor",
+      "category": "aws",
+      "file": "aws/serverless-api.json",
+      "tags": ["aws", "serverless", "api", "lambda", "dynamodb"],
+      "difficulty": "beginner",
+      "estimatedTime": "3 min",
+      "icon": "⚡"
+    },
+    {
+      "id": "aws-microservices-ecs",
+      "name": "Microservices on ECS",
+      "description": "Arquitectura de microservicios usando ECS, ALB y RDS compartido",
+      "category": "aws",
+      "file": "aws/microservices-ecs.json",
+      "tags": ["aws", "microservices", "ecs", "containers", "docker"],
+      "difficulty": "advanced",
+      "estimatedTime": "8 min",
+      "icon": "🐳"
+    },
+    {
+      "id": "microservices-basic",
+      "name": "Basic Microservices Pattern",
+      "description": "Patrón básico de microservicios con API Gateway y servicios independientes",
+      "category": "microservices",
+      "file": "microservices/basic-microservices.json",
+      "tags": ["microservices", "api-gateway", "services"],
+      "difficulty": "intermediate",
+      "estimatedTime": "5 min",
+      "icon": "🔷"
+    },
+    {
+      "id": "event-driven",
+      "name": "Event-Driven Architecture",
+      "description": "Arquitectura orientada a eventos con Event Bus y productores/consumidores",
+      "category": "microservices",
+      "file": "microservices/event-driven.json",
+      "tags": ["microservices", "events", "messaging", "kafka"],
+      "difficulty": "advanced",
+      "estimatedTime": "7 min",
+      "icon": "📡"
+    },
+    {
+      "id": "api-gateway-pattern",
+      "name": "API Gateway Pattern",
+      "description": "Patrón de API Gateway como punto único de entrada a microservicios",
+      "category": "microservices",
+      "file": "microservices/api-gateway-pattern.json",
+      "tags": ["microservices", "api-gateway", "routing"],
+      "difficulty": "intermediate",
+      "estimatedTime": "4 min",
+      "icon": "🚪"
+    },
+    {
+      "id": "ecommerce-er",
+      "name": "E-commerce Database Schema",
+      "description": "Schema completo para tienda online con usuarios, productos y órdenes",
+      "category": "databases",
+      "file": "databases/ecommerce-er.json",
+      "tags": ["database", "er-diagram", "ecommerce", "sql"],
+      "difficulty": "beginner",
+      "estimatedTime": "4 min",
+      "icon": "🛒"
+    },
+    {
+      "id": "social-media-schema",
+      "name": "Social Media Schema",
+      "description": "Schema de red social con usuarios, posts, comentarios y relaciones",
+      "category": "databases",
+      "file": "databases/social-media-schema.json",
+      "tags": ["database", "er-diagram", "social-media", "relationships"],
+      "difficulty": "intermediate",
+      "estimatedTime": "6 min",
+      "icon": "👥"
+    },
+    {
+      "id": "blog-platform",
+      "name": "Blog Platform Schema",
+      "description": "Schema de plataforma de blog con posts, categorías, tags y comentarios",
+      "category": "databases",
+      "file": "databases/blog-platform.json",
+      "tags": ["database", "er-diagram", "blog", "cms"],
+      "difficulty": "beginner",
+      "estimatedTime": "3 min",
+      "icon": "📝"
+    }
+  ],
+  "categories": [
+    {
+      "id": "aws",
+      "name": "AWS Architecture",
+      "description": "Plantillas de arquitectura AWS Well-Architected",
+      "icon": "☁️"
+    },
+    {
+      "id": "microservices",
+      "name": "Microservices",
+      "description": "Patrones de arquitectura de microservicios",
+      "icon": "🔷"
+    },
+    {
+      "id": "databases",
+      "name": "Database ER Diagrams",
+      "description": "Diagramas entidad-relación para bases de datos",
+      "icon": "🗄️"
+    }
+  ]
+}

@@ -1,0 +1,218 @@
+{
+    "name": "Basic Microservices Pattern",
+    "description": "Patrón básico de microservicios con API Gateway",
+    "version": "1.0.0",
+    "author": "Flowly Templates",
+    "category": "microservices",
+    "canvas": {
+        "width": 1200,
+        "height": 800,
+        "gridSize": 20,
+        "backgroundColor": "#FFFFFF"
+    },
+    "shapes": [
+        {
+            "id": "client",
+            "type": "component",
+            "componentId": "user",
+            "x": 100,
+            "y": 300,
+            "width": 100,
+            "height": 100,
+            "label": "Client"
+        },
+        {
+            "id": "api-gateway",
+            "type": "rounded-rectangle",
+            "x": 300,
+            "y": 280,
+            "width": 180,
+            "height": 140,
+            "fill": "#3498db",
+            "stroke": "#2c3e50",
+            "strokeWidth": 3,
+            "cornerRadius": 12
+        },
+        {
+            "id": "api-gateway-label",
+            "type": "text",
+            "x": 310,
+            "y": 320,
+            "text": "🚪 API Gateway\n\nRouting\nAuthentication\nRate Limiting",
+            "fontSize": 14,
+            "fontWeight": "bold",
+            "fill": "#FFFFFF",
+            "width": 160,
+            "align": "center"
+        },
+        {
+            "id": "auth-service",
+            "type": "rounded-rectangle",
+            "x": 580,
+            "y": 100,
+            "width": 160,
+            "height": 100,
+            "fill": "#e74c3c",
+            "stroke": "#c0392b",
+            "strokeWidth": 2,
+            "cornerRadius": 8
+        },
+        {
+            "id": "auth-label",
+            "type": "text",
+            "x": 590,
+            "y": 130,
+            "text": "🔐 Auth Service\nJWT Tokens",
+            "fontSize": 13,
+            "fill": "#FFFFFF",
+            "width": 140,
+            "align": "center"
+        },
+        {
+            "id": "user-service",
+            "type": "rounded-rectangle",
+            "x": 580,
+            "y": 240,
+            "width": 160,
+            "height": 100,
+            "fill": "#27ae60",
+            "stroke": "#229954",
+            "strokeWidth": 2,
+            "cornerRadius": 8
+        },
+        {
+            "id": "user-label",
+            "type": "text",
+            "x": 590,
+            "y": 270,
+            "text": "👤 User Service\nCRUD Users",
+            "fontSize": 13,
+            "fill": "#FFFFFF",
+            "width": 140,
+            "align": "center"
+        },
+        {
+            "id": "product-service",
+            "type": "rounded-rectangle",
+            "x": 580,
+            "y": 380,
+            "width": 160,
+            "height": 100,
+            "fill": "#f39c12",
+            "stroke": "#d68910",
+            "strokeWidth": 2,
+            "cornerRadius": 8
+        },
+        {
+            "id": "product-label",
+            "type": "text",
+            "x": 590,
+            "y": 410,
+            "text": "📦 Product Service\nCatalog",
+            "fontSize": 13,
+            "fill": "#FFFFFF",
+            "width": 140,
+            "align": "center"
+        },
+        {
+            "id": "order-service",
+            "type": "rounded-rectangle",
+            "x": 580,
+            "y": 520,
+            "width": 160,
+            "height": 100,
+            "fill": "#9b59b6",
+            "stroke": "#8e44ad",
+            "strokeWidth": 2,
+            "cornerRadius": 8
+        },
+        {
+            "id": "order-label",
+            "type": "text",
+            "x": 590,
+            "y": 550,
+            "text": "🛒 Order Service\nCheckout",
+            "fontSize": 13,
+            "fill": "#FFFFFF",
+            "width": 140,
+            "align": "center"
+        },
+        {
+            "id": "message-queue",
+            "type": "rounded-rectangle",
+            "x": 850,
+            "y": 300,
+            "width": 180,
+            "height": 120,
+            "fill": "#34495e",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2,
+            "cornerRadius": 8
+        },
+        {
+            "id": "queue-label",
+            "type": "text",
+            "x": 860,
+            "y": 330,
+            "text": "📨 Message Queue\n(RabbitMQ/Kafka)\n\nAsync Events",
+            "fontSize": 13,
+            "fill": "#FFFFFF",
+            "width": 160,
+            "align": "center"
+        }
+    ],
+    "connectors": [
+        {
+            "from": "client",
+            "to": "api-gateway",
+            "type": "arrow",
+            "label": "HTTPS",
+            "stroke": "#2c3e50",
+            "strokeWidth": 2
+        },
+        {
+            "from": "api-gateway",
+            "to": "auth-service",
+            "type": "arrow",
+            "label": "/auth",
+            "stroke": "#e74c3c",
+            "strokeWidth": 2
+        },
+        {
+            "from": "api-gateway",
+            "to": "user-service",
+            "type": "arrow",
+            "label": "/users",
+            "stroke": "#27ae60",
+            "strokeWidth": 2
+        },
+        {
+            "from": "api-gateway",
+            "to": "product-service",
+            "type": "arrow",
+            "label": "/products",
+            "stroke": "#f39c12",
+            "strokeWidth": 2
+        },
+        {
+            "from": "api-gateway",
+            "to": "order-service",
+            "type": "arrow",
+            "label": "/orders",
+            "stroke": "#9b59b6",
+            "strokeWidth": 2
+        },
+        {
+            "from": "order-service",
+            "to": "message-queue",
+            "type": "arrow",
+            "label": "Events",
+            "stroke": "#95a5a6",
+            "strokeWidth": 2,
+            "dash": [
+                5,
+                5
+            ]
+        }
+    ]
+}

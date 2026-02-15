@@ -1,0 +1,142 @@
+{
+    "name": "Serverless API",
+    "description": "API serverless con API Gateway, Lambda y DynamoDB",
+    "version": "1.0.0",
+    "author": "Flowly Templates",
+    "category": "aws",
+    "canvas": {
+        "width": 1000,
+        "height": 700,
+        "gridSize": 20,
+        "backgroundColor": "#FFFFFF"
+    },
+    "shapes": [
+        {
+            "id": "client",
+            "type": "text",
+            "x": 100,
+            "y": 280,
+            "text": "👤 Client App",
+            "fontSize": 16,
+            "fontWeight": "bold",
+            "fill": "#2c3e50",
+            "width": 120,
+            "align": "center"
+        },
+        {
+            "id": "api-gateway",
+            "type": "image",
+            "icon": "assets/aws/Architecture-Service-Icons_07312025/Arch_Networking-Content-Delivery/64/Arch_Amazon-API-Gateway_64.svg",
+            "x": 340,
+            "y": 260,
+            "width": 80,
+            "height": 60,
+            "label": "API Gateway"
+        },
+        {
+            "id": "lambda-auth",
+            "type": "image",
+            "icon": "assets/aws/Architecture-Service-Icons_07312025/Arch_Compute/64/Arch_AWS-Lambda_64.svg",
+            "x": 550,
+            "y": 140,
+            "width": 80,
+            "height": 60,
+            "label": "Authorizer"
+        },
+        {
+            "id": "lambda-users",
+            "type": "image",
+            "icon": "assets/aws/Architecture-Service-Icons_07312025/Arch_Compute/64/Arch_AWS-Lambda_64.svg",
+            "x": 550,
+            "y": 260,
+            "width": 80,
+            "height": 60,
+            "label": "Users API"
+        },
+        {
+            "id": "lambda-orders",
+            "type": "image",
+            "icon": "assets/aws/Architecture-Service-Icons_07312025/Arch_Compute/64/Arch_AWS-Lambda_64.svg",
+            "x": 550,
+            "y": 380,
+            "width": 80,
+            "height": 60,
+            "label": "Orders API"
+        },
+        {
+            "id": "dynamodb",
+            "type": "image",
+            "icon": "assets/aws/Architecture-Service-Icons_07312025/Arch_Database/64/Arch_Amazon-DynamoDB_64.svg",
+            "x": 760,
+            "y": 260,
+            "width": 80,
+            "height": 60,
+            "label": "DynamoDB"
+        },
+        {
+            "id": "s3",
+            "type": "image",
+            "icon": "assets/aws/Architecture-Service-Icons_07312025/Arch_Storage/64/Arch_Amazon-Simple-Storage-Service_64.svg",
+            "x": 340,
+            "y": 480,
+            "width": 80,
+            "height": 60,
+            "label": "S3 Bucket"
+        },
+        {
+            "id": "cloudfront",
+            "type": "image",
+            "icon": "assets/aws/Architecture-Service-Icons_07312025/Arch_Networking-Content-Delivery/64/Arch_Amazon-CloudFront_64.svg",
+            "x": 100,
+            "y": 480,
+            "width": 80,
+            "height": 60,
+            "label": "CloudFront"
+        }
+    ],
+    "connectors": [
+        {
+            "from": "api-gateway",
+            "to": "lambda-auth",
+            "type": "arrow",
+            "stroke": "#9C27B0",
+            "strokeWidth": 2,
+            "label": "Auth"
+        },
+        {
+            "from": "api-gateway",
+            "to": "lambda-users",
+            "type": "arrow",
+            "stroke": "#FF9800",
+            "strokeWidth": 2
+        },
+        {
+            "from": "api-gateway",
+            "to": "lambda-orders",
+            "type": "arrow",
+            "stroke": "#FF9800",
+            "strokeWidth": 2
+        },
+        {
+            "from": "lambda-users",
+            "to": "dynamodb",
+            "type": "arrow",
+            "stroke": "#2196F3",
+            "strokeWidth": 2
+        },
+        {
+            "from": "lambda-orders",
+            "to": "dynamodb",
+            "type": "arrow",
+            "stroke": "#2196F3",
+            "strokeWidth": 2
+        },
+        {
+            "from": "cloudfront",
+            "to": "s3",
+            "type": "arrow",
+            "stroke": "#4CAF50",
+            "strokeWidth": 2
+        }
+    ]
+}

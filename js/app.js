@@ -18,6 +18,8 @@ import { setupPropertiesPanel } from './ui/properties.js';
 import { attachFileOperations } from './ui/fileops.js';
 import { setupContextMenu } from './ui/context-menu.js';
 import { TooltipManager } from './ui/tooltip.js';
+import { TemplateManager } from './templates/template-manager.js';
+import { TemplatesGallery } from './ui/templates-gallery.js';
 
 class FlowlyApp {
 	constructor() {
@@ -27,6 +29,8 @@ class FlowlyApp {
 		this.storageManager = null;
 		this.connectorsManager = null;
 		this.tooltipManager = null;
+		this.templateManager = null;
+		this.templatesGallery = null;
 		this.currentTool = 'select';
 		this.selectedShape = null;
 	}
@@ -47,22 +51,31 @@ class FlowlyApp {
 		// Assign connectorsManager to canvasManager so anchors can access it
 		this.canvasManager.connectorsManager = this.connectorsManager;
 		this.tooltipManager = new TooltipManager(); // Initialize TooltipManager here
-	this.alignmentManager = new AlignmentManager(this.canvasManager); // Sprint 4: Alineación	
-	// Sprint 4: Component Library - Create container if doesn't exist
-	let componentsContainer = document.getElementById('components-library');
-	if (!componentsContainer) {
-		componentsContainer = document.createElement('div');
-		componentsContainer.id = 'components-library';
-		componentsContainer.className = 'components-library';
-		const leftSidebar = document.querySelector('.left-sidebar');
-		if (leftSidebar) {
-			leftSidebar.appendChild(componentsContainer);
+		this.alignmentManager = new AlignmentManager(this.canvasManager); // Sprint 4: Alineación	
+		// Sprint 4: Component Library - Create container if doesn't exist
+		let componentsContainer = document.getElementById('components-library');
+		if (!componentsContainer) {
+			componentsContainer = document.createElement('div');
+			componentsContainer.id = 'components-library';
+			componentsContainer.className = 'components-library';
+			const leftSidebar = document.querySelector('.left-sidebar');
+			if (leftSidebar) {
+				leftSidebar.appendChild(componentsContainer);
+			}
 		}
-	}
-	this.componentLibrary = new ComponentLibrary(this); // Sprint 4: Biblioteca de componentes
-	
-	// Setup event listeners (delegated to modular helpers)
-	attachNotificationHelpers(this);		setupToolbar(this);
+		this.componentLibrary = new ComponentLibrary(this); // Sprint 4: Biblioteca de componentes
+
+		// Sprint 5: Template System
+		this.templateManager = new TemplateManager(this.canvasManager);
+		this.templatesGallery = new TemplatesGallery(this.templateManager, this);
+
+		// Load templates catalog asynchronously
+		this.templateManager.loadTemplatesCatalog().catch(err => {
+			console.warn('Templates catalog not loaded:', err);
+		});
+
+		// Setup event listeners (delegated to modular helpers)
+		attachNotificationHelpers(this); setupToolbar(this);
 		setupKeyboardShortcuts(this);
 		this.setupCanvasControls();
 		setupPropertiesPanel(this);
@@ -71,6 +84,11 @@ class FlowlyApp {
 		// Right-click context menu for nodes
 		try { setupContextMenu(this); } catch (e) { console.warn('Context menu failed to initialize', e); }
 		this.setupShapesLibrary();
+
+		// Setup templates button
+		document.getElementById('templates-btn')?.addEventListener('click', () => {
+			this.templatesGallery.show();
+		});
 
 		// Listen to selection changes
 		this.canvasManager.on('selectionChanged', (shapes) => {
