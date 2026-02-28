@@ -30,10 +30,10 @@ export class Minimap {
             right: 20px;
             width: 200px;
             height: 150px;
-            background: white;
-            border: 2px solid #3498db;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            background: var(--md-surface-container, #ffffff);
+            border: 1.5px solid var(--md-outline-variant, #dee2e6);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
             z-index: 1000;
             overflow: hidden;
             cursor: pointer;
@@ -44,6 +44,7 @@ export class Minimap {
         this.minimapCanvas.width = 200;
         this.minimapCanvas.height = 150;
         this.ctx = this.minimapCanvas.getContext('2d');
+        this.container.appendChild(this.minimapCanvas); // ← was missing!
 
         this.container.addEventListener('click', () => this.toggle());
         document.body.appendChild(this.container);

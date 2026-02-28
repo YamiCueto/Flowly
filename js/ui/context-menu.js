@@ -9,7 +9,7 @@ export function setupContextMenu(app) {
 	const menu = document.createElement('div');
 	menu.className = 'flowly-context-menu';
 	menu.style.position = 'absolute';
-	menu.style.zIndex = 10000;
+	menu.style.zIndex = '10000';
 	menu.style.background = '#ffffff';
 	menu.style.border = '1px solid rgba(0,0,0,0.12)';
 	menu.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
@@ -107,9 +107,17 @@ export function setupContextMenu(app) {
 
 	container.appendChild(menu);
 
-	// Add CSS styles for menu items
 	const style = document.createElement('style');
 	style.textContent = `
+        .flowly-context-menu {
+            background: var(--md-surface-container, #ffffff);
+            border: 1px solid var(--md-outline-variant, rgba(0,0,0,0.1));
+            box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+            padding: 8px;
+            border-radius: 10px;
+            min-width: 220px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
         .context-menu-item {
             display: flex;
             align-items: center;
@@ -122,53 +130,27 @@ export function setupContextMenu(app) {
             width: 100%;
             text-align: left;
             font-size: 14px;
-            color: #2c3e50;
-            transition: background 0.15s ease;
+            color: var(--md-on-surface, #1D1B20);
+            transition: background 0.12s ease;
         }
-
         .context-menu-item:hover {
-            background: #f0f2f5;
+            background: var(--md-surface-container-high, #f0f2f5);
         }
-
-        .context-menu-item.danger:hover {
-            background: #fee;
-            color: #e74c3c;
-        }
-
-        .menu-icon {
-            font-size: 16px;
-            width: 20px;
-            text-align: center;
-        }
-
-        .menu-label {
-            flex: 1;
-            font-weight: 500;
-        }
-
+        .context-menu-item.danger { color: var(--md-error, #B3261E); }
+        .context-menu-item.danger:hover { background: var(--md-error-container, #F9DEDC); }
+        .menu-icon { font-size: 16px; width: 20px; text-align: center; }
+        .menu-label { flex: 1; font-weight: 500; }
         .menu-shortcut {
             font-size: 11px;
-            color: #95a5a6;
-            background: #ecf0f1;
+            color: var(--md-on-surface-variant, #49454F);
+            background: var(--md-surface-container-highest, #e8def8);
             padding: 2px 6px;
             border-radius: 4px;
             font-family: 'Courier New', monospace;
         }
-
-        .menu-separator {
-            height: 1px;
-            background: #ecf0f1;
-            margin: 4px 0;
-        }
-
-        .context-menu-item:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .context-menu-item:disabled:hover {
-            background: transparent;
-        }
+        .menu-separator { height: 1px; background: var(--md-outline-variant, #e0e0e0); margin: 4px 0; }
+        .context-menu-item:disabled { opacity: 0.5; cursor: not-allowed; }
+        .context-menu-item:disabled:hover { background: transparent; }
     `;
 	document.head.appendChild(style);
 
@@ -245,18 +227,18 @@ export function setupContextMenu(app) {
 			const fill = target.attrs && target.attrs.fill ? target.attrs.fill : '#3498db';
 			colorInput.value = fill;
 		} catch (e) { }
-	// Sprint 4: Show/hide alignment options based on selection
-	const alignOptions = menu.querySelectorAll('.align-option');
-	const alignSeparator = menu.querySelector('#align-separator');
-	const selectedCount = app.canvasManager.selectedShapes ? app.canvasManager.selectedShapes.length : 0;
-	const showAlign = selectedCount >= 2;
-	
-	alignOptions.forEach(opt => {
-		opt.style.display = showAlign ? 'flex' : 'none';
-	});
-	if (alignSeparator) {
-		alignSeparator.style.display = showAlign ? 'block' : 'none';
-	}
+		// Sprint 4: Show/hide alignment options based on selection
+		const alignOptions = menu.querySelectorAll('.align-option');
+		const alignSeparator = menu.querySelector('#align-separator');
+		const selectedCount = app.canvasManager.selectedShapes ? app.canvasManager.selectedShapes.length : 0;
+		const showAlign = selectedCount >= 2;
+
+		alignOptions.forEach(opt => {
+			opt.style.display = showAlign ? 'flex' : 'none';
+		});
+		if (alignSeparator) {
+			alignSeparator.style.display = showAlign ? 'block' : 'none';
+		}
 		positionMenu(clientX, clientY);
 	};
 
@@ -304,7 +286,7 @@ export function setupContextMenu(app) {
 				break;
 
 			case 'lock':
-				toggleLock(target);
+				toggleLock(target, app);
 				hideMenu();
 				break;
 
@@ -313,76 +295,57 @@ export function setupContextMenu(app) {
 				hideMenu();
 				break;
 
-		case 'align-left':
-			app.alignmentManager && app.alignmentManager.alignLeft();
-			hideMenu();
-			break;
+			case 'align-left':
+				app.alignmentManager && app.alignmentManager.alignLeft();
+				hideMenu();
+				break;
 
-		case 'align-right':
-			app.alignmentManager && app.alignmentManager.alignRight();
-			hideMenu();
-			break;
+			case 'align-right':
+				app.alignmentManager && app.alignmentManager.alignRight();
+				hideMenu();
+				break;
 
-		case 'align-top':
-			app.alignmentManager && app.alignmentManager.alignTop();
-			hideMenu();
-			break;
+			case 'align-top':
+				app.alignmentManager && app.alignmentManager.alignTop();
+				hideMenu();
+				break;
 
-		case 'align-bottom':
-			app.alignmentManager && app.alignmentManager.alignBottom();
-			hideMenu();
-			break;
+			case 'align-bottom':
+				app.alignmentManager && app.alignmentManager.alignBottom();
+				hideMenu();
+				break;
 
-		case 'align-center-h':
-			app.alignmentManager && app.alignmentManager.alignCenterHorizontal();
-			hideMenu();
-			break;
+			case 'align-center-h':
+				app.alignmentManager && app.alignmentManager.alignCenterHorizontal();
+				hideMenu();
+				break;
 
-		case 'align-center-v':
-			app.alignmentManager && app.alignmentManager.alignCenterVertical();
-			hideMenu();
-			break;
+			case 'align-center-v':
+				app.alignmentManager && app.alignmentManager.alignCenterVertical();
+				hideMenu();
+				break;
 
-	case 'delete':
-		app.canvasManager.selectShape(target);
-		app.canvasManager.deleteSelected();
-		hideMenu();
-		break;
+			case 'delete':
+				app.canvasManager.selectShape(target);
+				app.canvasManager.deleteSelected();
+				hideMenu();
+				break;
 
-	case 'edit': {
-		hideMenu();
-		// If it's a Text node, open input. Otherwise, attempt to find linked Text node.
-		if (target.getClassName && target.getClassName() === 'Text') {
-			// Use SweetAlert2 if available for a nicer prompt
-					if (window.Swal) {
-						window.Swal.fire({
-							title: 'Editar texto',
-							input: 'text',
-							inputValue: target.text() || '',
-							showCancelButton: true,
-							confirmButtonText: 'Guardar',
-							cancelButtonText: 'Cancelar'
-						}).then(result => {
-							if (result.isConfirmed) {
-								target.text(result.value || '');
-								app.canvasManager.mainLayer.draw();
-								app.canvasManager.saveHistory();
-							}
-						});
-			} else {
-				const v = prompt('Editar texto', target.text() || '');
-				if (v !== null) {
-					target.text(v);
-					app.canvasManager.mainLayer.draw();
-					app.canvasManager.saveHistory();
+			case 'edit': {
+				hideMenu();
+				// Use the toolManager's inline editor for ANY shape type
+				if (app.toolManager && typeof app.toolManager.editText === 'function') {
+					app.toolManager.editText(target);
+				} else if (target.getClassName && target.getClassName() === 'Text') {
+					const v = prompt('Editar texto', target.text() || '');
+					if (v !== null) {
+						target.text(v);
+						app.canvasManager.mainLayer.draw();
+						app.canvasManager.saveHistory();
+					}
 				}
+				break;
 			}
-		} else {
-			// Not a text node
-			if (app.notify) app.notify('El elemento no contiene texto editable').catch(() => { });
-		}
-		break;
-	}
 		}
 	});
 	// Color change handler
@@ -426,21 +389,44 @@ function duplicateSelected(app) {
 }
 
 /**
- * Helper function: Toggle lock/unlock shape
+ * Helper function: Toggle lock/unlock shape (with visual lock icon)
  */
-function toggleLock(shape) {
-	const isLocked = shape.attrs.locked || false;
-	shape.setAttr('locked', !isLocked);
-	shape.draggable(!isLocked);
+function toggleLock(shape, app) {
+	const isLocked = shape.getAttr('locked') || false;
+	const willBeLocked = !isLocked;
+	shape.setAttr('locked', willBeLocked);
+	shape.draggable(!willBeLocked);
+	shape.opacity(willBeLocked ? 0.7 : 1);
 
-	// Visual feedback
-	if (!isLocked) {
-		shape.opacity(0.7);
-	} else {
-		shape.opacity(1);
+	const layer = shape.getLayer();
+	if (!layer) { return; }
+
+	if (willBeLocked && !shape._lockIcon) {
+		const box = shape.getClientRect({ relativeTo: layer });
+		const lockIcon = new Konva.Text({
+			text: '🔒',
+			fontSize: 16,
+			x: box.x + box.width / 2 - 8,
+			y: box.y - 24,
+			listening: false,
+			name: 'lock-icon'
+		});
+		layer.add(lockIcon);
+		shape._lockIcon = lockIcon;
+		shape.on('dragmove.lock transform.lock', () => {
+			const b = shape.getClientRect({ relativeTo: layer });
+			lockIcon.x(b.x + b.width / 2 - 8);
+			lockIcon.y(b.y - 24);
+			layer.batchDraw();
+		});
+	} else if (!willBeLocked && shape._lockIcon) {
+		try { shape._lockIcon.destroy(); } catch (e) { }
+		shape._lockIcon = null;
+		shape.off('dragmove.lock transform.lock');
 	}
 
-	shape.getLayer().draw();
+	layer.draw();
+	if (app && app.canvasManager) app.canvasManager.saveHistory();
 }
 
 /**

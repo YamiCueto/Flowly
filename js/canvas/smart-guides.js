@@ -10,7 +10,7 @@ export class SmartGuides {
         this.guides = [];
         this.snapThreshold = 5; // Distancia en píxeles para snap
         this.enabled = true;
-        
+
         this.init();
     }
 
@@ -19,11 +19,15 @@ export class SmartGuides {
      */
     init() {
         const stage = this.canvasManager.getStage();
-        
+
         // Crear layer para las guías (arriba de todo)
         this.guidesLayer = new Konva.Layer();
         stage.add(this.guidesLayer);
         this.guidesLayer.moveToTop();
+
+        // Always clean up guides when mouse is released anywhere (prevents ghost lines)
+        this._onWindowMouseUp = () => this.clearGuides();
+        window.addEventListener('mouseup', this._onWindowMouseUp);
     }
 
     /**
@@ -247,6 +251,9 @@ export class SmartGuides {
      */
     destroy() {
         this.clearGuides();
+        if (this._onWindowMouseUp) {
+            window.removeEventListener('mouseup', this._onWindowMouseUp);
+        }
         if (this.guidesLayer) {
             this.guidesLayer.destroy();
         }
