@@ -29,7 +29,7 @@ export function createShapeFromDataImpl(canvas, data) {
     delete cfg.className;
 
     let shape;
-    switch(className) {
+    switch (className) {
         case 'Rect':
             shape = new Konva.Rect(cfg);
             break;
@@ -51,6 +51,23 @@ export function createShapeFromDataImpl(canvas, data) {
         case 'Text':
             shape = new Konva.Text(cfg);
             break;
+        case 'Group':
+            shape = new Konva.Group(cfg);
+            // Restore children if serialized
+            if (Array.isArray(data.children)) {
+                data.children.forEach(childData => {
+                    const child = createShapeFromDataImpl(canvas, childData);
+                    if (child) shape.add(child);
+                });
+            }
+            break;
+        case 'Image': {
+            // Restore as a placeholder rect since Image src is not serializable
+            const imgCfg = Object.assign({}, cfg);
+            delete imgCfg.image;
+            shape = new Konva.Rect({ ...imgCfg, fill: imgCfg.fill || '#D0BCFF', stroke: imgCfg.stroke || '#6750A4' });
+            break;
+        }
         default:
             console.warn('Unknown shape type:', className);
             return null;

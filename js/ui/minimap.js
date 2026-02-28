@@ -126,36 +126,50 @@ export class Minimap {
         this.ctx.scale(this.scale, this.scale);
 
         mainLayer.children.forEach(shape => {
-            if (shape.name && (shape.name() === 'connector' || shape.name() === 'anchor')) {
-                return;
-            }
+            try {
+                const name = typeof shape.name === 'function' ? shape.name() : '';
+                if (name === 'connector' || name === 'anchor' || name === 'lock-icon' || name === 'shape-label') return;
 
-            const x = shape.x();
-            const y = shape.y();
+                const x = shape.x();
+                const y = shape.y();
+                const attrs = shape.attrs || {};
 
-            this.ctx.fillStyle = shape.fill() || '#3498db';
-            this.ctx.strokeStyle = shape.stroke() || '#2c3e50';
-            this.ctx.lineWidth = 1;
+                // Safe fill/stroke — Image and Group nodes don't have fill() method
+                const fill = typeof shape.fill === 'function'
+                    ? (shape.fill() || attrs.fill || '#6750A4')
+                    : (attrs.fill || '#6750A4');
+                const stroke = typeof shape.stroke === 'function'
+                    ? (shape.stroke() || attrs.stroke || '#4A4458')
+                    : (attrs.stroke || '#4A4458');
 
-            const className = shape.getClassName();
+                this.ctx.fillStyle = fill;
+                this.ctx.strokeStyle = stroke;
+                this.ctx.lineWidth = 1;
 
-            if (className === 'Rect') {
-                this.ctx.fillRect(x, y, shape.width(), shape.height());
-                this.ctx.strokeRect(x, y, shape.width(), shape.height());
-            } else if (className === 'Circle') {
-                this.ctx.beginPath();
-                this.ctx.arc(x, y, shape.radius(), 0, Math.PI * 2);
-                this.ctx.fill();
-                this.ctx.stroke();
-            } else if (className === 'Ellipse') {
-                this.ctx.beginPath();
-                this.ctx.ellipse(x, y, shape.radiusX(), shape.radiusY(), 0, 0, Math.PI * 2);
-                this.ctx.fill();
-                this.ctx.stroke();
-            } else {
-                // Formas genéricas como un punto
-                this.ctx.fillRect(x - 2, y - 2, 4, 4);
-            }
+                const className = shape.getClassName();
+
+                if (className === 'Rect') {
+                    this.ctx.fillRect(x, y, shape.width(), shape.height());
+                    this.ctx.strokeRect(x, y, shape.width(), shape.height());
+                } else if (className === 'Circle') {
+                    this.ctx.beginPath();
+                    this.ctx.arc(x, y, shape.radius(), 0, Math.PI * 2);
+                    this.ctx.fill();
+                    this.ctx.stroke();
+                } else if (className === 'Ellipse') {
+                    this.ctx.beginPath();
+                    this.ctx.ellipse(x, y, shape.radiusX(), shape.radiusY(), 0, 0, Math.PI * 2);
+                    this.ctx.fill();
+                    this.ctx.stroke();
+                } else if (className === 'Image') {
+                    // Draw image as a colored rect placeholder
+                    this.ctx.fillStyle = '#D0BCFF';
+                    this.ctx.fillRect(x, y, attrs.width || 40, attrs.height || 40);
+                } else if (className !== 'Transformer' && className !== 'Text') {
+                    // Generic shape dot
+                    this.ctx.fillRect(x - 3, y - 3, 6, 6);
+                }
+            } catch (e) { /* skip shapes that don't support canvas operations */ }
         });
 
         this.ctx.restore();
