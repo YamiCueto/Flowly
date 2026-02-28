@@ -19,11 +19,12 @@ export class ToolManager {
 
         // Lasso selection system
         this.lassoSelection = new LassoSelection(canvasManager);
-        
+
         // Smart guides system
         this.smartGuides = new SmartGuides(canvasManager);
 
         this.setupDrawingEvents();
+        this.setupDoubleClickEdit();
     }
 
     /**
@@ -325,45 +326,62 @@ export class ToolManager {
     }
 
     /**
-     * Edit text
+     * Edit text inline — works for dedicated Text nodes AND for any other shape
+     * (stores the label in a `_label` attribute and renders it as an overlay)
      */
     editText(textNode) {
-        // Hide transformer
+        // Hide transformer while editing
         this.canvasManager.transformer.hide();
 
-        // Create textarea
+        // Create textarea overlay
         const textPosition = textNode.absolutePosition();
         const stage = this.canvasManager.getStage();
         const stageBox = stage.container().getBoundingClientRect();
+        const scale = stage.scaleX();
 
         const textarea = document.createElement('textarea');
         document.body.appendChild(textarea);
 
-        textarea.value = textNode.text();
+        // For real Text nodes use text(), for shapes use stored _label attr
+        const isTextNode = textNode.getClassName() === 'Text';
+        textarea.value = isTextNode ? textNode.text() : (textNode.getAttr('_label') || '');
+
+        const nodeWidth = isTextNode ? textNode.width() * scale : Math.max(textNode.width() * scale, 100);
+
         textarea.style.position = 'absolute';
         textarea.style.top = stageBox.top + textPosition.y + 'px';
         textarea.style.left = stageBox.left + textPosition.x + 'px';
-        textarea.style.width = textNode.width() + 'px';
-        textarea.style.fontSize = textNode.fontSize() + 'px';
-        textarea.style.border = '2px solid #3498db';
-        textarea.style.padding = '4px';
+        textarea.style.width = nodeWidth + 'px';
+        textarea.style.minWidth = '80px';
+        textarea.style.fontSize = (isTextNode ? textNode.fontSize() : 13) * scale + 'px';
+        textarea.style.border = '2px solid #6750A4';
+        textarea.style.borderRadius = '6px';
+        textarea.style.padding = '4px 6px';
         textarea.style.margin = '0px';
         textarea.style.overflow = 'hidden';
-        textarea.style.background = 'white';
+        textarea.style.background = 'var(--md-surface-container-lowest, #fff)';
+        textarea.style.color = 'var(--md-on-surface, #1D1B20)';
         textarea.style.outline = 'none';
         textarea.style.resize = 'none';
-        textarea.style.fontFamily = textNode.fontFamily();
-        textarea.style.transformOrigin = 'left top';
-        textarea.style.textAlign = textNode.align();
-        textarea.style.color = textNode.fill();
+        textarea.style.fontFamily = isTextNode ? textNode.fontFamily() : 'Inter, sans-serif';
+        textarea.style.textAlign = isTextNode ? textNode.align() : 'center';
         textarea.style.zIndex = '1000';
+        textarea.style.boxShadow = '0 4px 16px rgba(103,80,164,0.2)';
 
         textarea.focus();
         textarea.select();
 
         const removeTextarea = () => {
+            if (!textarea.parentNode) return;
             textarea.parentNode.removeChild(textarea);
-            textNode.text(textarea.value);
+            const value = textarea.value;
+            if (isTextNode) {
+                textNode.text(value);
+            } else {
+                // Store label as custom attribute
+                textNode.setAttr('_label', value);
+                this._renderShapeLabel(textNode, value);
+            }
             this.canvasManager.mainLayer.draw();
             this.canvasManager.transformer.show();
             this.canvasManager.transformer.forceUpdate();
@@ -371,15 +389,71 @@ export class ToolManager {
         };
 
         textarea.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                removeTextarea();
-            }
-            if (e.key === 'Enter' && e.ctrlKey) {
-                removeTextarea();
-            }
+            if (e.key === 'Escape') { removeTextarea(); }
+            if (e.key === 'Enter' && e.ctrlKey) { removeTextarea(); }
         });
 
         textarea.addEventListener('blur', removeTextarea);
+    }
+
+    /**
+     * Render label text over a non-text shape using a sibling Konva.Text node
+     */
+    _renderShapeLabel(shape, text) {
+        // Remove old label if any
+        if (shape._labelNode) {
+            try { shape._labelNode.destroy(); } catch (e) { }
+            shape._labelNode = null;
+        }
+        if (!text) return;
+
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const box = shape.getClientRect({ relativeTo: this.canvasManager.mainLayer });
+        const label = new Konva.Text({
+            x: box.x,
+            y: box.y + box.height / 2 - 8,
+            width: box.width,
+            text,
+            fontSize: 13,
+            fontFamily: 'Inter, sans-serif',
+            fill: isDark ? '#E6E0E9' : '#1D1B20',
+            align: 'center',
+            listening: false,
+            name: 'shape-label'
+        });
+        this.canvasManager.mainLayer.add(label);
+        shape._labelNode = label;
+
+        // Keep label synced on drag
+        shape.off('dragmove.label');
+        shape.on('dragmove.label transform.label', () => {
+            const b = shape.getClientRect({ relativeTo: this.canvasManager.mainLayer });
+            label.x(b.x);
+            label.y(b.y + b.height / 2 - 8);
+            label.width(b.width);
+            this.canvasManager.mainLayer.batchDraw();
+        });
+    }
+
+    /**
+     * Setup double-click editing on any shape (non-text shapes trigger inline label editor)
+     */
+    setupDoubleClickEdit() {
+        const stage = this.canvasManager.stage;
+        stage.on('dblclick dbltap', (e) => {
+            if (e.target === stage) return;
+            if (this.activeTool !== 'select') return;
+
+            const target = e.target;
+            // For Text nodes we already have dblclick handlers on individual nodes;
+            // here we handle non-text shapes
+            const cls = target.getClassName ? target.getClassName() : '';
+            if (cls === 'Text') {
+                this.editText(target);
+            } else if (cls !== 'Transformer' && target.draggable && target.draggable()) {
+                this.editText(target);
+            }
+        });
     }
 
     /**
@@ -387,105 +461,34 @@ export class ToolManager {
      */
     addShapeToCenter(shapeType) {
         const stage = this.canvasManager.getStage();
-        const centerX = stage.width() / 2;
-        const centerY = stage.height() / 2;
+        const cx = stage.width() / 2;
+        const cy = stage.height() / 2;
 
-        let shape;
+        const defaults = {
+            rectangle: { x: cx - 50, y: cy - 40, width: 100, height: 80 },
+            'rounded-rectangle': { x: cx - 50, y: cy - 40, width: 100, height: 80 },
+            ellipse: { x: cx, y: cy, radiusX: 70, radiusY: 40 },
+            circle: { x: cx, y: cy, radius: 50 },
+            triangle: { x: cx, y: cy, radius: 50 },
+            pentagon: { x: cx, y: cy, radius: 50 },
+            hexagon: { x: cx, y: cy, radius: 50 },
+            line: { x: cx - 60, y: cy, points: [0, 0, 120, 0] },
+            arrow: { x: cx - 60, y: cy, points: [0, 0, 120, 0] },
+            text: { x: cx - 100, y: cy - 8, text: 'Doble-click para editar', fontSize: 16, fill: '#000000', width: 200 }
+        };
 
-        switch (shapeType) {
-            case 'rectangle':
-                shape = ShapeFactory.create('rectangle', {
-                    x: centerX - 50,
-                    y: centerY - 40,
-                    width: 100,
-                    height: 80
-                });
-                break;
+        const attrs = defaults[shapeType];
+        if (!attrs) return;
 
-            case 'circle':
-                shape = ShapeFactory.create('circle', {
-                    x: centerX,
-                    y: centerY,
-                    radius: 50
-                });
-                break;
+        const shape = ShapeFactory.create(shapeType, attrs);
+        if (!shape) return;
 
-            case 'triangle':
-                shape = ShapeFactory.create('triangle', {
-                    x: centerX,
-                    y: centerY,
-                    radius: 50
-                });
-                break;
-
-            case 'rounded-rectangle':
-                shape = ShapeFactory.create('rounded-rectangle', {
-                    x: centerX - 50,
-                    y: centerY - 40,
-                    width: 100,
-                    height: 80
-                });
-                break;
-
-            case 'ellipse':
-                shape = ShapeFactory.create('ellipse', {
-                    x: centerX,
-                    y: centerY,
-                    radiusX: 70,
-                    radiusY: 40
-                });
-                break;
-
-            case 'line':
-                shape = ShapeFactory.create('line', {
-                    x: centerX - 60,
-                    y: centerY,
-                    points: [0, 0, 120, 0]
-                });
-                break;
-
-            case 'arrow':
-                shape = ShapeFactory.create('arrow', {
-                    x: centerX - 60,
-                    y: centerY,
-                    points: [0, 0, 120, 0]
-                });
-                break;
-            case 'pentagon':
-                shape = ShapeFactory.create('pentagon', {
-                    x: centerX,
-                    y: centerY,
-                    radius: 50
-                });
-                break;
-            case 'hexagon':
-                shape = ShapeFactory.create('hexagon', {
-                    x: centerX,
-                    y: centerY,
-                    radius: 50
-                });
-                break;
-
-            case 'text':
-                shape = ShapeFactory.create('text', {
-                    x: centerX - 100,
-                    y: centerY - 8,
-                    text: 'Doble-click para editar',
-                    fontSize: 16,
-                    fill: '#000000',
-                    width: 200
-                });
-
-                shape.on('dblclick dbltap', () => {
-                    this.editText(shape);
-                });
-                break;
+        if (shapeType === 'text') {
+            shape.on('dblclick dbltap', () => this.editText(shape));
         }
 
-        if (shape) {
-            this.canvasManager.addShape(shape);
-            this.canvasManager.selectShape(shape);
-        }
+        this.canvasManager.addShape(shape);
+        this.canvasManager.selectShape(shape);
     }
 
     /**

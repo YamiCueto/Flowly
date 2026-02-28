@@ -111,41 +111,42 @@ export class CanvasManager {
 	}
 
 	/**
-	 * Draw grid
+	 * Draw grid - uses CSS background pattern for performance (no Konva nodes)
 	 */
 	drawGrid() {
 		this.gridLayer.destroyChildren();
+		this.gridLayer.draw();
+		// Delegate all grid rendering to CSS
+		this._updateCSSGrid();
+	}
+
+	/**
+	 * Sync the CSS grid background to match current stage zoom/position
+	 */
+	_updateCSSGrid() {
+		const wrapper = this.container;
+		if (!wrapper) return;
 
 		if (!this.gridVisible) {
-			this.gridLayer.draw();
+			wrapper.style.backgroundImage = 'none';
 			return;
 		}
 
-		const width = this.stage.width();
-		const height = this.stage.height();
-		const gridSize = this.gridSize;
+		const scale = this.zoom;
+		const stagePos = this.stage ? this.stage.position() : { x: 0, y: 0 };
+		const size = this.gridSize * scale;
+		const ox = stagePos.x % size;
+		const oy = stagePos.y % size;
 
-		// Vertical lines
-		for (let x = 0; x <= width; x += gridSize) {
-			this.gridLayer.add(new Konva.Line({
-				points: [x, 0, x, height],
-				stroke: '#ddd',
-				strokeWidth: 1,
-				listening: false
-			}));
-		}
+		// Use slightly different colors for light/dark mode
+		const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+		const lineColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
 
-		// Horizontal lines
-		for (let y = 0; y <= height; y += gridSize) {
-			this.gridLayer.add(new Konva.Line({
-				points: [0, y, width, y],
-				stroke: '#ddd',
-				strokeWidth: 1,
-				listening: false
-			}));
-		}
-
-		this.gridLayer.draw();
+		wrapper.style.backgroundImage =
+			`linear-gradient(${lineColor} 1px, transparent 1px),` +
+			`linear-gradient(90deg, ${lineColor} 1px, transparent 1px)`;
+		wrapper.style.backgroundSize = `${size}px ${size}px`;
+		wrapper.style.backgroundPosition = `${ox}px ${oy}px`;
 	}
 
 	/**
@@ -314,7 +315,13 @@ export class CanvasManager {
 			stage.batchDraw();
 
 			this.zoom = limitedScale;
+			this._updateCSSGrid();
 			this.emit('zoomChanged', this.zoom);
+		});
+
+		// Also update grid on pan
+		stage.on('dragmove', () => {
+			this._updateCSSGrid();
 		});
 	}
 
@@ -340,10 +347,53 @@ export class CanvasManager {
 		return this.zoom;
 	}
 
+	/**
+	 * Fit all content to screen with proper centering and zoom
+	 */
 	fitToScreen() {
-		this.setZoom(1);
-		this.stage.position({ x: 0, y: 0 });
+		const children = this.mainLayer.getChildren().filter(n => {
+			try { return n.getClassName() !== 'Transformer'; } catch (e) { return true; }
+		});
+
+		if (children.length === 0) {
+			// No content: just reset to 100% at origin
+			this.setZoom(1);
+			this.stage.position({ x: 0, y: 0 });
+			this.stage.draw();
+			this._updateCSSGrid();
+			return;
+		}
+
+		// Calculate bounding box of all shapes
+		let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+		children.forEach(shape => {
+			try {
+				const box = shape.getClientRect({ relativeTo: this.mainLayer });
+				minX = Math.min(minX, box.x);
+				minY = Math.min(minY, box.y);
+				maxX = Math.max(maxX, box.x + box.width);
+				maxY = Math.max(maxY, box.y + box.height);
+			} catch (e) { }
+		});
+
+		const padding = 60;
+		const contentW = maxX - minX + padding * 2;
+		const contentH = maxY - minY + padding * 2;
+		const stageW = this.stage.width();
+		const stageH = this.stage.height();
+
+		const scale = Math.min(stageW / contentW, stageH / contentH, 2); // max 200% zoom
+		const limitedScale = Math.max(0.1, scale);
+
+		const newX = (stageW - contentW * limitedScale) / 2 - (minX - padding) * limitedScale;
+		const newY = (stageH - contentH * limitedScale) / 2 - (minY - padding) * limitedScale;
+
+		this.zoom = limitedScale;
+		this.stage.scale({ x: limitedScale, y: limitedScale });
+		this.stage.position({ x: newX, y: newY });
 		this.stage.draw();
+		this._updateCSSGrid();
+		this.emit('zoomChanged', this.zoom);
 	}
 
 	/**
@@ -351,7 +401,7 @@ export class CanvasManager {
 	 */
 	setGridVisible(visible) {
 		this.gridVisible = visible;
-		this.drawGrid();
+		this._updateCSSGrid();
 	}
 
 	setSnapToGrid(snap) {
@@ -395,6 +445,10 @@ export class CanvasManager {
 	 * Load from JSON
 	 */
 	loadFromJSON(data, saveToHistory = true) {
+		// Clear connectors FIRST to avoid duplicates/ghost arrows on undo/redo
+		if (this.connectorsManager && typeof this.connectorsManager.clearAll === 'function') {
+			this.connectorsManager.clearAll();
+		}
 		this.mainLayer.destroyChildren();
 		this.clearSelection();
 

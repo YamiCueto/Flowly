@@ -13,7 +13,7 @@ export class Minimap {
         this.isDragging = false;
         this.scale = 0.1; // Escala del mini-mapa (10% del tamaño real)
         this.visible = true;
-        
+
         this.init();
     }
 
@@ -44,22 +44,19 @@ export class Minimap {
         this.minimapCanvas.width = 200;
         this.minimapCanvas.height = 150;
         this.ctx = this.minimapCanvas.getContext('2d');
-        
-        this.container.appendChild(this.minimapCanvas);
+
+        this.container.addEventListener('click', () => this.toggle());
         document.body.appendChild(this.container);
 
-        // Setup eventos
+        // Setup events
         this.setupEvents();
-        
-        // Render inicial
+
+        // Initial render
         this.render();
-        
-        // Actualizar cada 500ms
-        this.updateInterval = setInterval(() => this.render(), 500);
     }
 
     /**
-     * Setup eventos del mini-mapa
+     * Setup eventos del mini-mapa (event-driven, no polling)
      */
     setupEvents() {
         // Click para navegar
@@ -69,21 +66,21 @@ export class Minimap {
         });
 
         this.minimapCanvas.addEventListener('mousemove', (e) => {
-            if (this.isDragging) {
-                this.navigateToPosition(e);
-            }
+            if (this.isDragging) this.navigateToPosition(e);
         });
 
-        this.minimapCanvas.addEventListener('mouseup', () => {
-            this.isDragging = false;
-        });
+        this.minimapCanvas.addEventListener('mouseup', () => { this.isDragging = false; });
+        this.minimapCanvas.addEventListener('mouseleave', () => { this.isDragging = false; });
 
-        this.minimapCanvas.addEventListener('mouseleave', () => {
-            this.isDragging = false;
-        });
-
-        // Escuchar cambios en el canvas principal
+        // Re-render on meaningful canvas events (no polling)
+        this.canvasManager.on('historyChanged', () => this.render());
         this.canvasManager.on('zoomChanged', () => this.render());
+        this.canvasManager.on('selectionChanged', () => this.render());
+
+        // Also re-render after drag ends on any shape
+        if (this.canvasManager.mainLayer) {
+            this.canvasManager.mainLayer.on('dragend', () => this.render());
+        }
     }
 
     /**
@@ -103,7 +100,7 @@ export class Minimap {
 
         stage.position({ x: targetX, y: targetY });
         stage.batchDraw();
-        
+
         this.render();
     }
 
@@ -115,10 +112,10 @@ export class Minimap {
 
         const stage = this.canvasManager.getStage();
         const mainLayer = this.canvasManager.mainLayer;
-        
+
         // Limpiar
         this.ctx.clearRect(0, 0, this.minimapCanvas.width, this.minimapCanvas.height);
-        
+
         // Fondo
         this.ctx.fillStyle = '#f8f9fa';
         this.ctx.fillRect(0, 0, this.minimapCanvas.width, this.minimapCanvas.height);
@@ -134,13 +131,13 @@ export class Minimap {
 
             const x = shape.x();
             const y = shape.y();
-            
+
             this.ctx.fillStyle = shape.fill() || '#3498db';
             this.ctx.strokeStyle = shape.stroke() || '#2c3e50';
             this.ctx.lineWidth = 1;
 
             const className = shape.getClassName();
-            
+
             if (className === 'Rect') {
                 this.ctx.fillRect(x, y, shape.width(), shape.height());
                 this.ctx.strokeRect(x, y, shape.width(), shape.height());
@@ -165,7 +162,7 @@ export class Minimap {
         // Dibujar viewport (área visible)
         const pos = stage.position();
         const scale = stage.scaleX();
-        
+
         const viewportX = (-pos.x / scale) * this.scale;
         const viewportY = (-pos.y / scale) * this.scale;
         const viewportW = (stage.width() / scale) * this.scale;
@@ -198,7 +195,6 @@ export class Minimap {
      * Destruye el mini-mapa
      */
     destroy() {
-        clearInterval(this.updateInterval);
         if (this.container && this.container.parentNode) {
             this.container.parentNode.removeChild(this.container);
         }

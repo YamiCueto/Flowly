@@ -1,0 +1,17 @@
+feat: improvements round 1 and 2
+
+- Add text labels on connectors (UI + Konva.Text + background rect)
+- Fix connector undo/redo: clearAll before loadFromJSON
+- Replace Konva.Line grid with CSS background (performance)
+- Fix fitToScreen to center on actual content bounds
+- Add double-click inline text editing on any shape
+- Serialize connector labels correctly in JSON export
+- Fix README keyboard shortcuts (T=Text, H=Pan)
+- Simplify addShapeToCenter with config table (removes switch boilerplate)
+- Implement autosave every 30s in StorageManager
+- Activate Minimap (was implemented but never instantiated)
+- Make Minimap event-driven, remove 500ms polling interval
+- Add saveProject() public method, fix Ctrl+S
+- Add Ctrl+Shift+F and Ctrl+0 for fitToScreen
+- Add visual lock icon (emoji) for locked shapes (Ctrl+L)
+- Refactor export-manager: shared _getBounds() helper, remove duplicate code

@@ -246,12 +246,11 @@ git push origin main
 | `R` | Rectángulo |
 | `C` | Círculo |
 | `E` | Elipse |
-| `T` | Triángulo |
+| `T` | Texto |
 | `P` | Pentágono |
-| `H` | Hexágono |
+| `H` | Mover Vista (Pan) |
 | `L` | Línea |
 | `A` | Flecha |
-| `X` | Texto |
 
 ### Edición
 | Atajo | Acción |
@@ -280,7 +279,8 @@ git push origin main
 | `Ctrl + S` | Guardar proyecto |
 | `Ctrl + O` | Cargar proyecto |
 | `Ctrl + N` | Nuevo proyecto |
-| `Ctrl + E` | Abrir modal de exportación || `Ctrl + T` | Abrir galería de plantillas |
+| `Ctrl + E` | Abrir modal de exportación |
+| `Ctrl + T` | Abrir galería de plantillas |
 ---
 
 ## 🏗️ Arquitectura

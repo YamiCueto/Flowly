@@ -9,6 +9,29 @@ export class StorageManager {
         this.storageKey = 'flowly_projects';
         this.lastSessionKey = 'flowly_last_session';
         this.maxProjects = 10;
+        this._autosaveInterval = null;
+        this.startAutosave();
+    }
+
+    /**
+     * Start autosaving every 30 seconds
+     */
+    startAutosave(intervalMs = 30000) {
+        if (this._autosaveInterval) clearInterval(this._autosaveInterval);
+        this._autosaveInterval = setInterval(() => {
+            this.saveLastSession();
+            console.log('💾 Autosaved at', new Date().toLocaleTimeString());
+        }, intervalMs);
+    }
+
+    /**
+     * Stop autosave
+     */
+    stopAutosave() {
+        if (this._autosaveInterval) {
+            clearInterval(this._autosaveInterval);
+            this._autosaveInterval = null;
+        }
     }
 
     /**
@@ -21,24 +44,24 @@ export class StorageManager {
             date: new Date().toISOString(),
             data: this.canvasManager.toJSON()
         };
-        
+
         // Get existing projects
         const projects = this.getProjects();
-        
+
         // Add new project
         projects.unshift(projectData);
-        
+
         // Limit number of stored projects
         if (projects.length > this.maxProjects) {
             projects.pop();
         }
-        
+
         // Save to localStorage
         this.setProjects(projects);
-        
+
         // Also save as last session
         this.saveLastSession();
-        
+
         return projectData.id;
     }
 
@@ -48,14 +71,14 @@ export class StorageManager {
     loadProject(projectId) {
         const projects = this.getProjects();
         const project = projects.find(p => p.id === projectId);
-        
+
         if (project) {
             this.canvasManager.loadFromJSON(project.data);
             this.saveLastSession();
             // Return the loaded project object for callers to use (e.g., show notifications)
             return project;
         }
-        
+
         return null;
     }
 
@@ -121,7 +144,7 @@ export class StorageManager {
             localStorage.setItem(this.storageKey, JSON.stringify(projects));
         } catch (e) {
             console.error('Failed to save projects:', e);
-            
+
             // If quota exceeded, remove oldest projects
             if (e.name === 'QuotaExceededError') {
                 projects.pop();
@@ -144,12 +167,12 @@ export class StorageManager {
     exportProjectFile(projectId) {
         const projects = this.getProjects();
         const project = projects.find(p => p.id === projectId);
-        
+
         if (project) {
             const json = JSON.stringify(project.data, null, 2);
             const blob = new Blob([json], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
-            
+
             const link = document.createElement('a');
             link.download = `${project.name}.json`;
             link.href = url;
@@ -166,11 +189,11 @@ export class StorageManager {
     getStorageStats() {
         const projects = this.getProjects();
         const lastSession = this.getLastSession();
-        
+
         const projectsSize = new Blob([JSON.stringify(projects)]).size;
         const sessionSize = new Blob([JSON.stringify(lastSession)]).size;
         const totalSize = projectsSize + sessionSize;
-        
+
         return {
             projectCount: projects.length,
             totalSize: totalSize,
@@ -185,11 +208,11 @@ export class StorageManager {
      */
     formatBytes(bytes) {
         if (bytes === 0) return '0 Bytes';
-        
+
         const k = 1024;
         const sizes = ['Bytes', 'KB', 'MB', 'GB'];
         const i = Math.floor(Math.log(bytes) / Math.log(k));
-        
+
         return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
     }
 }

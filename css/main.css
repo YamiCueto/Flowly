@@ -492,10 +492,7 @@ body {
     flex: 1;
     position: relative;
     overflow: hidden;
-    background:
-        linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-        linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px);
-    background-size: 20px 20px;
+    background: var(--background);
 }
 
 #canvas-wrapper.hide-grid {

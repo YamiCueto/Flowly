@@ -35,7 +35,7 @@ export class ConnectorsManager {
         // Detect theme for connector color
         const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
         const defaultStroke = isDarkMode ? '#60A5FA' : '#2c3e50';
-        
+
         const connector = {
             id: Date.now().toString(),
             startShape: shape1,
@@ -71,18 +71,18 @@ export class ConnectorsManager {
                 listening: true
             });
         } else {
-                if (connector.type === 'line' || connector.type === 'elbow') {
-                    const points = (connector.type === 'elbow') ? this.computeElbowPoints(startPoint, endPoint) : [startPoint.x, startPoint.y, endPoint.x, endPoint.y];
-                    node = new Konva.Line({
-                        points: points,
-                        stroke: connector.options.stroke,
-                        strokeWidth: connector.options.strokeWidth,
-                        dash: connector.options.dash || [],
-                        tension: connector.type === 'line' ? 0 : 0,
-                        lineCap: 'round',
-                        lineJoin: 'round',
-                        listening: true
-                    });
+            if (connector.type === 'line' || connector.type === 'elbow') {
+                const points = (connector.type === 'elbow') ? this.computeElbowPoints(startPoint, endPoint) : [startPoint.x, startPoint.y, endPoint.x, endPoint.y];
+                node = new Konva.Line({
+                    points: points,
+                    stroke: connector.options.stroke,
+                    strokeWidth: connector.options.strokeWidth,
+                    dash: connector.options.dash || [],
+                    tension: connector.type === 'line' ? 0 : 0,
+                    lineCap: 'round',
+                    lineJoin: 'round',
+                    listening: true
+                });
             } else {
                 // Bezier: use Konva.Shape with custom sceneFunc to draw cubic bezier
                 // Determine control points (absolute coords) - allow provided controlPoints
@@ -101,14 +101,14 @@ export class ConnectorsManager {
                     const len = Math.sqrt(nx * nx + ny * ny) || 1;
                     const ux = nx / len;
                     const uy = ny / len;
-                    const offset = Math.min(100, Math.max(30, Math.sqrt(dx*dx+dy*dy)/4));
+                    const offset = Math.min(100, Math.max(30, Math.sqrt(dx * dx + dy * dy) / 4));
                     cp1 = { x: start.x + dx * 0.25 + ux * offset, y: start.y + dy * 0.25 + uy * offset };
                     cp2 = { x: start.x + dx * 0.75 + ux * offset, y: start.y + dy * 0.75 + uy * offset };
                     connector.options.controlPoints = [cp1, cp2];
                 }
 
                 node = new Konva.Shape({
-                    sceneFunc: function(ctx, shape) {
+                    sceneFunc: function (ctx, shape) {
                         const b = shape._bezier || {};
                         const s = b.startPoint || { x: 0, y: 0 };
                         const e = b.endPoint || { x: 0, y: 0 };
@@ -250,7 +250,7 @@ export class ConnectorsManager {
                     try {
                         connector._handles[0].position(connector.arrow._bezier.cp1);
                         connector._handles[1].position(connector.arrow._bezier.cp2);
-                    } catch (e) {}
+                    } catch (e) { }
                 }
             } else if (connector.arrow && typeof connector.arrow.points === 'function') {
                 if (connector.type === 'elbow') {
@@ -276,7 +276,7 @@ export class ConnectorsManager {
             }
 
             this.canvasManager.mainLayer.draw();
-            try { this.canvasManager.transformLayer && this.canvasManager.transformLayer.batchDraw(); } catch (e) {}
+            try { this.canvasManager.transformLayer && this.canvasManager.transformLayer.batchDraw(); } catch (e) { }
         };
 
         connector.startShape.on('dragmove', updateConnector);
@@ -293,8 +293,8 @@ export class ConnectorsManager {
         if (index !== -1) {
             const connector = this.connectors[index];
             // destroy bezier handles if any
-            try { this._destroyBezierHandles(connector); } catch (e) {}
-            try { connector.arrow.destroy(); } catch (e) {}
+            try { this._destroyBezierHandles(connector); } catch (e) { }
+            try { connector.arrow.destroy(); } catch (e) { }
             this.connectors.splice(index, 1);
             this.canvasManager.mainLayer.draw();
         }
@@ -333,7 +333,7 @@ export class ConnectorsManager {
             if (options.type && options.type !== connector.type) {
                 const oldNode = connector.arrow;
                 // destroy any existing bezier handles before replacing visual
-                try { this._destroyBezierHandles(connector); } catch (e) {}
+                try { this._destroyBezierHandles(connector); } catch (e) { }
                 const newType = options.type;
                 connector.type = newType;
 
@@ -360,7 +360,7 @@ export class ConnectorsManager {
                     } else {
                         points = [startPoint.x, startPoint.y, endPoint.x, endPoint.y];
                     }
-                    
+
                     newNode = new Konva.Line({
                         points: points,
                         stroke: connector.options.stroke,
@@ -374,7 +374,7 @@ export class ConnectorsManager {
                 }
 
                 // Replace node on canvas (add directly to mainLayer so it doesn't become selectable)
-                try { oldNode.destroy(); } catch (e) {}
+                try { oldNode.destroy(); } catch (e) { }
                 connector.arrow = newNode;
                 try {
                     if (this.canvasManager && this.canvasManager.mainLayer) {
@@ -389,7 +389,7 @@ export class ConnectorsManager {
                 this.setupConnectorListeners(connector);
                 // If new type is bezier, create handles
                 if (connector.type === 'bezier') {
-                    try { this._createBezierHandles(connector); } catch (e) {}
+                    try { this._createBezierHandles(connector); } catch (e) { }
                 }
             } else {
                 // Simple attribute update
@@ -405,7 +405,7 @@ export class ConnectorsManager {
                             connector.arrow.pointerLength(connector.options.pointerLength || 10);
                             connector.arrow.pointerWidth(connector.options.pointerWidth || 10);
                             connector.arrow.fill(connector.options.stroke);
-                        } catch (e) {}
+                        } catch (e) { }
                     }
                     // Bezier curvature or update bezier control points
                     if (connector.type === 'bezier') {
@@ -417,7 +417,7 @@ export class ConnectorsManager {
                                     connector.arrow._bezier.cp2 = connector.options.controlPoints[1];
                                 }
                             }
-                        } catch (e) {}
+                        } catch (e) { }
                     }
                     if (connector.type === 'bezier' || connector.type === 'line' || connector.type === 'elbow') {
                         // If elbow type, recompute points
@@ -429,7 +429,7 @@ export class ConnectorsManager {
                                 if (connector.arrow && typeof connector.arrow.points === 'function') {
                                     connector.arrow.points(pts);
                                 }
-                            } catch (e) {}
+                            } catch (e) { }
                         }
                         try {
                             if (typeof connector.arrow.tension === 'function') {
@@ -437,7 +437,7 @@ export class ConnectorsManager {
                             } else if ('tension' in connector.arrow.attrs) {
                                 connector.arrow.setAttrs({ tension: connector.options.curvature || 0 });
                             }
-                        } catch (e) {}
+                        } catch (e) { }
                     }
                 }
             }
@@ -489,7 +489,7 @@ export class ConnectorsManager {
                         if (idx === 0) node._bezier.cp1 = connector.options.controlPoints[0];
                         else node._bezier.cp2 = connector.options.controlPoints[1];
                     }
-                    try { this.canvasManager.mainLayer.draw(); } catch (e) {}
+                    try { this.canvasManager.mainLayer.draw(); } catch (e) { }
                 });
 
                 layer.add(h);
@@ -500,7 +500,7 @@ export class ConnectorsManager {
             const h2 = makeHandle(cp[1], 1);
 
             connector._handles = [h1, h2];
-            try { layer.batchDraw(); } catch (e) {}
+            try { layer.batchDraw(); } catch (e) { }
         } catch (e) {
             console.warn('Failed to create bezier handles', e);
         }
@@ -513,11 +513,11 @@ export class ConnectorsManager {
         if (!connector || !connector._handles) return;
         try {
             connector._handles.forEach(h => {
-                try { h.destroy(); } catch (e) {}
+                try { h.destroy(); } catch (e) { }
             });
-        } catch (e) {}
+        } catch (e) { }
         connector._handles = null;
-        try { this.canvasManager.transformLayer && this.canvasManager.transformLayer.batchDraw(); } catch (e) {}
+        try { this.canvasManager.transformLayer && this.canvasManager.transformLayer.batchDraw(); } catch (e) { }
     }
 
     /**
@@ -528,7 +528,8 @@ export class ConnectorsManager {
             id: connector.id,
             startShapeId: connector.startShape.id(),
             endShapeId: connector.endShape.id(),
-            options: connector.options
+            type: connector.type,
+            options: { ...connector.options } // label is inside options
         }));
     }
 
@@ -538,8 +539,8 @@ export class ConnectorsManager {
     fromJSON(data, shapes) {
         // Clear existing connectors (destroy arrows and any bezier handles)
         this.connectors.forEach(c => {
-            try { this._destroyBezierHandles(c); } catch (e) {}
-            try { c.arrow && c.arrow.destroy(); } catch (e) {}
+            try { this._destroyBezierHandles(c); } catch (e) { }
+            try { c.arrow && c.arrow.destroy(); } catch (e) { }
         });
         this.connectors = [];
 
@@ -559,7 +560,7 @@ export class ConnectorsManager {
      */
     clearAll() {
         this.connectors.forEach(c => {
-            try { this._destroyBezierHandles(c); } catch (e) {}
+            try { this._destroyBezierHandles(c); } catch (e) { }
             try { c.arrow.destroy(); } catch (e) { /* ignore */ }
         });
         this.connectors = [];

@@ -20,6 +20,7 @@ import { setupContextMenu } from './ui/context-menu.js';
 import { TooltipManager } from './ui/tooltip.js';
 import { TemplateManager } from './templates/template-manager.js';
 import { TemplatesGallery } from './ui/templates-gallery.js';
+import { Minimap } from './ui/minimap.js';
 
 class FlowlyApp {
 	constructor() {
@@ -31,6 +32,7 @@ class FlowlyApp {
 		this.tooltipManager = null;
 		this.templateManager = null;
 		this.templatesGallery = null;
+		this.minimap = null;
 		this.currentTool = 'select';
 		this.selectedShape = null;
 	}
@@ -50,8 +52,14 @@ class FlowlyApp {
 		this.connectorsManager = new ConnectorsManager(this.canvasManager);
 		// Assign connectorsManager to canvasManager so anchors can access it
 		this.canvasManager.connectorsManager = this.connectorsManager;
-		this.tooltipManager = new TooltipManager(); // Initialize TooltipManager here
-		this.alignmentManager = new AlignmentManager(this.canvasManager); // Sprint 4: Alineación	
+		this.tooltipManager = new TooltipManager();
+		this.alignmentManager = new AlignmentManager(this.canvasManager);
+		// Minimap - event-driven navigation overlay
+		try {
+			this.minimap = new Minimap(this.canvasManager);
+		} catch (e) {
+			console.warn('Minimap failed to initialize:', e);
+		}
 		// Sprint 4: Component Library - Create container if doesn't exist
 		let componentsContainer = document.getElementById('components-library');
 		if (!componentsContainer) {
@@ -163,7 +171,7 @@ class FlowlyApp {
 		// Left Sidebar
 		const leftSidebar = document.getElementById('left-sidebar');
 		const leftToggleBtn = document.getElementById('sidebar-toggle');
-		
+
 		if (leftSidebar && leftToggleBtn) {
 			// Load saved state from localStorage
 			const savedState = localStorage.getItem('leftSidebarCollapsed');
@@ -175,10 +183,10 @@ class FlowlyApp {
 			leftToggleBtn.addEventListener('click', () => {
 				leftSidebar.classList.toggle('collapsed');
 				const isCollapsed = leftSidebar.classList.contains('collapsed');
-				
+
 				// Save state to localStorage
 				localStorage.setItem('leftSidebarCollapsed', isCollapsed);
-				
+
 				// Resize canvas to fit new space
 				setTimeout(() => {
 					this.canvasManager.fitStageIntoParentContainer();
@@ -189,7 +197,7 @@ class FlowlyApp {
 		// Right Sidebar
 		const rightSidebar = document.getElementById('right-sidebar');
 		const rightToggleBtn = document.getElementById('right-sidebar-toggle');
-		
+
 		if (rightSidebar && rightToggleBtn) {
 			// Load saved state from localStorage
 			const savedState = localStorage.getItem('rightSidebarCollapsed');
@@ -201,10 +209,10 @@ class FlowlyApp {
 			rightToggleBtn.addEventListener('click', () => {
 				rightSidebar.classList.toggle('collapsed');
 				const isCollapsed = rightSidebar.classList.contains('collapsed');
-				
+
 				// Save state to localStorage
 				localStorage.setItem('rightSidebarCollapsed', isCollapsed);
-				
+
 				// Resize canvas to fit new space
 				setTimeout(() => {
 					this.canvasManager.fitStageIntoParentContainer();
@@ -238,7 +246,7 @@ class FlowlyApp {
 	setTheme(theme) {
 		// Update data-theme attribute
 		document.documentElement.setAttribute('data-theme', theme);
-		
+
 		// Update button icon
 		const themeToggleBtn = document.getElementById('theme-toggle-btn');
 		if (themeToggleBtn) {
@@ -251,25 +259,25 @@ class FlowlyApp {
 				themeToggleBtn.setAttribute('data-tooltip', 'Modo Oscuro');
 			}
 		}
-		
+
 		// Save preference
 		localStorage.setItem('theme', theme);
-		
+
 		// Update text and connector colors on canvas for better contrast
 		if (this.canvasManager && this.canvasManager.mainLayer) {
 			const textColor = theme === 'dark' ? '#E6E0E9' : '#2c3e50';
 			const lineColor = theme === 'dark' ? '#60A5FA' : '#2c3e50';
-			
+
 			// Update all text elements
 			this.canvasManager.mainLayer.find('Text').forEach(textNode => {
 				// Only update if it's not using a custom color
 				const currentFill = textNode.fill();
-				if (currentFill === '#2c3e50' || currentFill === '#E6E0E9' || 
-				    currentFill === '#1D1B20' || currentFill === 'black') {
+				if (currentFill === '#2c3e50' || currentFill === '#E6E0E9' ||
+					currentFill === '#1D1B20' || currentFill === 'black') {
 					textNode.fill(textColor);
 				}
 			});
-			
+
 			// Update all arrows (connectors)
 			this.canvasManager.mainLayer.find('Arrow').forEach(arrow => {
 				const currentStroke = arrow.stroke();
@@ -278,7 +286,7 @@ class FlowlyApp {
 					arrow.fill(lineColor); // Update arrowhead fill
 				}
 			});
-			
+
 			// Update all lines
 			this.canvasManager.mainLayer.find('Line').forEach(line => {
 				const currentStroke = line.stroke();
@@ -286,7 +294,7 @@ class FlowlyApp {
 					line.stroke(lineColor);
 				}
 			});
-			
+
 			// Redraw canvas
 			this.canvasManager.mainLayer.draw();
 		}
@@ -448,6 +456,28 @@ class FlowlyApp {
 		if (lastSession) {
 			this.canvasManager.loadFromJSON(lastSession);
 		}
+	}
+
+	/**
+	 * Save project (triggered by Ctrl+S shortcut)
+	 * Saves the current state to localStorage as the last session and shows a brief notification.
+	 */
+	saveProject() {
+		this.storageManager.saveLastSession();
+		// Show confirmation via SweetAlert2 if available, otherwise a silent console.log
+		try {
+			if (window.Swal) {
+				Swal.fire({
+					text: '💾 Proyecto guardado',
+					icon: 'success',
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 1500
+				});
+			}
+		} catch (e) { }
+		console.log('💾 Project saved at', new Date().toLocaleTimeString());
 	}
 }
 

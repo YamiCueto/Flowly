@@ -20,8 +20,8 @@ export class ExportManager {
                     });
                     return;
                 }
-            } catch (e) {}
-            try { alert(message); } catch (e) {}
+            } catch (e) { }
+            try { alert(message); } catch (e) { }
         };
     }
 
@@ -29,25 +29,40 @@ export class ExportManager {
      * Export diagram to specified format
      */
     export(format) {
-        switch(format) {
-            case 'png':
-                this.exportPNG();
-                break;
-            case 'jpg':
-                this.exportJPG();
-                break;
-            case 'svg':
-                this.exportSVG();
-                break;
-            case 'pdf':
-                this.exportPDF();
-                break;
-            case 'json':
-                this.exportJSON();
-                break;
-            default:
-                throw new Error('Unknown export format: ' + format);
+        switch (format) {
+            case 'png': this.exportPNG(); break;
+            case 'jpg': this.exportJPG(); break;
+            case 'svg': this.exportSVG(); break;
+            case 'pdf': this.exportPDF(); break;
+            case 'json': this.exportJSON(); break;
+            default: throw new Error('Unknown export format: ' + format);
         }
+    }
+
+    /**
+     * Shared helper: compute bounding box of all visible shapes with padding
+     */
+    _getBounds(padding = 20) {
+        const shapes = this.canvasManager.mainLayer.children;
+        if (!shapes || shapes.length === 0) return null;
+
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        shapes.forEach(shape => {
+            try {
+                const box = shape.getClientRect();
+                minX = Math.min(minX, box.x);
+                minY = Math.min(minY, box.y);
+                maxX = Math.max(maxX, box.x + box.width);
+                maxY = Math.max(maxY, box.y + box.height);
+            } catch (e) { }
+        });
+
+        return {
+            x: minX - padding,
+            y: minY - padding,
+            width: maxX - minX + padding * 2,
+            height: maxY - minY + padding * 2
+        };
     }
 
     /**
@@ -55,40 +70,14 @@ export class ExportManager {
      */
     exportPNG() {
         const stage = this.canvasManager.getStage();
-        
-        // Get the bounding box of all shapes
-        const shapes = this.canvasManager.mainLayer.children;
-        if (shapes.length === 0) {
-            this.notify('No hay elementos para exportar', { icon: 'warning' });
-            return;
-        }
-        
-        // Calculate bounds
-        let minX = Infinity, minY = Infinity;
-        let maxX = -Infinity, maxY = -Infinity;
-        
-        shapes.forEach(shape => {
-            const box = shape.getClientRect();
-            minX = Math.min(minX, box.x);
-            minY = Math.min(minY, box.y);
-            maxX = Math.max(maxX, box.x + box.width);
-            maxY = Math.max(maxY, box.y + box.height);
-        });
-        
-        const padding = 20;
-        const width = maxX - minX + padding * 2;
-        const height = maxY - minY + padding * 2;
-        
-        // Export with white background
+        const bounds = this._getBounds();
+        if (!bounds) { this.notify('No hay elementos para exportar', { icon: 'warning' }); return; }
+
         const dataURL = stage.toDataURL({
-            x: minX - padding,
-            y: minY - padding,
-            width: width,
-            height: height,
-            pixelRatio: 2, // High quality
+            ...bounds,
+            pixelRatio: 2,
             mimeType: 'image/png'
         });
-        
         this.downloadFile(dataURL, 'diagram.png');
     }
 
@@ -97,54 +86,23 @@ export class ExportManager {
      */
     exportJPG() {
         const stage = this.canvasManager.getStage();
-        
-        const shapes = this.canvasManager.mainLayer.children;
-        if (shapes.length === 0) {
-            this.notify('No hay elementos para exportar', { icon: 'warning' });
-            return;
-        }
-        
-        // Calculate bounds
-        let minX = Infinity, minY = Infinity;
-        let maxX = -Infinity, maxY = -Infinity;
-        
-        shapes.forEach(shape => {
-            const box = shape.getClientRect();
-            minX = Math.min(minX, box.x);
-            minY = Math.min(minY, box.y);
-            maxX = Math.max(maxX, box.x + box.width);
-            maxY = Math.max(maxY, box.y + box.height);
-        });
-        
-        const padding = 20;
-        const width = maxX - minX + padding * 2;
-        const height = maxY - minY + padding * 2;
-        
-        // Create temporary white background
-        const tempRect = new Konva.Rect({
-            x: minX - padding,
-            y: minY - padding,
-            width: width,
-            height: height,
-            fill: 'white'
-        });
-        
+        const bounds = this._getBounds();
+        if (!bounds) { this.notify('No hay elementos para exportar', { icon: 'warning' }); return; }
+
+        // White background rect
+        const tempRect = new Konva.Rect({ ...bounds, fill: 'white' });
         this.canvasManager.mainLayer.add(tempRect);
         tempRect.moveToBottom();
-        
+
         const dataURL = stage.toDataURL({
-            x: minX - padding,
-            y: minY - padding,
-            width: width,
-            height: height,
+            ...bounds,
             pixelRatio: 2,
             mimeType: 'image/jpeg',
             quality: 0.9
         });
-        
+
         tempRect.destroy();
         this.canvasManager.mainLayer.draw();
-        
         this.downloadFile(dataURL, 'diagram.jpg');
     }
 
@@ -152,49 +110,22 @@ export class ExportManager {
      * Export as SVG
      */
     exportSVG() {
-        const stage = this.canvasManager.getStage();
-        
+        const bounds = this._getBounds();
+        if (!bounds) { this.notify('No hay elementos para exportar', { icon: 'warning' }); return; }
+
         const shapes = this.canvasManager.mainLayer.children;
-        if (shapes.length === 0) {
-            this.notify('No hay elementos para exportar', { icon: 'warning' });
-            return;
-        }
-        
-        // Calculate bounds
-        let minX = Infinity, minY = Infinity;
-        let maxX = -Infinity, maxY = -Infinity;
-        
-        shapes.forEach(shape => {
-            const box = shape.getClientRect();
-            minX = Math.min(minX, box.x);
-            minY = Math.min(minY, box.y);
-            maxX = Math.max(maxX, box.x + box.width);
-            maxY = Math.max(maxY, box.y + box.height);
-        });
-        
-        const padding = 20;
-        const width = maxX - minX + padding * 2;
-        const height = maxY - minY + padding * 2;
-        
-        // Create SVG string
+        const { x, y, width, height } = bounds;
+
         let svg = `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="${minX - padding} ${minY - padding} ${width} ${height}">
+<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="${x} ${y} ${width} ${height}">
 `;
-        
-        // Convert each shape to SVG
-        shapes.forEach(shape => {
-            svg += this.shapeToSVG(shape, minX - padding, minY - padding);
-        });
-        
+        shapes.forEach(shape => { svg += this.shapeToSVG(shape, x, y); });
         svg += '</svg>';
-        
+
         const blob = new Blob([svg], { type: 'image/svg+xml' });
         const url = URL.createObjectURL(blob);
         this.downloadFile(url, 'diagram.svg');
-        // Revoke the object URL after a short delay to ensure the download has started
-        setTimeout(() => {
-            try { URL.revokeObjectURL(url); } catch (e) { /* ignore */ }
-        }, 1500);
+        setTimeout(() => { try { URL.revokeObjectURL(url); } catch (e) { } }, 1500);
     }
 
     /**
@@ -205,7 +136,7 @@ export class ExportManager {
         const className = shape.getClassName();
 
         // Use the absolute transform matrix so rotated/scaled shapes are preserved
-        let matrix = [1,0,0,1,0,0];
+        let matrix = [1, 0, 0, 1, 0, 0];
         try {
             const m = shape.getAbsoluteTransform().getMatrix();
             // Konva returns a Transform which exposes getMatrix() as array [a, b, c, d, e, f]
@@ -223,7 +154,7 @@ export class ExportManager {
 
         let svg = '';
 
-        switch(className) {
+        switch (className) {
             case 'Rect': {
                 const width = shape.width();
                 const height = shape.height();
@@ -315,61 +246,25 @@ export class ExportManager {
      */
     exportPDF() {
         const stage = this.canvasManager.getStage();
-        
-        const shapes = this.canvasManager.mainLayer.children;
-        if (shapes.length === 0) {
-            this.notify('No hay elementos para exportar', { icon: 'warning' });
-            return;
-        }
-        
-        // Get image data
-        let minX = Infinity, minY = Infinity;
-        let maxX = -Infinity, maxY = -Infinity;
-        
-        shapes.forEach(shape => {
-            const box = shape.getClientRect();
-            minX = Math.min(minX, box.x);
-            minY = Math.min(minY, box.y);
-            maxX = Math.max(maxX, box.x + box.width);
-            maxY = Math.max(maxY, box.y + box.height);
-        });
-        
-        const padding = 20;
-        const width = maxX - minX + padding * 2;
-        const height = maxY - minY + padding * 2;
-        
-        const dataURL = stage.toDataURL({
-            x: minX - padding,
-            y: minY - padding,
-            width: width,
-            height: height,
-            pixelRatio: 2
-        });
-        
-        // Create PDF using jsPDF
+        const bounds = this._getBounds();
+        if (!bounds) { this.notify('No hay elementos para exportar', { icon: 'warning' }); return; }
+
+        const dataURL = stage.toDataURL({ ...bounds, pixelRatio: 2 });
+
         if (!window.jspdf || !window.jspdf.jsPDF) {
-            this.notify('jsPDF no está disponible. Instala/importe jsPDF para exportar a PDF.', { icon: 'error' });
+            this.notify('jsPDF no está disponible.', { icon: 'error' });
             return;
         }
 
         const { jsPDF } = window.jspdf;
-        // Determine page orientation
-        const orientation = width > height ? 'landscape' : 'portrait';
+        const orientation = bounds.width > bounds.height ? 'landscape' : 'portrait';
         const pdf = new jsPDF(orientation, 'pt', 'a4');
-        
         const pageWidth = pdf.internal.pageSize.getWidth();
         const pageHeight = pdf.internal.pageSize.getHeight();
-        
-        // Calculate scale to fit
-        const scale = Math.min(pageWidth / width, pageHeight / height) * 0.9;
-        const imgWidth = width * scale;
-        const imgHeight = height * scale;
-        
-        // Center the image
-        const x = (pageWidth - imgWidth) / 2;
-        const y = (pageHeight - imgHeight) / 2;
-        
-        pdf.addImage(dataURL, 'PNG', x, y, imgWidth, imgHeight);
+        const scale = Math.min(pageWidth / bounds.width, pageHeight / bounds.height) * 0.9;
+        const imgWidth = bounds.width * scale;
+        const imgHeight = bounds.height * scale;
+        pdf.addImage(dataURL, 'PNG', (pageWidth - imgWidth) / 2, (pageHeight - imgHeight) / 2, imgWidth, imgHeight);
         pdf.save('diagram.pdf');
     }
 
@@ -380,11 +275,11 @@ export class ExportManager {
         const data = this.canvasManager.toJSON();
         data.exportDate = new Date().toISOString();
         data.appName = 'Flowly';
-        
+
         const json = JSON.stringify(data, null, 2);
         const blob = new Blob([json], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
-        
+
         this.downloadFile(url, 'diagram.json');
         URL.revokeObjectURL(url);
     }

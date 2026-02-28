@@ -35,7 +35,8 @@ export function setupKeyboardShortcuts(app) {
                 case 's': app.saveProject(); e.preventDefault(); break;
                 case 'o': app.openLoadModal(); e.preventDefault(); break;
                 case 'n': app.newProject(); e.preventDefault(); break;
-                
+                case '0': app.canvasManager.fitToScreen(); app.updateZoomDisplay(); e.preventDefault(); break;
+
                 // Sprint 2: New shortcuts
                 case 'g':
                     // Agrupar formas seleccionadas
@@ -73,6 +74,7 @@ export function setupKeyboardShortcuts(app) {
                 case 'v': app.alignmentManager.alignCenterVertical(); e.preventDefault(); break;
                 case 'd': app.alignmentManager.distributeHorizontal(); e.preventDefault(); break;
                 case 'e': app.alignmentManager.distributeVertical(); e.preventDefault(); break;
+                case 'f': app.canvasManager.fitToScreen(); app.updateZoomDisplay(); e.preventDefault(); break;
             }
         }
 
@@ -106,23 +108,52 @@ function groupSelectedShapes(app) {
 }
 
 /**
- * Helper: Bloquear/Desbloquear formas seleccionadas
+ * Helper: Bloquear/Desbloquear formas seleccionadas (con feedback visual)
  */
 function toggleLockSelected(app) {
     const selected = app.canvasManager.selectedShapes;
     if (selected.length === 0) return;
 
     selected.forEach(shape => {
-        const isLocked = shape.attrs.locked || false;
-        shape.setAttr('locked', !isLocked);
-        shape.draggable(!isLocked);
+        const isLocked = shape.getAttr('locked') || false;
+        const willBeLocked = !isLocked;
+        shape.setAttr('locked', willBeLocked);
+        shape.draggable(!willBeLocked);
+        shape.opacity(willBeLocked ? 0.7 : 1);
 
-        if (!isLocked) {
-            shape.opacity(0.7);
+        // Visual lock icon management
+        if (willBeLocked) {
+            if (!shape._lockIcon) {
+                const box = shape.getClientRect({ relativeTo: app.canvasManager.mainLayer });
+                const lockIcon = new Konva.Text({
+                    text: '🔒',
+                    fontSize: 16,
+                    x: box.x + box.width / 2 - 8,
+                    y: box.y - 24,
+                    listening: false,
+                    name: 'lock-icon'
+                });
+                app.canvasManager.mainLayer.add(lockIcon);
+                shape._lockIcon = lockIcon;
+
+                // Keep lock icon synced on drag/transform
+                shape.on('dragmove.lock transform.lock', () => {
+                    const b = shape.getClientRect({ relativeTo: app.canvasManager.mainLayer });
+                    lockIcon.x(b.x + b.width / 2 - 8);
+                    lockIcon.y(b.y - 24);
+                    app.canvasManager.mainLayer.batchDraw();
+                });
+            }
         } else {
-            shape.opacity(1);
+            // Remove lock icon
+            if (shape._lockIcon) {
+                try { shape._lockIcon.destroy(); } catch (e) { }
+                shape._lockIcon = null;
+                shape.off('dragmove.lock transform.lock');
+            }
         }
     });
 
     app.canvasManager.mainLayer.draw();
+    app.canvasManager.saveHistory();
 }
